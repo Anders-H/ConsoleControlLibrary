@@ -20,7 +20,8 @@ namespace ConsoleControlLibrary
         private double _charOffsetX = 0.0;
         private double _charOffsetY = 0.0;
         private bool _hasFocus = false;
-        private bool _uppercaseInput = true;
+        private History History { get; } = new History();
+        private bool RowChanged { get; set; } = false;
         public event UserInputHandler UserInput;
         public ConsoleControl()
         {
@@ -78,11 +79,8 @@ namespace ConsoleControlLibrary
         }
         [DefaultValue(true)]
         [Category("Console Settings")]
-        public bool UppercaseInput
-        {
-            get { return _uppercaseInput; }
-            set { _uppercaseInput = value; }
-        }
+        public bool UppercaseInput { get; set; } = true;
+
         private void InitializeConsole()
         {
             if (DesignMode)
@@ -171,6 +169,7 @@ namespace ConsoleControlLibrary
             _characterArray[RowCount - 1, CursorPosition] = UppercaseInput ? char.ToUpper(e.KeyChar) : e.KeyChar;
             if (CursorPosition < ColumnCount - 1)
                 CursorPosition++;
+            RowChanged = true;
         }
         private void ConsoleControl_Enter(object sender, EventArgs e)
         {
@@ -219,7 +218,7 @@ namespace ConsoleControlLibrary
         {
             get
             {
-                for (var c = ColumnCount - 1; c > 0; c--)
+                for (var c = ColumnCount - 1; c >= 0; c--)
                     if (_characterArray[RowCount - 1, c] != (char)0 && _characterArray[RowCount - 1, c] != ' ')
                         return c;
                 return -1;
@@ -227,8 +226,23 @@ namespace ConsoleControlLibrary
         }
         private void ConsoleControl_KeyDown(object sender, KeyEventArgs e)
         {
+            string text;
             switch (e.KeyCode)
             {
+                case Keys.Up:
+                    if (!History.HasData())
+                        return;
+                    text = GetText(RowCount - 1, 0);
+                    if (RowChanged && !string.IsNullOrWhiteSpace(text))
+                        History.RememberTemporary(text.Trim());
+                    RestoreInput(History.Previous());
+                    break;
+                case Keys.Down:
+                    text = GetText(RowCount - 1, 0);
+                    if (RowChanged && !string.IsNullOrWhiteSpace(text))
+                        History.RememberTemporary(text.Trim());
+                    RestoreInput(History.Next());
+                    break;
                 case Keys.Insert:
                     e.SuppressKeyPress = true;
                     InsertAt(CursorPosition);
@@ -271,23 +285,35 @@ namespace ConsoleControlLibrary
                     CursorPosition = 0;
                     break;
                 case Keys.End:
-                    timer1.Stop();
-                    _cursorBlink = true;
-                    timer1.Start();
-                    var lastCharacterIndex = LastCharacterIndex;
-                    if (lastCharacterIndex < ColumnCount - 2)
-                        CursorPosition = lastCharacterIndex + 1;
-                    else
-                        CursorPosition = ColumnCount - 1;
+                    GoToEnd();
                     break;
                 default:
                     break;
             }
             Invalidate();
         }
+        private void GoToEnd()
+        {
+            timer1.Stop();
+            _cursorBlink = true;
+            timer1.Start();
+            var lastCharacterIndex = LastCharacterIndex;
+            CursorPosition = lastCharacterIndex < ColumnCount - 2 ? lastCharacterIndex + 1 : ColumnCount - 1;
+        }
+        private void RestoreInput(string text)
+        {
+            for (var i = 0; i < ColumnCount; i++)
+                _characterArray[RowCount - 1, i] = (char) 0;
+            SetText(RowCount - 1, 0, text);
+            GoToEnd();
+            RowChanged = false;
+        }
         private void HandleInput()
         {
             var text = GetText(RowCount - 1, 0);
+            if (!string.IsNullOrWhiteSpace(text))
+                History.Remember(text.Trim());
+            RowChanged = false;
             ScrollUp();
             CursorPosition = 0;
             UserInput?.Invoke(this, new UserInputEventArgs(text));
