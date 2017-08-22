@@ -20,6 +20,8 @@ namespace WindowsFormsApp1
         private void consoleControl1_UserInput(object sender, ConsoleControlLibrary.UserInputEventArgs e)
         {
             Text = e.RawInput;
+            if (e.RawInput == "WORDWRAP")
+                consoleControl1.WriteText(50, "Jag är en äppelhäst som gillar wordwrapping. DettaOrdÄrSåLångtAttDetInteFårPlatsPåEnEndaRadUtanMåsteHeltEnkeltBrytasPåMitten. Så är det. Texten är lång. Det är bra.");
         }
     }
 }

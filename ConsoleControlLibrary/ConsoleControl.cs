@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -333,6 +334,69 @@ namespace ConsoleControlLibrary
                     _characterArray[row - 1, col] = _characterArray[row, col];
             for (var col = 0; col < ColumnCount; col++)
                 _characterArray[RowCount - 1, col] = (char)0;
+        }
+        public void WriteText(int msDelay, string text)
+        {
+            var rows = WordWrap((text ?? "").Trim()).Split('\n');
+            timer1.Enabled = false;
+            _cursorBlink = false;
+            foreach (var row in rows)
+            {
+                var r = row.Trim();
+                if (string.IsNullOrEmpty(r) && row == rows.Last())
+                    continue;
+                for (var i = 0; i < r.Length; i++)
+                {
+                    SetText(RowCount - 1, i, r[i].ToString());
+                    if (msDelay <= 0)
+                        continue;
+                    Refresh();
+                    System.Threading.Thread.Sleep(msDelay);
+                }
+                ScrollUp();
+                Invalidate();
+            }
+            timer1.Enabled = true;
+        }
+        private string WordWrap(string text)
+        {
+            int Break(string breakText, int breakPos, int max)
+            {
+                var position = max;
+                while (position >= 0 && !char.IsWhiteSpace(breakText[breakPos + position]))
+                    position--;
+                if (position < 0)
+                    return max;
+                while (position >= 0 && char.IsWhiteSpace(breakText[breakPos + position]))
+                    position--;
+                return position + 1;
+            }
+            var wordBreak = 0;
+            var s = new StringBuilder();
+            for (var charPointer = 0; charPointer < text.Length; charPointer = wordBreak)
+            {
+                var endOfLine = text.IndexOf("\r\n", charPointer, StringComparison.Ordinal);
+                if (endOfLine < 0)
+                    endOfLine = text.Length;
+                wordBreak = endOfLine < 0 ? text.Length : endOfLine + 2;
+                if (endOfLine > charPointer)
+                {
+                    do
+                    {
+                        var length = endOfLine - charPointer;
+                        if (length > ColumnCount)
+                            length = Break(text, charPointer, ColumnCount);
+                        s.Append(text, charPointer, length);
+                        s.AppendLine();
+                        charPointer += length;
+                        while (charPointer < endOfLine && char.IsWhiteSpace(text[charPointer]))
+                            charPointer++;
+                    } while (endOfLine > charPointer);
+                    continue;
+                }
+                s.AppendLine();
+            }
+            return s.ToString();
         }
     }
 }
