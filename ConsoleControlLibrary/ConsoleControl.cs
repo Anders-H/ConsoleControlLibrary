@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace ConsoleControlLibrary
 {
-    public partial class ConsoleControl: UserControl
+    public partial class ConsoleControl : UserControl
     {
         private char[,] _characterArray;
         private int _columnCount = 40;
@@ -94,11 +94,11 @@ namespace ConsoleControlLibrary
         private void CalcSize(Graphics g)
         {
             _needsRecalcSize = false;
-            var width = Math.Max((double) Width, 30.0);
-            var height = Math.Max((double) Height, 30.0);
-            _charWidth = width / (double) ColumnCount;
-            _charHeight = height / (double) RowCount;
-            var fontSize = (float) (Math.Min(_charWidth, _charHeight) - 1);
+            var width = Math.Max((double)Width, 30.0);
+            var height = Math.Max((double)Height, 30.0);
+            _charWidth = width / (double)ColumnCount;
+            _charHeight = height / (double)RowCount;
+            var fontSize = (float)(Math.Min(_charWidth, _charHeight) - 1);
             for (var i = fontSize + 20; i >= fontSize; i -= 0.5f)
             {
                 _font?.Dispose();
@@ -194,7 +194,7 @@ namespace ConsoleControlLibrary
         private void InsertAt(int col)
         {
             if (col == ColumnCount - 1)
-                _characterArray[RowCount - 1, ColumnCount - 1] = (char) 0;
+                _characterArray[RowCount - 1, ColumnCount - 1] = (char)0;
             for (var i = ColumnCount - 2; i > col; i--)
                 _characterArray[RowCount - 1, i] = _characterArray[RowCount - 1, i - 1];
             _characterArray[RowCount - 1, col] = (char)0;
@@ -305,7 +305,7 @@ namespace ConsoleControlLibrary
         private void RestoreInput(string text)
         {
             for (var i = 0; i < ColumnCount; i++)
-                _characterArray[RowCount - 1, i] = (char) 0;
+                _characterArray[RowCount - 1, i] = (char)0;
             SetText(RowCount - 1, 0, text);
             GoToEnd();
             RowChanged = false;
