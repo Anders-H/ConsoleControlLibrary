@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -322,7 +323,7 @@ namespace ConsoleControlLibrary
         {
             var s = new StringBuilder();
             for (var c = col; c < ColumnCount; c++)
-                s.Append(_characterArray[row, c]);
+                s.Append(_characterArray[row, c] == (char)0 ? ' ' : _characterArray[row, c]);
             return s.ToString().Trim();
         }
         private void ScrollUp()
