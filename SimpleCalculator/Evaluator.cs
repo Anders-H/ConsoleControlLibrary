@@ -19,10 +19,7 @@ namespace SimpleCalculator
             var tokens = ev.GetTokens(expression);
             if (tokens.Count <= 0)
                 return 0.0;
-            foreach (var token in tokens)
-            {
-                System.Diagnostics.Debug.WriteLine($"{token.CharacterClass} {token.RawValue}");
-            }
+            //TODO: Create tree.
             return tokens.Count > 0 ? ev.EvalTokens(tokens) : 0.0;
         }
         private TokenList GetTokens(string expression)
