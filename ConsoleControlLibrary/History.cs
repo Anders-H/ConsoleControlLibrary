@@ -21,9 +21,6 @@ namespace ConsoleControlLibrary
             Strings.Add(new HistoryString { Value = text, IsTemporary = false });
             PositionPointer = Strings.Count - 1;
             Strings.RemoveAll(x => x.IsTemporary);
-#if DEBUG
-            Debug.WriteLine(ToString());
-#endif
         }
         public void RememberTemporary(string text)
         {
@@ -38,9 +35,6 @@ namespace ConsoleControlLibrary
             PositionPointer = Strings.Count - 1;
             if (PositionPointer > 0)
                 PositionPointer--;
-#if DEBUG
-            Debug.WriteLine(ToString());
-#endif
         }
         public bool HasData() => Strings.Count > 0;
         public string Previous()
@@ -52,9 +46,6 @@ namespace ConsoleControlLibrary
             var ret = Strings[PositionPointer].Value;
             if (PositionPointer > 0)
                 PositionPointer--;
-#if DEBUG
-            Debug.WriteLine(ToString());
-#endif
             return ret;
         }
         public string Next()
@@ -66,9 +57,6 @@ namespace ConsoleControlLibrary
                 return "";
             if (PositionPointer < 0 || PositionPointer >= Strings.Count)
                 PositionPointer = 0;
-#if DEBUG
-            Debug.WriteLine(ToString());
-#endif
             return Strings[PositionPointer].Value;
         }
         public override string ToString()

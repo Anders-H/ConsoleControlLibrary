@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApp1
+﻿namespace SimpleCalculator
 {
     partial class Form1
     {
@@ -33,13 +33,11 @@
             // 
             // consoleControl1
             // 
-            this.consoleControl1.ColumnCount = 20;
             this.consoleControl1.CursorPosition = 0;
             this.consoleControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.consoleControl1.Location = new System.Drawing.Point(0, 0);
             this.consoleControl1.Name = "consoleControl1";
-            this.consoleControl1.RowCount = 10;
-            this.consoleControl1.Size = new System.Drawing.Size(598, 316);
+            this.consoleControl1.Size = new System.Drawing.Size(699, 470);
             this.consoleControl1.TabIndex = 0;
             this.consoleControl1.UserInput += new ConsoleControlLibrary.UserInputHandler(this.consoleControl1_UserInput);
             // 
@@ -47,7 +45,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(598, 316);
+            this.ClientSize = new System.Drawing.Size(699, 470);
             this.Controls.Add(this.consoleControl1);
             this.Name = "Form1";
             this.Text = "Form1";
