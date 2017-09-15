@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -60,40 +62,85 @@ namespace SimpleCalculator
             if (!tokens.Last().IsOperand)
                 throw new SystemException("Must end with operator.");
             var pass1 = new TokenList();
-            var previous = tokens.First();
+            Token previous = null;
             foreach (var t in tokens)
             {
-                if (t.IsHighPriorityOperator && previous.IsOperator)
+                if (t.AccountedFor || previous == null)
+                {
+                    if (!t.AccountedFor)
+                        pass1.Add(t);
+                    previous = t;
+                    continue;
+                }
+                if (t.IsHighPriorityOperator && !previous.IsOperand)
                     throw new SystemException("Expected operand.");
                 if (t.IsHighPriorityOperator && previous.IsOperand)
                 {
-
-                    var next = tokens.IndexOf(t);
+                    var nextIndex = tokens.IndexOf(t) + 1;
+                    if (nextIndex >= tokens.Count)
+                        throw new SystemException("Unexpected end.");
+                    var next = tokens[nextIndex];
+                    if (!next.IsOperand)
+                        throw new SystemException("Expected operand.");
+                    switch (t.OperatorValue)
+                    {
+                        case "*":
+                            pass1.Add(new Token(CharacterClass.Operand, previous.OperandValue*next.OperandValue));
+                            break;
+                        case "/":
+                            pass1.Add(new Token(CharacterClass.Operand, previous.OperandValue/next.OperandValue));
+                            break;
+                        default:
+                            throw new SystemException($"Unexpected high operator: {t.OperatorValue}");
+                    }
+                    previous.AccountedFor = true;
+                    t.AccountedFor = true;
+                    next.AccountedFor = true;
                 }
-                else
+                if (!t.AccountedFor)
                     pass1.Add(t);
                 previous = t;
             }
+            bool removeAgain;
+            do
+            {
+                removeAgain = false;
+                var accountedToken = pass1.FirstOrDefault(x => x.AccountedFor);
+                if (accountedToken == null)
+                    continue;
+                pass1.Remove(accountedToken);
+                removeAgain = true;
+            } while (removeAgain);
+            Debug.WriteLine("Pass 1:");
             foreach (var t in pass1)
-                System.Diagnostics.Debug.WriteLine(t);
+                Debug.WriteLine(t);
             return 0.0;
         }
     }
     internal class Token
     {
+        public bool AccountedFor { get; set; }
         public CharacterClass CharacterClass { get; }
         public string RawValue { get; }
+        private double? Value { get; } = null;
         public Token(CharacterClass characterClass, string rawValue)
         {
             CharacterClass = characterClass;
             RawValue = (rawValue ?? "").Trim();
+        }
+        public Token(CharacterClass characterClass, double value)
+        {
+            CharacterClass = characterClass;
+            Value = value;
         }
         public string OperatorValue => IsOperator ? RawValue : "";
         public double OperandValue
         {
             get
             {
-                if (double.TryParse(RawValue, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double s))
+                if (Value.HasValue)
+                    return Value.Value;
+                if (double.TryParse(RawValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double s))
                     return s;
                 throw new SystemException($"Failed to parse operand: {RawValue}");
             }
@@ -102,7 +149,7 @@ namespace SimpleCalculator
         public bool IsLowPriorityOperator => CharacterClass == CharacterClass.Operator && (RawValue == "+" || RawValue == "-");
         public bool IsOperator => CharacterClass == CharacterClass.Operator;
         public bool IsOperand => CharacterClass == CharacterClass.Operand;
-        public override string ToString() => $"{CharacterClass}: {RawValue}";
+        public override string ToString() => $"{CharacterClass}: {(string.IsNullOrEmpty(RawValue) && Value.HasValue ? Value.Value.ToString("n4") : RawValue)}";
     }
     internal class TokenList : List<Token>
     {
