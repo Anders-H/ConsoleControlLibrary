@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -61,46 +62,67 @@ namespace SimpleCalculator
         {
             if (!tokens.Last().IsOperand)
                 throw new SystemException("Must end with operator.");
+            var inputTokens = new TokenList();
+            tokens.ForEach(x => inputTokens.Add(x));
             var pass1 = new TokenList();
-            Token previous = null;
-            foreach (var t in tokens)
+            bool iterateHighPriorityAgain;
+            do
             {
-                if (t.AccountedFor || previous == null)
+                iterateHighPriorityAgain = false;
+                Token previous = null;
+                foreach (var t in inputTokens)
                 {
+                    if (t.AccountedFor || previous == null)
+                    {
+                        if (!t.AccountedFor)
+                            pass1.Add(t);
+                        previous = t;
+                        continue;
+                    }
+                    if (t.IsHighPriorityOperator && !previous.IsOperand)
+                        throw new SystemException("Expected operand.");
+                    if (t.IsHighPriorityOperator && previous.IsOperand)
+                    {
+                        var nextIndex = inputTokens.IndexOf(t) + 1;
+                        if (nextIndex >= inputTokens.Count)
+                            throw new SystemException("Unexpected end.");
+                        var next = inputTokens[nextIndex];
+                        if (!next.IsOperand)
+                            throw new SystemException("Expected operand.");
+                        switch (t.OperatorValue)
+                        {
+                            case "*":
+                                pass1.Add(new Token(CharacterClass.Operand, previous.OperandValue * next.OperandValue));
+                                break;
+                            case "/":
+                                pass1.Add(new Token(CharacterClass.Operand, previous.OperandValue / next.OperandValue));
+                                break;
+                            default:
+                                throw new SystemException($"Unexpected high operator: {t.OperatorValue}");
+                        }
+                        previous.AccountedFor = true;
+                        t.AccountedFor = true;
+                        next.AccountedFor = true;
+                        iterateHighPriorityAgain = true;
+                        pass1.Remove(previous);
+                        //Recreate and restart.
+                        if (inputTokens.Count > nextIndex + 1)
+                            for (var i = 0; i < inputTokens.Count - 1; i++)
+                                pass1.Add(inputTokens[i]);
+                        inputTokens.Clear();
+                        foreach (var x in pass1)
+                        {
+                            x.AccountedFor = false;
+                            inputTokens.Add(x);
+                        }
+                        break;
+                    }
                     if (!t.AccountedFor)
                         pass1.Add(t);
                     previous = t;
-                    continue;
                 }
-                if (t.IsHighPriorityOperator && !previous.IsOperand)
-                    throw new SystemException("Expected operand.");
-                if (t.IsHighPriorityOperator && previous.IsOperand)
-                {
-                    var nextIndex = tokens.IndexOf(t) + 1;
-                    if (nextIndex >= tokens.Count)
-                        throw new SystemException("Unexpected end.");
-                    var next = tokens[nextIndex];
-                    if (!next.IsOperand)
-                        throw new SystemException("Expected operand.");
-                    switch (t.OperatorValue)
-                    {
-                        case "*":
-                            pass1.Add(new Token(CharacterClass.Operand, previous.OperandValue*next.OperandValue));
-                            break;
-                        case "/":
-                            pass1.Add(new Token(CharacterClass.Operand, previous.OperandValue/next.OperandValue));
-                            break;
-                        default:
-                            throw new SystemException($"Unexpected high operator: {t.OperatorValue}");
-                    }
-                    previous.AccountedFor = true;
-                    t.AccountedFor = true;
-                    next.AccountedFor = true;
-                }
-                if (!t.AccountedFor)
-                    pass1.Add(t);
-                previous = t;
-            }
+
+            } while (iterateHighPriorityAgain);
             bool removeAgain;
             do
             {
