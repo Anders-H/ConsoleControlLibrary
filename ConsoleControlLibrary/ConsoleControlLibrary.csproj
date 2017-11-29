@@ -47,6 +47,7 @@
     <Compile Include="ConsoleControl.Designer.cs">
       <DependentUpon>ConsoleControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Button.cs" />
     <Compile Include="Controls\Control.cs" />
     <Compile Include="Form.cs" />
     <Compile Include="History.cs" />

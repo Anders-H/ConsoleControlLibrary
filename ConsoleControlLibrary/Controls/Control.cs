@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace ConsoleControlLibrary.Controls
+﻿namespace ConsoleControlLibrary.Controls
 {
     public abstract class Control
     {
