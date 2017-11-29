@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,17 +12,17 @@ namespace ConsoleControlLibrary
         private char[,] _characterArray;
         private int _columnCount = 40;
         private int _rowCount = 20;
-        private int _cursorPosition = 0;
-        private bool _cursorBlink = false;
+        private int _cursorPosition;
+        private bool _cursorBlink;
         private double _charWidth;
         private double _charHeight;
         private Font _font;
-        private bool _needsRecalcSize = false;
-        private double _charOffsetX = 0.0;
-        private double _charOffsetY = 0.0;
-        private bool _hasFocus = false;
+        private bool _needsRecalcSize;
+        private double _charOffsetX;
+        private double _charOffsetY;
+        private bool _hasFocus;
         private History History { get; } = new History();
-        private bool RowChanged { get; set; } = false;
+        private bool RowChanged { get; set; }
         public event UserInputHandler UserInput;
         public ConsoleControl()
         {
@@ -44,7 +43,7 @@ namespace ConsoleControlLibrary
         }
         public int CursorPosition
         {
-            get { return _cursorPosition; }
+            get => _cursorPosition;
             set
             {
                 _cursorPosition = value;
@@ -56,7 +55,7 @@ namespace ConsoleControlLibrary
         [Description("Number of columns (3 to 200).")]
         public int ColumnCount
         {
-            get { return _columnCount; }
+            get => _columnCount;
             set
             {
                 if (value < 3 || value > 200)
@@ -70,7 +69,7 @@ namespace ConsoleControlLibrary
         [Description("Number of rows (3 to 200).")]
         public int RowCount
         {
-            get { return _rowCount; }
+            get => _rowCount;
             set
             {
                 if (value < 3 || value > 200)
@@ -94,10 +93,10 @@ namespace ConsoleControlLibrary
         private void CalcSize(Graphics g)
         {
             _needsRecalcSize = false;
-            var width = Math.Max((double)Width, 30.0);
-            var height = Math.Max((double)Height, 30.0);
-            _charWidth = width / (double)ColumnCount;
-            _charHeight = height / (double)RowCount;
+            var width = Math.Max(Width, 30.0);
+            var height = Math.Max(Height, 30.0);
+            _charWidth = width/ColumnCount;
+            _charHeight = height/RowCount;
             var fontSize = (float)(Math.Min(_charWidth, _charHeight) - 1);
             for (var i = fontSize + 20; i >= fontSize; i -= 0.5f)
             {
@@ -289,8 +288,6 @@ namespace ConsoleControlLibrary
                 case Keys.End:
                     GoToEnd();
                     break;
-                default:
-                    break;
             }
             Invalidate();
         }
@@ -371,7 +368,7 @@ namespace ConsoleControlLibrary
                     position--;
                 return position + 1;
             }
-            var wordBreak = 0;
+            int wordBreak;
             var s = new StringBuilder();
             for (var charPointer = 0; charPointer < text.Length; charPointer = wordBreak)
             {
