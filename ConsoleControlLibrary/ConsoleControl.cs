@@ -405,6 +405,7 @@ namespace ConsoleControlLibrary
                 if (_currentForm == value)
                     return;
                 _currentForm = value;
+                _currentForm?.Run();
                 Invalidate();
                 CurrentFormChanged?.Invoke(this, new EventArgs());
             }

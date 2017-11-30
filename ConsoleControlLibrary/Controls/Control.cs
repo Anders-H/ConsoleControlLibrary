@@ -18,5 +18,6 @@
             Width = width;
             Height = height;
         }
+        protected void Invalidate() => ParentForm.Invalidate();
     }
 }
