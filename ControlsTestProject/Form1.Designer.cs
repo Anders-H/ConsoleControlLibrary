@@ -40,7 +40,7 @@
             this.consoleControl1.Location = new System.Drawing.Point(0, 0);
             this.consoleControl1.Name = "consoleControl1";
             this.consoleControl1.RowCount = 50;
-            this.consoleControl1.Size = new System.Drawing.Size(706, 496);
+            this.consoleControl1.Size = new System.Drawing.Size(932, 665);
             this.consoleControl1.TabIndex = 0;
             this.consoleControl1.CurrentFormChanged += new System.EventHandler(this.consoleControl1_CurrentFormChanged);
             this.consoleControl1.UserInput += new ConsoleControlLibrary.UserInputHandler(this.consoleControl1_UserInput);
@@ -49,7 +49,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(706, 496);
+            this.ClientSize = new System.Drawing.Size(932, 665);
             this.Controls.Add(this.consoleControl1);
             this.Name = "Form1";
             this.Text = "Form1";

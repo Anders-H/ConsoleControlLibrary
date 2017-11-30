@@ -47,8 +47,12 @@
     <Compile Include="ConsoleControl.Designer.cs">
       <DependentUpon>ConsoleControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ControlColorScheme.cs" />
     <Compile Include="Controls\Button.cs" />
-    <Compile Include="Controls\Control.cs" />
+    <Compile Include="Controls\ControlBase.cs" />
+    <Compile Include="Controls\ConsoleControlEventArgs.cs" />
+    <Compile Include="Controls\ConsoleControlEventHandler.cs" />
+    <Compile Include="Controls\ConsoleControlEventType.cs" />
     <Compile Include="Form.cs" />
     <Compile Include="History.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

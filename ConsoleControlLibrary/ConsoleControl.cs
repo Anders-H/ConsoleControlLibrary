@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using ConsoleControlLibrary.Controls;
 
 namespace ConsoleControlLibrary
 {
@@ -13,7 +14,7 @@ namespace ConsoleControlLibrary
         private int _columnCount = 40;
         private int _rowCount = 20;
         private int _cursorPosition;
-        private bool _cursorBlink;
+        internal static bool CursorBlink { get; set; }
         private double _charWidth;
         private double _charHeight;
         private Font _font;
@@ -26,6 +27,7 @@ namespace ConsoleControlLibrary
         private Form _currentForm;
         public event EventHandler CurrentFormChanged;
         public event UserInputHandler UserInput;
+        public event ConsoleControlEventHandler ControlEvent;
         public ConsoleControl()
         {
             InitializeComponent();
@@ -117,7 +119,7 @@ namespace ConsoleControlLibrary
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            _cursorBlink = !_cursorBlink;
+            CursorBlink = !CursorBlink;
             Invalidate();
         }
         private void ConsoleControl_Resize(object sender, EventArgs e)
@@ -134,6 +136,11 @@ namespace ConsoleControlLibrary
             }
             if (_needsRecalcSize)
                 CalcSize(e.Graphics);
+            if (CurrentForm != null)
+            {
+                CurrentForm.Draw(e.Graphics);
+                return;
+            }
             e.Graphics.Clear(BackColor);
             var xpos = 0.0;
             var ypos = 0.0;
@@ -146,7 +153,7 @@ namespace ConsoleControlLibrary
                     {
                         if (_characterArray[y, x] > 0 && _characterArray[y, x] != ' ')
                             e.Graphics.DrawString(_characterArray[y, x].ToString(), _font, b, (float)(xpos + _charOffsetX), (float)(ypos + _charOffsetY));
-                        if (_hasFocus && _cursorBlink && x == _cursorPosition && y == cursy)
+                        if (_hasFocus && CursorBlink && x == _cursorPosition && y == cursy)
                         {
                             e.Graphics.FillRectangle(b, (float)xpos, (float)ypos, (float)_charWidth, (float)_charHeight);
                             using (var bb = new SolidBrush(BackColor))
@@ -164,6 +171,12 @@ namespace ConsoleControlLibrary
         }
         private void ConsoleControl_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (CurrentForm?.CurrentControl != null)
+            {
+                e.Handled = true;
+                CurrentForm.CurrentControl.KeyPressInfo(Keys.Enter);
+                return;
+            }
             if (e.KeyChar == 13)
             {
                 HandleInput();
@@ -267,7 +280,7 @@ namespace ConsoleControlLibrary
                     if (CursorPosition < ColumnCount - 1 && CursorPosition < LastCharacterIndex + 1)
                     {
                         timer1.Stop();
-                        _cursorBlink = true;
+                        CursorBlink = true;
                         timer1.Start();
                         CursorPosition++;
                     }
@@ -276,14 +289,14 @@ namespace ConsoleControlLibrary
                     if (CursorPosition > 0)
                     {
                         timer1.Stop();
-                        _cursorBlink = true;
+                        CursorBlink = true;
                         timer1.Start();
                         CursorPosition--;
                     }
                     break;
                 case Keys.Home:
                     timer1.Stop();
-                    _cursorBlink = true;
+                    CursorBlink = true;
                     timer1.Start();
                     CursorPosition = 0;
                     break;
@@ -296,7 +309,7 @@ namespace ConsoleControlLibrary
         private void GoToEnd()
         {
             timer1.Stop();
-            _cursorBlink = true;
+            CursorBlink = true;
             timer1.Start();
             var lastCharacterIndex = LastCharacterIndex;
             CursorPosition = lastCharacterIndex < ColumnCount - 2 ? lastCharacterIndex + 1 : ColumnCount - 1;
@@ -338,7 +351,7 @@ namespace ConsoleControlLibrary
         {
             var rows = WordWrap((text ?? "").Trim()).Split('\n');
             timer1.Enabled = false;
-            _cursorBlink = false;
+            CursorBlink = false;
             foreach (var row in rows)
             {
                 var r = row.Trim();
@@ -410,5 +423,6 @@ namespace ConsoleControlLibrary
                 CurrentFormChanged?.Invoke(this, new EventArgs());
             }
         }
+        internal void TriggerEvent(object sender, ConsoleControlEventArgs e) => ControlEvent?.Invoke(sender, e);
     }
 }
