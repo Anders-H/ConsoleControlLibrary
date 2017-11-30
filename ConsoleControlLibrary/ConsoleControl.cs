@@ -23,6 +23,8 @@ namespace ConsoleControlLibrary
         private bool _hasFocus;
         private History History { get; } = new History();
         private bool RowChanged { get; set; }
+        private Form _currentForm;
+        public event EventHandler CurrentFormChanged;
         public event UserInputHandler UserInput;
         public ConsoleControl()
         {
@@ -394,6 +396,18 @@ namespace ConsoleControlLibrary
                 s.AppendLine();
             }
             return s.ToString();
+        }
+        public Form CurrentForm
+        {
+            get => _currentForm;
+            set
+            {
+                if (_currentForm == value)
+                    return;
+                _currentForm = value;
+                Invalidate();
+                CurrentFormChanged?.Invoke(this, new EventArgs());
+            }
         }
     }
 }

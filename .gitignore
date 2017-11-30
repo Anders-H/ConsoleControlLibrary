@@ -28,3 +28,4 @@ nuget.exe
 *.lock.json
 *.db
 *.nupkg
+*.ide

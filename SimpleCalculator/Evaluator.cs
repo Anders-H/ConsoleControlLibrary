@@ -1,9 +1,5 @@
 ﻿namespace SimpleCalculator
 {
-    internal enum CharacterClass
-    {
-        Separator, Operator, Operand
-    }
     public class Evaluator
     {
         public static double Eval(string expression)

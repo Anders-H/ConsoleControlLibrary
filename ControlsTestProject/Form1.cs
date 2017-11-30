@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace ControlsTestProject
@@ -15,6 +9,21 @@ namespace ControlsTestProject
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void consoleControl1_UserInput(object sender, ConsoleControlLibrary.UserInputEventArgs e)
+        {
+            switch (e.RawInput.Trim().ToLower())
+            {
+                case "testform1":
+                    consoleControl1.CurrentForm = new TestForm1(consoleControl1);
+                    break;
+            }
+        }
+
+        private void consoleControl1_CurrentFormChanged(object sender, EventArgs e)
+        {
+            Debug.WriteLine("CurrentFormChanged");
         }
     }
 }

@@ -34,6 +34,7 @@
             // consoleControl1
             // 
             this.consoleControl1.ColumnCount = 100;
+            this.consoleControl1.CurrentForm = null;
             this.consoleControl1.CursorPosition = 0;
             this.consoleControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.consoleControl1.Location = new System.Drawing.Point(0, 0);
@@ -41,6 +42,8 @@
             this.consoleControl1.RowCount = 50;
             this.consoleControl1.Size = new System.Drawing.Size(706, 496);
             this.consoleControl1.TabIndex = 0;
+            this.consoleControl1.CurrentFormChanged += new System.EventHandler(this.consoleControl1_CurrentFormChanged);
+            this.consoleControl1.UserInput += new ConsoleControlLibrary.UserInputHandler(this.consoleControl1_UserInput);
             // 
             // Form1
             // 
