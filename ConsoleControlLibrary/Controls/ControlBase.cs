@@ -33,6 +33,6 @@ namespace ConsoleControlLibrary.Controls
         }
         protected void Invalidate() => ParentForm.Invalidate();
         protected internal abstract void KeyPressInfo(Keys key);
-        protected internal abstract void Draw(Graphics g);
+        protected internal abstract void Draw(Graphics g, IDrawEngine drawEngine);
     }
 }

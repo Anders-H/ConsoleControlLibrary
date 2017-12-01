@@ -28,6 +28,7 @@ namespace ConsoleControlLibrary
         public event EventHandler CurrentFormChanged;
         public event UserInputHandler UserInput;
         public event ConsoleControlEventHandler ControlEvent;
+        public IDrawEngine DrawEngine { get; set; } = new DrawEngine();
         public ConsoleControl()
         {
             InitializeComponent();
@@ -138,7 +139,7 @@ namespace ConsoleControlLibrary
                 CalcSize(e.Graphics);
             if (CurrentForm != null)
             {
-                CurrentForm.Draw(e.Graphics);
+                CurrentForm.Draw(e.Graphics, DrawEngine);
                 return;
             }
             e.Graphics.Clear(BackColor);

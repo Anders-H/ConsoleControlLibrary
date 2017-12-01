@@ -29,10 +29,10 @@ namespace ConsoleControlLibrary
         }
         internal void Invalidate() => ParentConsole.Invalidate();
         internal void TriggerEvent(object sender, ConsoleControlEventArgs e) => ParentConsole.TriggerEvent(sender, e);
-        internal void Draw(Graphics g)
+        internal void Draw(Graphics g, IDrawEngine drawEngine)
         {
             g.Clear(ControlColorScheme.BackgroundColor);
-            Controls.ForEach(x => x.Draw(g));
+            Controls.ForEach(x => x.Draw(g, drawEngine));
         }
     }
 }

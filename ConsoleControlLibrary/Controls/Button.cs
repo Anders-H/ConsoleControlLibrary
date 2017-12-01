@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace ConsoleControlLibrary.Controls
 {
@@ -26,6 +27,10 @@ namespace ConsoleControlLibrary.Controls
                 ParentForm.TriggerEvent(this, new ConsoleControlEventArgs(ConsoleControlEventType.Click));
                 return;
             }
+        }
+        protected internal override void Draw(Graphics g, IDrawEngine drawEngine)
+        {
+            
         }
     }
 }
