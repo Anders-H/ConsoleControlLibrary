@@ -20,7 +20,7 @@ namespace ConsoleControlLibrary
         private bool _hasFocus;
         private History History { get; } = new History();
         private bool RowChanged { get; set; }
-        private Form _currentForm;
+        private ConsoleForm _currentForm;
         public event EventHandler CurrentFormChanged;
         public event UserInputHandler UserInput;
         public event ConsoleControlEventHandler ControlEvent;
@@ -150,11 +150,7 @@ namespace ConsoleControlLibrary
         private void ConsoleControl_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (CurrentForm?.CurrentControl != null)
-            {
-                e.Handled = true;
-                CurrentForm.CurrentControl.KeyPressed(Keys.Enter);
                 return;
-            }
             if (e.KeyChar == 13)
             {
                 HandleInput();
@@ -394,7 +390,7 @@ namespace ConsoleControlLibrary
             }
             return s.ToString();
         }
-        public Form CurrentForm
+        public ConsoleForm CurrentForm
         {
             get => _currentForm;
             set
@@ -408,5 +404,17 @@ namespace ConsoleControlLibrary
             }
         }
         internal void TriggerEvent(object sender, ConsoleControlEventArgs e) => ControlEvent?.Invoke(sender, e);
+        private void ConsoleControl_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (CurrentForm?.CurrentControl == null)
+                return;
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            CurrentForm.CurrentControl.KeyPressed(e.KeyCode);
+        }
+        private void ConsoleControl_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
     }
 }

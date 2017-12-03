@@ -7,7 +7,7 @@ namespace ConsoleControlLibrary.Controls
     {
         private string _text;
         private string _visibleText;
-        public Button(Form parentForm, IDrawEngine drawEngine, int x, int y, int width, int height, string text) : base(parentForm, drawEngine, x, y, width, height)
+        public Button(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, int width, int height, string text) : base(parentForm, drawEngine, x, y, width, height)
         {
             Text = text ?? "";
             CanGetFocus = true;
@@ -26,11 +26,9 @@ namespace ConsoleControlLibrary.Controls
         }
         protected internal override void KeyPressed(Keys key)
         {
-            if (key == Keys.Enter)
-            {
-                ParentForm.TriggerEvent(this, new ConsoleControlEventArgs(ConsoleControlEventType.Click));
+            if (key != Keys.Enter)
                 return;
-            }
+            ParentForm.TriggerEvent(this, new ConsoleControlEventArgs(ConsoleControlEventType.Click));
         }
         protected internal override void Draw(Graphics g, IDrawEngine drawEngine)
         {
@@ -50,7 +48,7 @@ namespace ConsoleControlLibrary.Controls
                 }
                 return;
             }
-            ///drawEngine.FillRectangle....
+            // drawEngine.FillRectangle....
             for (var i = 0; i < _visibleText.Length; i++)
             {
                 drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.ForeColorBrush, X + i, Y);

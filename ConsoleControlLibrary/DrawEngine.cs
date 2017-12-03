@@ -28,6 +28,7 @@ namespace ConsoleControlLibrary
                     break;
             }
             var csize = g.MeasureString("W", f);
+            //TODO: Detta fungerar skit. Skriv om. Sen.
             CharacterOffsetX = Math.Abs((CharacterWidth / 2.0) - (csize.Width / 2.0));
             CharacterOffsetY = Math.Abs((CharacterWidth / 2.0) - (csize.Height / 2.0));
             if (csize.Width > canvasWidth)

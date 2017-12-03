@@ -5,7 +5,7 @@ namespace ConsoleControlLibrary.Controls
 {
     public abstract class ControlBase
     {
-        public Form ParentForm { get; }
+        public ConsoleForm ParentForm { get; }
         public int TabIndex { get; set; }
         public bool CanGetFocus { get; protected set; }
         public bool HasFocus { get; internal set; }
@@ -15,7 +15,7 @@ namespace ConsoleControlLibrary.Controls
         public int Height { get; }
         private bool _enabled;
         private IDrawEngine DrawEngine { get; }
-        protected ControlBase(Form parentForm, IDrawEngine drawEngine, int x, int y, int width, int height)
+        protected ControlBase(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, int width, int height)
         {
             ParentForm = parentForm;
             DrawEngine = drawEngine;

@@ -28,22 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
+            ConsoleControlLibrary.DrawEngine drawEngine1 = new ConsoleControlLibrary.DrawEngine();
             this.consoleControl1 = new ConsoleControlLibrary.ConsoleControl();
             this.SuspendLayout();
             // 
             // consoleControl1
             // 
-            this.consoleControl1.ColumnCount = 100;
+            this.consoleControl1.ColumnCount = 80;
             this.consoleControl1.CurrentForm = null;
             this.consoleControl1.CursorPosition = 0;
             this.consoleControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.consoleControl1.DrawEngine = drawEngine1;
             this.consoleControl1.Location = new System.Drawing.Point(0, 0);
             this.consoleControl1.Name = "consoleControl1";
-            this.consoleControl1.RowCount = 50;
+            this.consoleControl1.RowCount = 40;
             this.consoleControl1.Size = new System.Drawing.Size(932, 665);
             this.consoleControl1.TabIndex = 0;
             this.consoleControl1.CurrentFormChanged += new System.EventHandler(this.consoleControl1_CurrentFormChanged);
-            this.consoleControl1.UserInput += new ConsoleControlLibrary.UserInputHandler(this.consoleControl1_UserInput);
+            this.consoleControl1.ControlEvent += new ConsoleControlLibrary.Controls.ConsoleControlEventHandler(this.consoleControl1_ControlEvent);
             // 
             // Form1
             // 
@@ -53,6 +55,7 @@
             this.Controls.Add(this.consoleControl1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }

@@ -7,7 +7,7 @@ using ConsoleControlLibrary.Controls;
 
 namespace ConsoleControlLibrary
 {
-    public class Form : IDisposable
+    public class ConsoleForm : IDisposable
     {
         protected List<ControlBase> Controls { get; }
         protected internal ControlBase CurrentControl { get; private set; }
@@ -15,7 +15,7 @@ namespace ConsoleControlLibrary
         protected ConsoleControl ParentConsole { get; }
         protected internal Brush BackColorBrush { get; }
         protected internal Brush ForeColorBrush { get; }
-        public Form(ConsoleControl parentConsole)
+        public ConsoleForm(ConsoleControl parentConsole)
         {
             BackColorBrush = new SolidBrush(ControlColorScheme.BackColor);
             ForeColorBrush = new SolidBrush(ControlColorScheme.ForeColor);

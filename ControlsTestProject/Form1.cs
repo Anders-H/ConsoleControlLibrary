@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using ConsoleControlLibrary;
+using ConsoleControlLibrary.Controls;
 
 namespace ControlsTestProject
 {
@@ -10,20 +12,8 @@ namespace ControlsTestProject
         {
             InitializeComponent();
         }
-
-        private void consoleControl1_UserInput(object sender, ConsoleControlLibrary.UserInputEventArgs e)
-        {
-            switch (e.RawInput.Trim().ToLower())
-            {
-                case "testform1":
-                    consoleControl1.CurrentForm = new TestForm1(consoleControl1, consoleControl1.DrawEngine);
-                    break;
-            }
-        }
-
-        private void consoleControl1_CurrentFormChanged(object sender, EventArgs e)
-        {
-            Debug.WriteLine("CurrentFormChanged");
-        }
+        private void consoleControl1_CurrentFormChanged(object sender, EventArgs e) => Debug.WriteLine("CurrentFormChanged");
+        private void Form1_Load(object sender, EventArgs e) => consoleControl1.CurrentForm = new ButtonsForm(consoleControl1, new DrawEngine());
+        private void consoleControl1_ControlEvent(object sender, ConsoleControlEventArgs e) => MessageBox.Show($@"{sender.GetType().Name}: {e.EventType}");
     }
 }
