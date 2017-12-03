@@ -30,6 +30,7 @@ namespace ConsoleControlLibrary
             InitializeComponent();
             InitializeConsole();
         }
+        public Font GetConsoleFont() => _font;
         public void SetText(int row, int col, string text)
         {
             if (col < 0 || col >= ColumnCount || row < 0 || row >= RowCount || string.IsNullOrEmpty(text) || text.Length <= 0)
@@ -95,7 +96,7 @@ namespace ConsoleControlLibrary
         {
             _needsRecalcSize = false;
             DrawEngine.CalculateSizes(g, ref _font, ColumnCount, RowCount, Width, Height);
-
+            System.Diagnostics.Debug.WriteLine(_font.Name);
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -151,7 +152,7 @@ namespace ConsoleControlLibrary
             if (CurrentForm?.CurrentControl != null)
             {
                 e.Handled = true;
-                CurrentForm.CurrentControl.KeyPressInfo(Keys.Enter);
+                CurrentForm.CurrentControl.KeyPressed(Keys.Enter);
                 return;
             }
             if (e.KeyChar == 13)
@@ -204,6 +205,8 @@ namespace ConsoleControlLibrary
                 case Keys.Shift | Keys.Up:
                 case Keys.Shift | Keys.Down:
                     return true;
+                case Keys.Tab:
+                    return true;
             }
             return base.IsInputKey(keyData);
         }
@@ -219,6 +222,11 @@ namespace ConsoleControlLibrary
         }
         private void ConsoleControl_KeyDown(object sender, KeyEventArgs e)
         {
+            if (CurrentForm != null)
+            {
+                CurrentForm.KeyPressed(e.KeyCode);
+                return;
+            }
             string text;
             switch (e.KeyCode)
             {
@@ -256,25 +264,19 @@ namespace ConsoleControlLibrary
                 case Keys.Right:
                     if (CursorPosition < ColumnCount - 1 && CursorPosition < LastCharacterIndex + 1)
                     {
-                        timer1.Stop();
-                        CursorBlink = true;
-                        timer1.Start();
+                        RestoreBink();
                         CursorPosition++;
                     }
                     break;
                 case Keys.Left:
                     if (CursorPosition > 0)
                     {
-                        timer1.Stop();
-                        CursorBlink = true;
-                        timer1.Start();
+                        RestoreBink();
                         CursorPosition--;
                     }
                     break;
                 case Keys.Home:
-                    timer1.Stop();
-                    CursorBlink = true;
-                    timer1.Start();
+                    RestoreBink();
                     CursorPosition = 0;
                     break;
                 case Keys.End:
@@ -285,11 +287,16 @@ namespace ConsoleControlLibrary
         }
         private void GoToEnd()
         {
+            RestoreBink();
+            var lastCharacterIndex = LastCharacterIndex;
+            CursorPosition = lastCharacterIndex < ColumnCount - 2 ? lastCharacterIndex + 1 : ColumnCount - 1;
+        }
+        public void RestoreBink()
+        {
             timer1.Stop();
             CursorBlink = true;
             timer1.Start();
-            var lastCharacterIndex = LastCharacterIndex;
-            CursorPosition = lastCharacterIndex < ColumnCount - 2 ? lastCharacterIndex + 1 : ColumnCount - 1;
+            Invalidate();
         }
         private void RestoreInput(string text)
         {

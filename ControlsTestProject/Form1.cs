@@ -16,7 +16,7 @@ namespace ControlsTestProject
             switch (e.RawInput.Trim().ToLower())
             {
                 case "testform1":
-                    consoleControl1.CurrentForm = new TestForm1(consoleControl1);
+                    consoleControl1.CurrentForm = new TestForm1(consoleControl1, consoleControl1.DrawEngine);
                     break;
             }
         }

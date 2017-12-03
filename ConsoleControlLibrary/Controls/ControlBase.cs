@@ -14,9 +14,11 @@ namespace ConsoleControlLibrary.Controls
         public int Width { get; }
         public int Height { get; }
         private bool _enabled;
-        protected ControlBase(Form parentForm, int x, int y, int width, int height)
+        private IDrawEngine DrawEngine { get; }
+        protected ControlBase(Form parentForm, IDrawEngine drawEngine, int x, int y, int width, int height)
         {
             ParentForm = parentForm;
+            DrawEngine = drawEngine;
             X = x;
             Y = y;
             Width = width;
@@ -32,7 +34,7 @@ namespace ConsoleControlLibrary.Controls
             }
         }
         protected void Invalidate() => ParentForm.Invalidate();
-        protected internal abstract void KeyPressInfo(Keys key);
+        protected internal abstract void KeyPressed(Keys key);
         protected internal abstract void Draw(Graphics g, IDrawEngine drawEngine);
     }
 }
