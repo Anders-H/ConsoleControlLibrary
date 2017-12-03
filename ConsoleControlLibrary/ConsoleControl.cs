@@ -15,12 +15,8 @@ namespace ConsoleControlLibrary
         private int _rowCount = 20;
         private int _cursorPosition;
         internal static bool CursorBlink { get; set; }
-        private double _charWidth;
-        private double _charHeight;
         private Font _font;
         private bool _needsRecalcSize;
-        private double _charOffsetX;
-        private double _charOffsetY;
         private bool _hasFocus;
         private History History { get; } = new History();
         private bool RowChanged { get; set; }
@@ -98,25 +94,8 @@ namespace ConsoleControlLibrary
         private void CalcSize(Graphics g)
         {
             _needsRecalcSize = false;
-            var width = Math.Max(Width, 30.0);
-            var height = Math.Max(Height, 30.0);
-            _charWidth = width/ColumnCount;
-            _charHeight = height/RowCount;
-            var fontSize = (float)(Math.Min(_charWidth, _charHeight) - 1);
-            for (var i = fontSize + 20; i >= fontSize; i -= 0.5f)
-            {
-                _font?.Dispose();
-                _font = new Font("Consolas", fontSize);
-                if (g.MeasureString("WM", _font).Width >= fontSize || g.MeasureString("Åj", _font).Height >= fontSize)
-                    break;
-            }
-            var csize = g.MeasureString("W", _font);
-            _charOffsetX = Math.Abs((_charWidth / 2.0) - (csize.Width / 2.0));
-            _charOffsetY = Math.Abs((_charHeight / 2.0) - (csize.Height / 2.0));
-            if (csize.Width > _charWidth)
-                _charOffsetX = -_charOffsetX;
-            if (csize.Height > _charHeight)
-                _charOffsetY = -_charOffsetY;
+            DrawEngine.CalculateSizes(g, ref _font, ColumnCount, RowCount, Width, Height);
+
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -137,14 +116,14 @@ namespace ConsoleControlLibrary
             }
             if (_needsRecalcSize)
                 CalcSize(e.Graphics);
-            if (CurrentForm != null)
-            {
+            if (CurrentForm == null)
+                DrawTextConsole(e.Graphics);
+            else
                 CurrentForm.Draw(e.Graphics, DrawEngine);
-                return;
-            }
-            e.Graphics.Clear(BackColor);
-            var xpos = 0.0;
-            var ypos = 0.0;
+        }
+        private void DrawTextConsole(Graphics g)
+        {
+            g.Clear(BackColor);
             var cursy = RowCount - 1;
             using (var b = new SolidBrush(ForeColor))
             {
@@ -153,20 +132,17 @@ namespace ConsoleControlLibrary
                     for (var x = 0; x < ColumnCount; x++)
                     {
                         if (_characterArray[y, x] > 0 && _characterArray[y, x] != ' ')
-                            e.Graphics.DrawString(_characterArray[y, x].ToString(), _font, b, (float)(xpos + _charOffsetX), (float)(ypos + _charOffsetY));
+                            DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, b, x, y);
                         if (_hasFocus && CursorBlink && x == _cursorPosition && y == cursy)
                         {
-                            e.Graphics.FillRectangle(b, (float)xpos, (float)ypos, (float)_charWidth, (float)_charHeight);
+                            DrawEngine.DrawCursor(g, b, x, y);
                             using (var bb = new SolidBrush(BackColor))
-                                e.Graphics.DrawString(_characterArray[y, x].ToString(), _font, bb, (float)(xpos + _charOffsetX), (float)(ypos + _charOffsetY));
+                                DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, bb, x, y);
                         }
                         else if (!_hasFocus && x == _cursorPosition && y == cursy)
                             using (var p = new Pen(ForeColor))
-                                e.Graphics.DrawRectangle(p, (float)xpos, (float)ypos, (float)_charWidth, (float)_charHeight);
-                        xpos += _charWidth;
+                                DrawEngine.DrawCursor(g, p, x, y);
                     }
-                    xpos = 0.0;
-                    ypos += _charHeight;
                 }
             }
         }
