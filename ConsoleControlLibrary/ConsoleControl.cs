@@ -220,6 +220,8 @@ namespace ConsoleControlLibrary
         {
             if (CurrentForm != null)
             {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
                 CurrentForm.KeyPressed(e.KeyCode);
                 return;
             }
@@ -404,17 +406,5 @@ namespace ConsoleControlLibrary
             }
         }
         internal void TriggerEvent(object sender, ConsoleControlEventArgs e) => ControlEvent?.Invoke(sender, e);
-        private void ConsoleControl_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (CurrentForm?.CurrentControl == null)
-                return;
-            e.Handled = true;
-            e.SuppressKeyPress = true;
-            CurrentForm.CurrentControl.KeyPressed(e.KeyCode);
-        }
-        private void ConsoleControl_MouseClick(object sender, MouseEventArgs e)
-        {
-
-        }
     }
 }

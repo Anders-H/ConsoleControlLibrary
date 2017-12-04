@@ -12,6 +12,7 @@ namespace ConsoleControlLibrary.Controls
             Text = text ?? "";
             CanGetFocus = true;
             Enabled = true;
+            Visible = true;
         }
 
         public string Text
@@ -51,7 +52,7 @@ namespace ConsoleControlLibrary.Controls
             // drawEngine.FillRectangle....
             for (var i = 0; i < _visibleText.Length; i++)
             {
-                drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.ForeColorBrush, X + i, Y);
+                drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.DisabledForeColorBrush, X + i, Y);
             }
         }
     }

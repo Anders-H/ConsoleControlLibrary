@@ -14,7 +14,9 @@ namespace ConsoleControlLibrary.Controls
         public int Width { get; }
         public int Height { get; }
         private bool _enabled;
+        private bool _visible;
         private IDrawEngine DrawEngine { get; }
+        
         protected ControlBase(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, int width, int height)
         {
             ParentForm = parentForm;
@@ -30,6 +32,19 @@ namespace ConsoleControlLibrary.Controls
             set
             {
                 _enabled = value;
+                if (!_enabled)
+                    ParentForm.FocusNextControl();
+                Invalidate();
+            }
+        }
+        public bool Visible
+        {
+            get => _visible;
+            set
+            {
+                _visible = value;
+                if (!_visible)
+                    ParentForm.FocusNextControl();
                 Invalidate();
             }
         }

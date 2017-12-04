@@ -45,7 +45,6 @@
             this.consoleControl1.Size = new System.Drawing.Size(932, 665);
             this.consoleControl1.TabIndex = 0;
             this.consoleControl1.CurrentFormChanged += new System.EventHandler(this.consoleControl1_CurrentFormChanged);
-            this.consoleControl1.ControlEvent += new ConsoleControlLibrary.Controls.ConsoleControlEventHandler(this.consoleControl1_ControlEvent);
             // 
             // Form1
             // 

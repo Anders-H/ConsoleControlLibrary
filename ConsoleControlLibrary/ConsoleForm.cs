@@ -15,10 +15,12 @@ namespace ConsoleControlLibrary
         protected ConsoleControl ParentConsole { get; }
         protected internal Brush BackColorBrush { get; }
         protected internal Brush ForeColorBrush { get; }
+        protected internal Brush DisabledForeColorBrush { get; }
         public ConsoleForm(ConsoleControl parentConsole)
         {
             BackColorBrush = new SolidBrush(ControlColorScheme.BackColor);
             ForeColorBrush = new SolidBrush(ControlColorScheme.ForeColor);
+            DisabledForeColorBrush = new SolidBrush(ControlColorScheme.DisabledForeColor);
             ParentConsole = parentConsole;
             Controls = new List<ControlBase>();
         }
@@ -42,20 +44,29 @@ namespace ConsoleControlLibrary
                 FocusNextControl();
         }
         internal void Invalidate() => ParentConsole.Invalidate();
-        internal void TriggerEvent(object sender, ConsoleControlEventArgs e) => ParentConsole.TriggerEvent(sender, e);
+        internal void TriggerEvent(object sender, ConsoleControlEventArgs e)
+        {
+            EventOccured(sender, e);
+            ParentConsole.TriggerEvent(sender, e);
+        }
         internal void Draw(Graphics g, IDrawEngine drawEngine)
         {
             g.Clear(ControlColorScheme.BackColor);
-            Controls.ForEach(x => x.Draw(g, drawEngine));
+            Controls.Where(x => x.Visible).ToList().ForEach(x => x.Draw(g, drawEngine));
         }
         internal void KeyPressed(Keys key)
         {
             if (key == Keys.Tab)
+            {
                 FocusNextControl();
-            else
-                CurrentControl?.KeyPressed(key);
+                return;
+            }
+            if (CurrentControl == null)
+                return;
+            if (CurrentControl.Visible && CurrentControl.Enabled)
+                CurrentControl.KeyPressed(key);
         }
-        private void FocusNextControl()
+        protected internal void FocusNextControl()
         {
             if (Controls.Count <= 0)
                 return;
@@ -78,5 +89,6 @@ namespace ConsoleControlLibrary
             } while (nextindex != startindex);
         }
         internal Font Font => ParentConsole.GetConsoleFont();
+        protected virtual void EventOccured(object sender, ConsoleControlEventArgs e) { }
     }
 }
