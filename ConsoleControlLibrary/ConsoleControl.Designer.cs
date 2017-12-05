@@ -49,6 +49,7 @@
             this.Enter += new System.EventHandler(this.ConsoleControl_Enter);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConsoleControl_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ConsoleControl_KeyPress);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ConsoleControl_KeyUp);
             this.Leave += new System.EventHandler(this.ConsoleControl_Leave);
             this.Resize += new System.EventHandler(this.ConsoleControl_Resize);
             this.ResumeLayout(false);

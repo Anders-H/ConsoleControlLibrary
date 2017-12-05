@@ -25,6 +25,7 @@ namespace ConsoleControlLibrary
         public event UserInputHandler UserInput;
         public event ConsoleControlEventHandler ControlEvent;
         public IDrawEngine DrawEngine { get; set; } = new DrawEngine();
+        internal bool ShiftKey { get; private set; }
         public ConsoleControl()
         {
             InitializeComponent();
@@ -191,6 +192,8 @@ namespace ConsoleControlLibrary
         {
             switch (keyData)
             {
+                case Keys.Shift:
+                    return true;
                 case Keys.Right:
                 case Keys.Left:
                 case Keys.Up:
@@ -202,6 +205,7 @@ namespace ConsoleControlLibrary
                 case Keys.Shift | Keys.Down:
                     return true;
                 case Keys.Tab:
+                case Keys.Shift | Keys.Tab:
                     return true;
             }
             return base.IsInputKey(keyData);
@@ -218,6 +222,8 @@ namespace ConsoleControlLibrary
         }
         private void ConsoleControl_KeyDown(object sender, KeyEventArgs e)
         {
+            if (((int)e.KeyCode & (int)Keys.Shift) > 0)
+                ShiftKey = true;
             if (CurrentForm != null)
             {
                 e.Handled = true;
@@ -406,5 +412,10 @@ namespace ConsoleControlLibrary
             }
         }
         internal void TriggerEvent(object sender, ConsoleControlEventArgs e) => ControlEvent?.Invoke(sender, e);
+        private void ConsoleControl_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (((int)e.KeyCode & (int)Keys.Shift) > 0)
+                ShiftKey = false;
+        }
     }
 }

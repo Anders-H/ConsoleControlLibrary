@@ -56,15 +56,40 @@ namespace ConsoleControlLibrary
         }
         internal void KeyPressed(Keys key)
         {
-            if (key == Keys.Tab)
+            if (((int)key & (int)Keys.Tab) > 0)
             {
-                FocusNextControl();
+                if (ParentConsole.ShiftKey)
+                    FocusPreviousControl();
+                else
+                    FocusNextControl();
                 return;
             }
             if (CurrentControl == null)
                 return;
             if (CurrentControl.Visible && CurrentControl.Enabled)
                 CurrentControl.KeyPressed(key);
+        }
+        protected internal void FocusPreviousControl()
+        {
+            if (Controls.Count <= 0)
+                return;
+            Controls.ForEach(x => x.HasFocus = false);
+            var startindex = CurrentControlIndex;
+            var nextindex = CurrentControlIndex;
+            do
+            {
+                nextindex--;
+                if (nextindex < 0)
+                    nextindex = Controls.Count - 1;
+                if (Controls[nextindex].Enabled && Controls[nextindex].CanGetFocus)
+                {
+                    CurrentControlIndex = nextindex;
+                    CurrentControl = Controls[nextindex];
+                    CurrentControl.HasFocus = true;
+                    ParentConsole.RestoreBink();
+                    break;
+                }
+            } while (nextindex != startindex);
         }
         protected internal void FocusNextControl()
         {
