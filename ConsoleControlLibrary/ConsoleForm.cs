@@ -81,7 +81,7 @@ namespace ConsoleControlLibrary
                 nextindex--;
                 if (nextindex < 0)
                     nextindex = Controls.Count - 1;
-                if (Controls[nextindex].Enabled && Controls[nextindex].CanGetFocus)
+                if (Controls[nextindex].Enabled && Controls[nextindex].Visible && Controls[nextindex].CanGetFocus)
                 {
                     CurrentControlIndex = nextindex;
                     CurrentControl = Controls[nextindex];
@@ -103,7 +103,7 @@ namespace ConsoleControlLibrary
                 nextindex++;
                 if (nextindex >= Controls.Count)
                     nextindex = 0;
-                if (Controls[nextindex].Enabled && Controls[nextindex].CanGetFocus)
+                if (Controls[nextindex].Enabled && Controls[nextindex].Visible && Controls[nextindex].CanGetFocus)
                 {
                     CurrentControlIndex = nextindex;
                     CurrentControl = Controls[nextindex];
