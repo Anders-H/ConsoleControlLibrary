@@ -54,11 +54,11 @@ namespace ConsoleControlLibrary
             g.Clear(ControlColorScheme.BackColor);
             Controls.Where(x => x.Visible).ToList().ForEach(x => x.Draw(g, drawEngine));
         }
-        internal void KeyPressed(Keys key)
+        internal void KeyPressed(Keys key, bool shift)
         {
-            if (((int)key & (int)Keys.Tab) > 0)
+            if (key == Keys.Tab)
             {
-                if (ParentConsole.ShiftKey)
+                if (shift)
                     FocusPreviousControl();
                 else
                     FocusNextControl();

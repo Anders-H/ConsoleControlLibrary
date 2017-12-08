@@ -25,7 +25,7 @@ namespace ConsoleControlLibrary
         public event UserInputHandler UserInput;
         public event ConsoleControlEventHandler ControlEvent;
         public IDrawEngine DrawEngine { get; set; } = new DrawEngine();
-        internal bool ShiftKey { get; private set; }
+        private bool ShiftKey { get; set; }
         public ConsoleControl()
         {
             InitializeComponent();
@@ -222,13 +222,17 @@ namespace ConsoleControlLibrary
         }
         private void ConsoleControl_KeyDown(object sender, KeyEventArgs e)
         {
-            if (((int)e.KeyCode & (int)Keys.Shift) > 0)
+            if (e.KeyCode == Keys.ShiftKey)
+            {
                 ShiftKey = true;
+                return;
+            }
             if (CurrentForm != null)
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
-                CurrentForm.KeyPressed(e.KeyCode);
+                System.Diagnostics.Debug.WriteLine(ShiftKey);
+                CurrentForm.KeyPressed(e.KeyCode, ShiftKey);
                 return;
             }
             string text;
@@ -414,7 +418,7 @@ namespace ConsoleControlLibrary
         internal void TriggerEvent(object sender, ConsoleControlEventArgs e) => ControlEvent?.Invoke(sender, e);
         private void ConsoleControl_KeyUp(object sender, KeyEventArgs e)
         {
-            if (((int)e.KeyCode & (int)Keys.Shift) > 0)
+            if (e.KeyCode == Keys.ShiftKey)
                 ShiftKey = false;
         }
     }
