@@ -15,6 +15,10 @@ namespace ConsoleControlLibrary.Controls
             Visible = true;
         }
 
+        public Button(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, int width, string text) : this(parentForm, drawEngine, x, y, width, 1, text) { }
+
+        public Button(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, string text) : this(parentForm, drawEngine, x, y, text.Length, 1, text) { }
+
         public string Text
         {
             get => _text;

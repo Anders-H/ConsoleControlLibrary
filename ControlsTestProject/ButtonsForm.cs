@@ -11,13 +11,13 @@ namespace ControlsTestProject
         private Button _button4;
         public ButtonsForm(ConsoleControl parentConsole, IDrawEngine drawEngine) : base(parentConsole)
         {
-            _button1 = new Button(this, drawEngine, 10, 10, 20, 1, "Disable me");
+            _button1 = new Button(this, drawEngine, 10, 10, "Disable me");
             AddControl(_button1);
-            _button2 = new Button(this, drawEngine, 10, 11, 20, 1, "Hide me");
+            _button2 = new Button(this, drawEngine, 10, 11, "Hide me");
             AddControl(_button2);
-            _button3 = new Button(this, drawEngine, 10, 12, 20, 1, "Restore");
+            _button3 = new Button(this, drawEngine, 10, 12, "Restore");
             AddControl(_button3);
-            _button4 = new Button(this, drawEngine, 10, 13, 20, 1, "To checkboxes form");
+            _button4 = new Button(this, drawEngine, 10, 13, "To checkboxes form");
             AddControl(_button4);
         }
         protected override void EventOccured(object sender, ConsoleControlEventArgs e)
