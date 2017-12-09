@@ -1,14 +1,15 @@
 ﻿using ConsoleControlLibrary;
 using ConsoleControlLibrary.Controls;
+using ConsoleControlLibrary.Controls.Events;
 
 namespace ControlsTestProject
 {
     public class ButtonsForm : ConsoleForm
     {
-        private Button _button1;
-        private Button _button2;
-        private Button _button3;
-        private Button _button4;
+        private readonly Button _button1;
+        private readonly Button _button2;
+        private readonly Button _button3;
+        private readonly Button _button4;
         public ButtonsForm(ConsoleControl parentConsole, IDrawEngine drawEngine) : base(parentConsole)
         {
             _button1 = new Button(this, drawEngine, 10, 10, "Disable me");
@@ -37,6 +38,10 @@ namespace ControlsTestProject
                 _button1.Enabled = true;
                 _button2.Visible = true;
                 return;
+            }
+            if (sender == _button4)
+            {
+                ParentConsole.CurrentForm = new CheckboxesForm(ParentConsole, ParentConsole.DrawEngine);
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
+using ConsoleControlLibrary.Controls.Events;
 
-namespace ConsoleControlLibrary.Controls
+namespace ConsoleControlLibrary.Controls.Events
 {
     public class ConsoleControlEventArgs : EventArgs
     {

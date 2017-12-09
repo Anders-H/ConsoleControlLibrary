@@ -1,4 +1,4 @@
-﻿namespace ConsoleControlLibrary.Controls
+﻿namespace ConsoleControlLibrary.Controls.Events
 {
     public delegate void ConsoleControlEventHandler(object sender, ConsoleControlEventArgs e);
 }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using ConsoleControlLibrary.Controls;
+using ConsoleControlLibrary.Controls.Events;
+using ConsoleControlLibrary.Controls.BaseTypes;
 
 namespace ConsoleControlLibrary
 {

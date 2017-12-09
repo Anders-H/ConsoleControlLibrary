@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace ConsoleControlLibrary.Controls
+namespace ConsoleControlLibrary.Controls.BaseTypes
 {
     public abstract class ControlBase
     {
@@ -32,7 +32,7 @@ namespace ConsoleControlLibrary.Controls
             set
             {
                 _enabled = value;
-                if (!_enabled)
+                if (!_enabled && HasFocus)
                     ParentForm.FocusNextControl();
                 Invalidate();
             }
@@ -43,7 +43,7 @@ namespace ConsoleControlLibrary.Controls
             set
             {
                 _visible = value;
-                if (!_visible)
+                if (!_visible && HasFocus)
                     ParentForm.FocusNextControl();
                 Invalidate();
             }

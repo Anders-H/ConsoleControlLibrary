@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using ConsoleControlLibrary.Controls.BaseTypes;
+using ConsoleControlLibrary.Controls.Events;
 
 namespace ConsoleControlLibrary.Controls
 {
@@ -14,11 +16,8 @@ namespace ConsoleControlLibrary.Controls
             Enabled = true;
             Visible = true;
         }
-
         public Button(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, int width, string text) : this(parentForm, drawEngine, x, y, width, 1, text) { }
-
         public Button(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, string text) : this(parentForm, drawEngine, x, y, text.Length, 1, text) { }
-
         public string Text
         {
             get => _text;
@@ -53,7 +52,6 @@ namespace ConsoleControlLibrary.Controls
                 }
                 return;
             }
-            // drawEngine.FillRectangle....
             for (var i = 0; i < _visibleText.Length; i++)
             {
                 drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.DisabledForeColorBrush, X + i, Y);

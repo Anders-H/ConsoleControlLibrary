@@ -49,10 +49,11 @@
     </Compile>
     <Compile Include="ControlColorScheme.cs" />
     <Compile Include="Controls\Button.cs" />
-    <Compile Include="Controls\ControlBase.cs" />
-    <Compile Include="Controls\ConsoleControlEventArgs.cs" />
-    <Compile Include="Controls\ConsoleControlEventHandler.cs" />
-    <Compile Include="Controls\ConsoleControlEventType.cs" />
+    <Compile Include="Controls\Checkbox.cs" />
+    <Compile Include="Controls\BaseTypes\ControlBase.cs" />
+    <Compile Include="Controls\Events\ConsoleControlEventArgs.cs" />
+    <Compile Include="Controls\Events\ConsoleControlEventHandler.cs" />
+    <Compile Include="Controls\Events\ConsoleControlEventType.cs" />
     <Compile Include="DrawEngine.cs" />
     <Compile Include="ConsoleForm.cs" />
     <Compile Include="History.cs" />
