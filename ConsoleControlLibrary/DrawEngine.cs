@@ -39,10 +39,8 @@ namespace ConsoleControlLibrary
 
         public void DrawCharacter(Graphics g, char c, Font f, Brush b, int x, int y) =>
             g.DrawString(c.ToString(), f, b, (float)(x * CharacterWidth + CharacterOffsetX), (float)(y * CharacterHeight + CharacterOffsetY));
-
         public void DrawCursor(Graphics g, Brush b, int x, int y) =>
             g.FillRectangle(b, (float)(x * CharacterWidth + CharacterOffsetX), (float)(y * CharacterHeight + CharacterOffsetY), (float)CharacterWidth, (float)CharacterHeight);
-
         public void DrawCursor(Graphics g, Pen p, int x, int y) =>
             g.DrawRectangle(p, (float)(x * CharacterWidth + CharacterOffsetX), (float)(y * CharacterHeight + CharacterOffsetY), (float)CharacterWidth, (float)CharacterHeight);
     }

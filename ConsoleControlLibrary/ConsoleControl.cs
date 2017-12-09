@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.Events;
 
 namespace ConsoleControlLibrary
@@ -113,21 +112,28 @@ namespace ConsoleControlLibrary
         private void ConsoleControl_Paint(object sender, PaintEventArgs e)
         {
             if (DesignMode)
-            {
-                e.Graphics.Clear(BackColor);
                 return;
-            }
             if (_needsRecalcSize)
                 CalcSize(e.Graphics);
             if (CurrentForm == null)
+            {
+                e.Graphics.Clear(BackColor);
                 DrawTextConsole(e.Graphics);
+            }
             else
+            {
                 CurrentForm.Draw(e.Graphics, DrawEngine);
+            }
         }
         private void DrawTextConsole(Graphics g)
         {
             g.Clear(BackColor);
             var cursy = RowCount - 1;
+#if DEBUG
+            for (var y = 0; y < _rowCount; y++)
+                for (var x = 0; x < _columnCount; x++)
+                    DrawEngine.DrawCursor(g, Pens.DarkRed, x, y);
+#endif
             using (var b = new SolidBrush(ForeColor))
             {
                 for (var y = 0; y < RowCount; y++)
