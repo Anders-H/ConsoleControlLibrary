@@ -1,5 +1,4 @@
 ﻿using System;
-using ConsoleControlLibrary.Controls.Events;
 
 namespace ConsoleControlLibrary.Controls.Events
 {

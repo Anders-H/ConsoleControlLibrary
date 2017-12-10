@@ -129,11 +129,6 @@ namespace ConsoleControlLibrary
         {
             g.Clear(BackColor);
             var cursy = RowCount - 1;
-#if DEBUG
-            for (var y = 0; y < _rowCount; y++)
-                for (var x = 0; x < _columnCount; x++)
-                    DrawEngine.DrawCursor(g, Pens.DarkRed, x, y);
-#endif
             using (var b = new SolidBrush(ForeColor))
             {
                 for (var y = 0; y < RowCount; y++)
@@ -238,7 +233,6 @@ namespace ConsoleControlLibrary
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
-                System.Diagnostics.Debug.WriteLine(ShiftKey);
                 CurrentForm.KeyPressed(e.KeyCode, ShiftKey);
                 return;
             }
@@ -279,19 +273,19 @@ namespace ConsoleControlLibrary
                 case Keys.Right:
                     if (CursorPosition < ColumnCount - 1 && CursorPosition < LastCharacterIndex + 1)
                     {
-                        RestoreBink();
+                        RestoreBlink();
                         CursorPosition++;
                     }
                     break;
                 case Keys.Left:
                     if (CursorPosition > 0)
                     {
-                        RestoreBink();
+                        RestoreBlink();
                         CursorPosition--;
                     }
                     break;
                 case Keys.Home:
-                    RestoreBink();
+                    RestoreBlink();
                     CursorPosition = 0;
                     break;
                 case Keys.End:
@@ -302,11 +296,11 @@ namespace ConsoleControlLibrary
         }
         private void GoToEnd()
         {
-            RestoreBink();
+            RestoreBlink();
             var lastCharacterIndex = LastCharacterIndex;
             CursorPosition = lastCharacterIndex < ColumnCount - 2 ? lastCharacterIndex + 1 : ColumnCount - 1;
         }
-        public void RestoreBink()
+        public void RestoreBlink()
         {
             timer1.Stop();
             CursorBlink = true;
@@ -427,6 +421,19 @@ namespace ConsoleControlLibrary
         {
             if (e.KeyCode == Keys.ShiftKey)
                 ShiftKey = false;
+        }
+        private void ConsoleControl_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (CurrentForm == null)
+                return;
+            var point = DrawEngine.PhysicalCoordinateToFormCoordinate(e.X, e.Y);
+            if (point == null)
+                return;
+            var hit = CurrentForm.GetControlAt(point.Item1, point.Item2);
+            if (hit == null)
+                return;
+            CurrentForm.SetFocus(hit);
+            CurrentForm.KeyPressed(Keys.Enter, ShiftKey);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls.BaseTypes;
-using ConsoleControlLibrary.Controls.Events;
 
 namespace ConsoleControlLibrary.Controls
 {

@@ -30,10 +30,7 @@ namespace ConsoleControlLibrary
             BackColorBrush.Dispose();
             ForeColorBrush.Dispose();
         }
-        public void AddControl(ControlBase control)
-        {
-            Controls.Add(control);
-        }
+        public void AddControl(ControlBase control) => Controls.Add(control);
         public void Run()
         {
             if (Controls.Count <= 0)
@@ -70,6 +67,13 @@ namespace ConsoleControlLibrary
             if (CurrentControl.Visible && CurrentControl.Enabled)
                 CurrentControl.KeyPressed(key);
         }
+        public void SetFocus(ControlBase control)
+        {
+            Controls.ForEach(x => x.HasFocus = false);
+            CurrentControl = control;
+            CurrentControl.HasFocus = true;
+            ParentConsole.RestoreBlink();
+        }
         protected internal void FocusPreviousControl()
         {
             if (Controls.Count <= 0)
@@ -82,14 +86,13 @@ namespace ConsoleControlLibrary
                 nextindex--;
                 if (nextindex < 0)
                     nextindex = Controls.Count - 1;
-                if (Controls[nextindex].Enabled && Controls[nextindex].Visible && Controls[nextindex].CanGetFocus)
-                {
-                    CurrentControlIndex = nextindex;
-                    CurrentControl = Controls[nextindex];
-                    CurrentControl.HasFocus = true;
-                    ParentConsole.RestoreBink();
-                    break;
-                }
+                if (!Controls[nextindex].Enabled || !Controls[nextindex].Visible || !Controls[nextindex].CanGetFocus)
+                    continue;
+                CurrentControlIndex = nextindex;
+                CurrentControl = Controls[nextindex];
+                CurrentControl.HasFocus = true;
+                ParentConsole.RestoreBlink();
+                break;
             } while (nextindex != startindex);
         }
         protected internal void FocusNextControl()
@@ -104,17 +107,17 @@ namespace ConsoleControlLibrary
                 nextindex++;
                 if (nextindex >= Controls.Count)
                     nextindex = 0;
-                if (Controls[nextindex].Enabled && Controls[nextindex].Visible && Controls[nextindex].CanGetFocus)
-                {
-                    CurrentControlIndex = nextindex;
-                    CurrentControl = Controls[nextindex];
-                    CurrentControl.HasFocus = true;
-                    ParentConsole.RestoreBink();
-                    break;
-                }
+                if (!Controls[nextindex].Enabled || !Controls[nextindex].Visible || !Controls[nextindex].CanGetFocus)
+                    continue;
+                CurrentControlIndex = nextindex;
+                CurrentControl = Controls[nextindex];
+                CurrentControl.HasFocus = true;
+                ParentConsole.RestoreBlink();
+                break;
             } while (nextindex != startindex);
         }
         internal Font Font => ParentConsole.GetConsoleFont();
         protected virtual void EventOccured(object sender, ConsoleControlEventArgs e) { }
+        public ControlBase GetControlAt(int x, int y) => Controls.FirstOrDefault(c => c.Enabled && c.CanGetFocus);
     }
 }

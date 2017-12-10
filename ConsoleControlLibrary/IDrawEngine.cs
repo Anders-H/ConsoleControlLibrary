@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace ConsoleControlLibrary
 {
@@ -14,5 +15,6 @@ namespace ConsoleControlLibrary
         void DrawCharacter(Graphics g, char c, Font f, Brush b, int x, int y);
         void DrawCursor(Graphics g, Brush b, int x, int y);
         void DrawCursor(Graphics g, Pen p, int x, int y);
+        Tuple<int, int> PhysicalCoordinateToFormCoordinate(int x, int y);
     }
 }
