@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using ConsoleControlLibrary;
-using ConsoleControlLibrary.Controls;
 
 namespace ControlsTestProject
 {

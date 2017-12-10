@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Drawing;
 
 namespace ConsoleControlLibrary
@@ -28,20 +29,15 @@ namespace ConsoleControlLibrary
                     break;
             }
             var csize = g.MeasureString("W", f);
-            //TODO: Detta fungerar skit. Skriv om. Sen.
-            CharacterOffsetX = Math.Abs((CharacterWidth / 2.0) - (csize.Width / 2.0));
-            CharacterOffsetY = Math.Abs((CharacterWidth / 2.0) - (csize.Height / 2.0));
-            if (csize.Width > canvasWidth)
-                CharacterOffsetX = -CharacterOffsetX;
-            if (csize.Height > canvasHeight)
-                CharacterOffsetY = -CharacterOffsetY;
+            CharacterOffsetX = (CharacterWidth / 2.0) - (csize.Width / 2.0);
+            CharacterOffsetY = (CharacterHeight / 2.0) - (csize.Height / 2.0);
         }
 
         public void DrawCharacter(Graphics g, char c, Font f, Brush b, int x, int y) =>
             g.DrawString(c.ToString(), f, b, (float)(x * CharacterWidth + CharacterOffsetX), (float)(y * CharacterHeight + CharacterOffsetY));
         public void DrawCursor(Graphics g, Brush b, int x, int y) =>
-            g.FillRectangle(b, (float)(x * CharacterWidth + CharacterOffsetX), (float)(y * CharacterHeight + CharacterOffsetY), (float)CharacterWidth, (float)CharacterHeight);
+            g.FillRectangle(b, (float)(x * CharacterWidth), (float)(y * CharacterHeight), (float)CharacterWidth, (float)CharacterHeight);
         public void DrawCursor(Graphics g, Pen p, int x, int y) =>
-            g.DrawRectangle(p, (float)(x * CharacterWidth + CharacterOffsetX), (float)(y * CharacterHeight + CharacterOffsetY), (float)CharacterWidth, (float)CharacterHeight);
+            g.DrawRectangle(p, (float)(x * CharacterWidth), (float)(y * CharacterHeight), (float)CharacterWidth, (float)CharacterHeight);
     }
 }
