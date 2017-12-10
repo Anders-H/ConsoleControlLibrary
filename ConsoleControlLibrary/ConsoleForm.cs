@@ -53,11 +53,6 @@ namespace ConsoleControlLibrary
         internal void Draw(Graphics g, IDrawEngine drawEngine)
         {
             g.Clear(ControlColorScheme.BackColor);
-#if DEBUG
-            for (var y = 0; y < ParentConsole.RowCount; y++)
-                for (var x = 0; x < ParentConsole.ColumnCount; x++)
-                    drawEngine.DrawCursor(g, Pens.DarkRed, x, y);
-#endif
             Controls.Where(x => x.Visible).ToList().ForEach(x => x.Draw(g, drawEngine));
         }
         internal void KeyPressed(Keys key, bool shift)

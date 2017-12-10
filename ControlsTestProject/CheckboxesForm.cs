@@ -11,11 +11,11 @@ namespace ControlsTestProject
         private readonly Button _button;
         public CheckboxesForm(ConsoleControl parentConsole, IDrawEngine drawEngine) : base(parentConsole)
         {
+            AddControl(new Label(this, drawEngine, 10, 8, "Two checkboxes and a button:"));
             _checkbox1 = new Checkbox(this, drawEngine, true, 10, 10, "Enable button");
             AddControl(_checkbox1);
             _checkbox2 = new Checkbox(this, drawEngine, true, 10, 11, "Show button");
             AddControl(_checkbox2);
-
             _button = new Button(this, drawEngine, 10, 13, "To buttons form");
             AddControl(_button);
         }
@@ -33,7 +33,7 @@ namespace ControlsTestProject
             }
             if (sender == _button)
             {
-                ParentConsole.CurrentForm = new CheckboxesForm(ParentConsole, ParentConsole.DrawEngine);
+                ParentConsole.CurrentForm = new ButtonsForm(ParentConsole, ParentConsole.DrawEngine);
             }
         }
     }

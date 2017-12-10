@@ -12,6 +12,7 @@ namespace ControlsTestProject
         private readonly Button _button4;
         public ButtonsForm(ConsoleControl parentConsole, IDrawEngine drawEngine) : base(parentConsole)
         {
+            AddControl(new Label(this, drawEngine, 10, 8, "Four buttons:"));
             _button1 = new Button(this, drawEngine, 10, 10, "Disable me");
             AddControl(_button1);
             _button2 = new Button(this, drawEngine, 10, 11, "Hide me");

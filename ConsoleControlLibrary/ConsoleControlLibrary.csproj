@@ -54,6 +54,7 @@
     <Compile Include="Controls\Events\ConsoleControlEventArgs.cs" />
     <Compile Include="Controls\Events\ConsoleControlEventHandler.cs" />
     <Compile Include="Controls\Events\ConsoleControlEventType.cs" />
+    <Compile Include="Controls\Label.cs" />
     <Compile Include="DrawEngine.cs" />
     <Compile Include="ConsoleForm.cs" />
     <Compile Include="History.cs" />
