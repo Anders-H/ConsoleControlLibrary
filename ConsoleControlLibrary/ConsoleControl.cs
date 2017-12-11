@@ -342,7 +342,7 @@ namespace ConsoleControlLibrary
         }
         public void WriteText(int msDelay, string text)
         {
-            var rows = WordWrap((text ?? "").Trim()).Split('\n');
+            var rows = WordWrapper.WordWrap(ColumnCount, (text ?? "").Trim()).Split('\n');
             timer1.Enabled = false;
             CursorBlink = false;
             foreach (var row in rows)
@@ -362,46 +362,6 @@ namespace ConsoleControlLibrary
                 Invalidate();
             }
             timer1.Enabled = true;
-        }
-        private string WordWrap(string text)
-        {
-            int Break(string breakText, int breakPos, int max)
-            {
-                var position = max;
-                while (position >= 0 && !char.IsWhiteSpace(breakText[breakPos + position]))
-                    position--;
-                if (position < 0)
-                    return max;
-                while (position >= 0 && char.IsWhiteSpace(breakText[breakPos + position]))
-                    position--;
-                return position + 1;
-            }
-            int wordBreak;
-            var s = new StringBuilder();
-            for (var charPointer = 0; charPointer < text.Length; charPointer = wordBreak)
-            {
-                var endOfLine = text.IndexOf("\r\n", charPointer, StringComparison.Ordinal);
-                if (endOfLine < 0)
-                    endOfLine = text.Length;
-                wordBreak = endOfLine < 0 ? text.Length : endOfLine + 2;
-                if (endOfLine > charPointer)
-                {
-                    do
-                    {
-                        var length = endOfLine - charPointer;
-                        if (length > ColumnCount)
-                            length = Break(text, charPointer, ColumnCount);
-                        s.Append(text, charPointer, length);
-                        s.AppendLine();
-                        charPointer += length;
-                        while (charPointer < endOfLine && char.IsWhiteSpace(text[charPointer]))
-                            charPointer++;
-                    } while (endOfLine > charPointer);
-                    continue;
-                }
-                s.AppendLine();
-            }
-            return s.ToString();
         }
         public ConsoleForm CurrentForm
         {

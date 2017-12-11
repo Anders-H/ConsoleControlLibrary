@@ -55,6 +55,7 @@
     <Compile Include="Controls\Events\ConsoleControlEventHandler.cs" />
     <Compile Include="Controls\Events\ConsoleControlEventType.cs" />
     <Compile Include="Controls\Label.cs" />
+    <Compile Include="Controls\TextBlock.cs" />
     <Compile Include="DrawEngine.cs" />
     <Compile Include="ConsoleForm.cs" />
     <Compile Include="History.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInputEventArgs.cs" />
     <Compile Include="UserInputHandler.cs" />
+    <Compile Include="WordWrapper.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>

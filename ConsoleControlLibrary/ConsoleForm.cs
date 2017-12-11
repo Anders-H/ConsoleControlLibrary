@@ -119,6 +119,6 @@ namespace ConsoleControlLibrary
         }
         internal Font Font => ParentConsole.GetConsoleFont();
         protected virtual void EventOccured(object sender, ConsoleControlEventArgs e) { }
-        public ControlBase GetControlAt(int x, int y) => Controls.FirstOrDefault(c => c.HitTest(x, y) && c.Enabled && c.CanGetFocus);
+        public ControlBase GetControlAt(int x, int y) => Controls.FirstOrDefault(c => c.HitTest(x, y) && c.Enabled && c.CanGetFocus && c.Visible);
     }
 }
