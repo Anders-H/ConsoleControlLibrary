@@ -30,6 +30,7 @@ namespace ConsoleControlLibrary
             BackColorBrush.Dispose();
             ForeColorBrush.Dispose();
         }
+        internal void HideCursor() => ParentConsole.HideCursor();
         public void AddControl(ControlBase control) => Controls.Add(control);
         public void Run()
         {
@@ -42,6 +43,7 @@ namespace ConsoleControlLibrary
                 FocusNextControl();
         }
         internal void Invalidate() => ParentConsole.Invalidate();
+        internal void Refresh() => ParentConsole.Refresh();
         internal void TriggerEvent(object sender, ConsoleControlEventArgs e)
         {
             EventOccured(sender, e);

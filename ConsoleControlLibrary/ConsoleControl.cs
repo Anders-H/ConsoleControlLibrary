@@ -31,6 +31,7 @@ namespace ConsoleControlLibrary
             InitializeComponent();
             InitializeConsole();
         }
+        internal void HideCursor() => CursorBlink = false;
         public Font GetConsoleFont() => _font;
         public void SetText(int row, int col, string text)
         {

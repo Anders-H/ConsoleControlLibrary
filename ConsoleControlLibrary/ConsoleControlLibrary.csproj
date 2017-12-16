@@ -59,6 +59,7 @@
     <Compile Include="DrawEngine.cs" />
     <Compile Include="ConsoleForm.cs" />
     <Compile Include="History.cs" />
+    <Compile Include="HorizontalTextAlignment.cs" />
     <Compile Include="IDrawEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInputEventArgs.cs" />
