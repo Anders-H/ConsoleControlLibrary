@@ -17,18 +17,18 @@ namespace ControlsTestProject
         public ButtonsForm(ConsoleControl parentConsole, IDrawEngine drawEngine) : base(parentConsole)
         {
             const string text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis justo vel eros egestas commodo sed vel ante.";
-            _textBlock = new TextBlock(this, drawEngine, 0, 0, parentConsole.ColumnCount, 7, text, 10, HorizontalTextAlignment.Top);
+            _textBlock = new TextBlock(this, 0, 0, parentConsole.ColumnCount, 7, text, 10, HorizontalTextAlignment.Top);
             AddControl(_textBlock);
-            AddControl(new Label(this, drawEngine, 10, 8, "Four buttons:"));
-            _button1 = new Button(this, drawEngine, 10, 10, "Disable me");
+            AddControl(new Label(this, 10, 8, "Four buttons:"));
+            _button1 = new Button(this, 10, 10, "Disable me");
             AddControl(_button1);
-            _button2 = new Button(this, drawEngine, 10, 11, "Hide me");
+            _button2 = new Button(this, 10, 11, "Hide me");
             AddControl(_button2);
-            _button3 = new Button(this, drawEngine, 10, 12, "Restore");
+            _button3 = new Button(this, 10, 12, "Restore");
             AddControl(_button3);
-            _button4 = new Button(this, drawEngine, 10, 13, "Add text");
+            _button4 = new Button(this, 10, 13, "Add text");
             AddControl(_button4);
-            _button5 = new Button(this, drawEngine, 10, 14, "To checkboxes form");
+            _button5 = new Button(this, 10, 14, "To checkboxes form");
             AddControl(_button5);
         }
         protected override void EventOccured(object sender, ConsoleControlEventArgs e)
@@ -75,7 +75,7 @@ namespace ControlsTestProject
             }
             if (sender == _button5)
             {
-                ParentConsole.CurrentForm = new CheckboxesForm(ParentConsole, ParentConsole.DrawEngine);
+                ParentConsole.CurrentForm = new CheckboxesForm(ParentConsole);
             }
         }
     }

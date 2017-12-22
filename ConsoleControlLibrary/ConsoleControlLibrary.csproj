@@ -48,6 +48,7 @@
       <DependentUpon>ConsoleControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ControlColorScheme.cs" />
+    <Compile Include="Controls\BaseTypes\CheckboxBase.cs" />
     <Compile Include="Controls\Button.cs" />
     <Compile Include="Controls\Checkbox.cs" />
     <Compile Include="Controls\BaseTypes\ControlBase.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Controls\Events\ConsoleControlEventHandler.cs" />
     <Compile Include="Controls\Events\ConsoleControlEventType.cs" />
     <Compile Include="Controls\Label.cs" />
+    <Compile Include="Controls\Radiobutton.cs" />
     <Compile Include="Controls\TextBlock.cs" />
     <Compile Include="DrawEngine.cs" />
     <Compile Include="ConsoleForm.cs" />

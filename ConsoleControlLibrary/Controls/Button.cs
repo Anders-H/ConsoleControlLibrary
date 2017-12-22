@@ -9,15 +9,15 @@ namespace ConsoleControlLibrary.Controls
     {
         private string _text;
         private string _visibleText;
-        public Button(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, int width, int height, string text) : base(parentForm, drawEngine, x, y, width, height)
+        public Button(ConsoleForm parentForm, int x, int y, int width, int height, string text) : base(parentForm, x, y, width, height)
         {
             Text = text ?? "";
             CanGetFocus = true;
             Enabled = true;
             Visible = true;
         }
-        public Button(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, int width, string text) : this(parentForm, drawEngine, x, y, width, 1, text) { }
-        public Button(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, string text) : this(parentForm, drawEngine, x, y, text.Length, 1, text) { }
+        public Button(ConsoleForm parentForm, int x, int y, int width, string text) : this(parentForm, x, y, width, 1, text) { }
+        public Button(ConsoleForm parentForm, int x, int y, string text) : this(parentForm, x, y, text.Length, 1, text) { }
         public string Text
         {
             get => _text;

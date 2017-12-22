@@ -15,12 +15,10 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
         public int Height { get; }
         private bool _enabled;
         private bool _visible;
-        private IDrawEngine DrawEngine { get; }
         
-        protected ControlBase(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, int width, int height)
+        protected ControlBase(ConsoleForm parentForm, int x, int y, int width, int height)
         {
             ParentForm = parentForm;
-            DrawEngine = drawEngine;
             X = x;
             Y = y;
             Width = width;

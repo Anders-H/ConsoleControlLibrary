@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls.BaseTypes;
 
@@ -14,7 +13,7 @@ namespace ConsoleControlLibrary.Controls
         private string _text;
         private char[,] _characterGrid;
         private int _firstFreeRow;
-        public TextBlock(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, int width, int height, string text, int characterDelayMs, HorizontalTextAlignment horizontalTextAlignment) : base(parentForm, drawEngine, x, y, width, height)
+        public TextBlock(ConsoleForm parentForm, int x, int y, int width, int height, string text, int characterDelayMs, HorizontalTextAlignment horizontalTextAlignment) : base(parentForm, x, y, width, height)
         {
             HorizontalTextAlignment = horizontalTextAlignment;
             CanGetFocus = false;
@@ -23,8 +22,8 @@ namespace ConsoleControlLibrary.Controls
             Text = text ?? "";
             CharacterDelayMs = characterDelayMs;
         }
-        public TextBlock(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, int width, int height, string text, HorizontalTextAlignment horizontalTextAlignment) : this(parentForm, drawEngine, x, y, width, height, text, 0, horizontalTextAlignment) { }
-        public TextBlock(ConsoleForm parentForm, IDrawEngine drawEngine, int x, int y, int width, int height, HorizontalTextAlignment horizontalTextAlignment) : this(parentForm, drawEngine, x, y, width, height, "", 0, horizontalTextAlignment) { }
+        public TextBlock(ConsoleForm parentForm, int x, int y, int width, int height, string text, HorizontalTextAlignment horizontalTextAlignment) : this(parentForm, x, y, width, height, text, 0, horizontalTextAlignment) { }
+        public TextBlock(ConsoleForm parentForm, int x, int y, int width, int height, HorizontalTextAlignment horizontalTextAlignment) : this(parentForm, x, y, width, height, "", 0, horizontalTextAlignment) { }
         public HorizontalTextAlignment HorizontalTextAlignment { get; }
         [DefaultValue(0)]
         public int CharacterDelayMs { get; set; }
