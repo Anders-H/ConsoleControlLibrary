@@ -14,12 +14,12 @@ namespace ControlsTestProject
         private readonly Button _button3;
         private readonly Button _button4;
         private readonly Button _button5;
-        public ButtonsForm(ConsoleControl parentConsole, IDrawEngine drawEngine) : base(parentConsole)
+        public ButtonsForm(ConsoleControl parentConsole) : base(parentConsole)
         {
             const string text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis justo vel eros egestas commodo sed vel ante.";
             _textBlock = new TextBlock(this, 0, 0, parentConsole.ColumnCount, 7, text, 10, HorizontalTextAlignment.Top);
             AddControl(_textBlock);
-            AddControl(new Label(this, 10, 8, "Four buttons:"));
+            AddControl(new Label(this, 10, 8, "Five buttons:"));
             _button1 = new Button(this, 10, 10, "Disable me");
             AddControl(_button1);
             _button2 = new Button(this, 10, 11, "Hide me");
@@ -28,7 +28,7 @@ namespace ControlsTestProject
             AddControl(_button3);
             _button4 = new Button(this, 10, 13, "Add text");
             AddControl(_button4);
-            _button5 = new Button(this, 10, 14, "To checkboxes form");
+            _button5 = new Button(this, 10, 15, "To checkboxes form");
             AddControl(_button5);
         }
         protected override void EventOccured(object sender, ConsoleControlEventArgs e)

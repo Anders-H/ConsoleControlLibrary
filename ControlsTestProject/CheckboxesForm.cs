@@ -14,14 +14,14 @@ namespace ControlsTestProject
         private readonly Button _button;
         public CheckboxesForm(ConsoleControl parentConsole) : base(parentConsole)
         {
-            AddControl(new Label(this, 10, 8, "Two checkboxes and a button:"));
-            _checkbox1 = new Checkbox(this, true, 10, 10, "Enable button");
+            AddControl(new Label(this, 1, 8, "Two checkboxes, two radiobuttons and a button:"));
+            _checkbox1 = new Checkbox(this, true, 1, 10, "Enable button");
             AddControl(_checkbox1);
-            _checkbox2 = new Checkbox(this, true, 10, 11, "Show button");
+            _checkbox2 = new Checkbox(this, true, 1, 11, "Show button");
             AddControl(_checkbox2);
-            AddControl(new Radiobutton(this, false, "group", 10, 12, "Enable button"));
-            AddControl(new Radiobutton(this, false, "group", 10, 13, "Show button"));
-            _button = new Button(this, 10, 15, "To buttons form");
+            AddControl(new Radiobutton(this, false, "group", 1, 12, "Enable button"));
+            AddControl(new Radiobutton(this, false, "group", 1, 13, "Show button"));
+            _button = new Button(this, 1, 15, "To textboxes form");
             AddControl(_button);
         }
         protected override void EventOccured(object sender, ConsoleControlEventArgs e)
@@ -38,7 +38,7 @@ namespace ControlsTestProject
             }
             if (sender == _button)
             {
-                ParentConsole.CurrentForm = new ButtonsForm(ParentConsole, ParentConsole.DrawEngine);
+                ParentConsole.CurrentForm = new TextboxesForm(ParentConsole);
             }
         }
     }
