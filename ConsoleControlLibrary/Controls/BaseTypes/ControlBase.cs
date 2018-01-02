@@ -15,7 +15,6 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
         public int Height { get; }
         private bool _enabled;
         private bool _visible;
-        
         protected ControlBase(ConsoleForm parentForm, int x, int y, int width, int height)
         {
             ParentForm = parentForm;
@@ -24,6 +23,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
             Width = width;
             Height = height;
         }
+        public Rectangle ControlOutline => new Rectangle(X, Y, Width, Height);
         public bool Enabled
         {
             get => _enabled;

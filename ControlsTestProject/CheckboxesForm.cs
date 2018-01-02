@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using ConsoleControlLibrary;
+﻿using ConsoleControlLibrary;
 using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.Events;
 using Button = ConsoleControlLibrary.Controls.Button;

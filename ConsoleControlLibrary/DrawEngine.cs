@@ -33,11 +33,19 @@ namespace ConsoleControlLibrary
         }
         public Tuple<int, int> PhysicalCoordinateToFormCoordinate(int x, int y)
         {
-            var sourcex = ((double)x) - CharacterOffsetX;
-            var sourcey = ((double)y) - CharacterOffsetY;
+            var sourcex = x - CharacterOffsetX;
+            var sourcey = y - CharacterOffsetY;
             var cx = x > 0 ? (int)(sourcex/CharacterWidth) : 0;
             var cy = y > 0 ? (int)(sourcey/CharacterHeight) : 0;
             return Tuple.Create(cx, cy);
+        }
+        public Tuple<float, float> PhysicalCoordinateFromFormCoordinate(int x, int y)
+        {
+            var sourceX = (double)x;
+            var sourceY = (double)y;
+            var fx = CharacterWidth * sourceX + CharacterOffsetX;
+            var fy = CharacterHeight * sourceY + CharacterOffsetY;
+            return Tuple.Create((float)fx, (float)fy);
         }
         public void DrawCharacter(Graphics g, char c, Font f, Brush b, int x, int y) =>
             g.DrawString(c.ToString(), f, b, (float)(x*CharacterWidth + CharacterOffsetX), (float)(y*CharacterHeight + CharacterOffsetY));
@@ -45,5 +53,12 @@ namespace ConsoleControlLibrary
             g.FillRectangle(b, (float)(x*CharacterWidth), (float)(y*CharacterHeight), (float)CharacterWidth, (float)CharacterHeight);
         public void DrawCursor(Graphics g, Pen p, int x, int y) =>
             g.DrawRectangle(p, (float)(x*CharacterWidth), (float)(y*CharacterHeight), (float)CharacterWidth, (float)CharacterHeight);
+        public void OutlineControl(Graphics g, Pen p, Rectangle outline)
+        {
+            var pos = PhysicalCoordinateFromFormCoordinate(outline.X, outline.Y);
+            var size = PhysicalCoordinateFromFormCoordinate(outline.Width, outline.Height);
+            var r = new Rectangle((int)pos.Item1, (int)pos.Item2, (int)size.Item1, (int)size.Item2);
+            g.DrawRectangle(p, r);
+        }
     }
 }

@@ -53,6 +53,14 @@ namespace ConsoleControlLibrary
         {
             g.Clear(ControlColorScheme.BackColor);
             Controls.Where(x => x.Visible).ToList().ForEach(x => x.Draw(g, drawEngine));
+#if DEBUG
+            using (var p = new Pen(Color.FromArgb(0, 0, 255)))
+                foreach (var c in Controls.Where(x => x.Visible && !x.HasFocus))
+                    drawEngine.OutlineControl(g, p, c.ControlOutline);
+            using (var p = new Pen(Color.FromArgb(0, 255, 255)))
+                foreach (var c in Controls.Where(x => x.Visible && x.HasFocus))
+                    drawEngine.OutlineControl(g, p, c.ControlOutline);
+#endif
         }
         internal void KeyPressed(Keys key, bool shift)
         {

@@ -58,6 +58,7 @@
     <Compile Include="Controls\Label.cs" />
     <Compile Include="Controls\Radiobutton.cs" />
     <Compile Include="Controls\TextBlock.cs" />
+    <Compile Include="Controls\Textbox.cs" />
     <Compile Include="DrawEngine.cs" />
     <Compile Include="ConsoleForm.cs" />
     <Compile Include="History.cs" />
