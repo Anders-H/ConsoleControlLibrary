@@ -8,7 +8,7 @@ using ConsoleControlLibrary.Controls.BaseTypes;
 
 namespace ConsoleControlLibrary.Controls
 {
-    public class TextBlock : ControlBase
+    public class TextBlock : ControlBase, IControl, ITextControl
     {
         private string _text;
         private char[,] _characterGrid;

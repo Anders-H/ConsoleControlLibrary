@@ -5,7 +5,7 @@ using ConsoleControlLibrary.Controls.BaseTypes;
 
 namespace ConsoleControlLibrary.Controls
 {
-    public class Textbox : ControlBase
+    public class Textbox : ControlBase, IControl, ITextControl
     {
         private int _displayOffset;
         private int _cursorX;

@@ -4,7 +4,7 @@ using ConsoleControlLibrary.Controls.BaseTypes;
 
 namespace ConsoleControlLibrary.Controls
 {
-    public class Label : ControlBase
+    public class Label : ControlBase, IControl, ITextControl
     {
         private string _text;
         private string _visibleText;

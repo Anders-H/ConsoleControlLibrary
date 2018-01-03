@@ -5,7 +5,7 @@ using ConsoleControlLibrary.Controls.Events;
 
 namespace ConsoleControlLibrary.Controls
 {
-    public class Button : ControlBase
+    public class Button : ControlBase, IControl, ITextControl
     {
         private string _text;
         private string _visibleText;
