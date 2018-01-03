@@ -4,7 +4,7 @@ using ConsoleControlLibrary.Controls.BaseTypes;
 
 namespace ConsoleControlLibrary.Controls
 {
-    public class Label : ControlBase, IControl, ITextControl
+    public class Label : ControlBase, IControl, IControlFormOperations, ITextControl
     {
         private string _text;
         private string _visibleText;
@@ -27,8 +27,8 @@ namespace ConsoleControlLibrary.Controls
                 Invalidate();
             }
         }
-        protected internal override void KeyPressed(Keys key) { }
-        protected internal override void Draw(Graphics g, IDrawEngine drawEngine)
+        public override void KeyPressed(Keys key) { }
+        public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             if (Width <= 0 || _visibleText.Length <= 0)
                 return;

@@ -5,7 +5,7 @@ using ConsoleControlLibrary.Controls.Events;
 
 namespace ConsoleControlLibrary.Controls
 {
-    public class Button : ControlBase, IControl, ITextControl
+    public class Button : ControlBase, IControl, IControlFormOperations, ITextControl
     {
         private string _text;
         private string _visibleText;
@@ -28,13 +28,13 @@ namespace ConsoleControlLibrary.Controls
                 Invalidate();
             }
         }
-        protected internal override void KeyPressed(Keys key)
+        public override void KeyPressed(Keys key)
         {
             if (key != Keys.Enter)
                 return;
             ParentForm.TriggerEvent(this, new ConsoleControlEventArgs(ConsoleControlEventType.Click));
         }
-        protected internal override void Draw(Graphics g, IDrawEngine drawEngine)
+        public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             if (Width <= 0 || _visibleText.Length <= 0)
                 return;

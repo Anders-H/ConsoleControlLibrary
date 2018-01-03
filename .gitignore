@@ -24,7 +24,8 @@ nuget.exe
 *.ncrunchsolution
 *.*sdf
 *.ipch
-*.sln.ide
+*.sln
+*.ide
 *.lock.json
 *.db
 *.nupkg

@@ -3,7 +3,7 @@ using ConsoleControlLibrary.Controls.BaseTypes;
 
 namespace ConsoleControlLibrary.Controls
 {
-    public class Radiobutton : CheckboxBase, IControl, ITextControl, ICheckControl
+    public class Radiobutton : CheckboxBase, IControl, IControlFormOperations, ITextControl, ICheckControl
     {
         public object Group { get; }
         public Radiobutton(ConsoleForm parentForm, bool isChecked, object group, int x, int y, int width, int height, string text) : base(parentForm, isChecked, x, y, width, height, text)

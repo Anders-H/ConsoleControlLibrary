@@ -31,14 +31,14 @@ namespace ConsoleControlLibrary
             ForeColorBrush.Dispose();
         }
         internal void HideCursor() => ParentConsole.HideCursor();
-        public void AddControl(IControl control) => Controls.Add(control);
+        public void AddControl<T>(T control) where T : IControl, IControlFormOperations => Controls.Add(control);
         public void Run()
         {
             if (Controls.Count <= 0)
                 return;
             CurrentControl = Controls.OrderBy(x => x.TabIndex).First();
             CurrentControlIndex = Controls.IndexOf(CurrentControl);
-            var c = (ControlBase)CurrentControl;
+            var c = (IControlFormOperations)CurrentControl;
             c.HasFocus = true;
             if (!CurrentControl.CanGetFocus || !CurrentControl.Enabled)
                 FocusNextControl();
@@ -53,7 +53,7 @@ namespace ConsoleControlLibrary
         internal void Draw(Graphics g, IDrawEngine drawEngine)
         {
             g.Clear(ControlColorScheme.BackColor);
-            Controls.Where(x => x.Visible).Cast<ControlBase>().ToList().ForEach(x => x.Draw(g, drawEngine));
+            Controls.Where(x => x.Visible).Cast<IControlFormOperations>().ToList().ForEach(x => x.Draw(g, drawEngine));
 #if DEBUG
             using (var p = new Pen(Color.FromArgb(0, 0, 255)))
                 foreach (var c in Controls.Where(x => x.Visible && !x.HasFocus))
@@ -76,13 +76,13 @@ namespace ConsoleControlLibrary
             if (CurrentControl == null)
                 return;
             if (CurrentControl.Visible && CurrentControl.Enabled)
-                ((ControlBase)CurrentControl).KeyPressed(key);
+                ((IControlFormOperations)CurrentControl).KeyPressed(key);
         }
         public void SetFocus(IControl control)
         {
-            Controls.Cast<ControlBase>().ToList().ForEach(x => x.HasFocus = false);
+            Controls.Cast<IControlFormOperations>().ToList().ForEach(x => x.HasFocus = false);
             CurrentControl = control;
-            ((ControlBase)CurrentControl).HasFocus = true;
+            ((IControlFormOperations)CurrentControl).HasFocus = true;
             CurrentControlIndex = Controls.IndexOf(CurrentControl);
             ParentConsole.RestoreBlink();
         }
@@ -90,7 +90,7 @@ namespace ConsoleControlLibrary
         {
             if (Controls.Count <= 0)
                 return;
-            Controls.Cast<ControlBase>().ToList().ForEach(x => x.HasFocus = false);
+            Controls.Cast<IControlFormOperations>().ToList().ForEach(x => x.HasFocus = false);
             var startindex = CurrentControlIndex;
             var nextindex = CurrentControlIndex;
             do
@@ -102,7 +102,7 @@ namespace ConsoleControlLibrary
                     continue;
                 CurrentControlIndex = nextindex;
                 CurrentControl = Controls[nextindex];
-                ((ControlBase)CurrentControl).HasFocus = true;
+                ((IControlFormOperations)CurrentControl).HasFocus = true;
                 ParentConsole.RestoreBlink();
                 break;
             } while (nextindex != startindex);
@@ -111,7 +111,7 @@ namespace ConsoleControlLibrary
         {
             if (Controls.Count <= 0)
                 return;
-            Controls.Cast<ControlBase>().ToList().ForEach(x => x.HasFocus = false);
+            Controls.Cast<IControlFormOperations>().ToList().ForEach(x => x.HasFocus = false);
             var startindex = CurrentControlIndex;
             var nextindex = CurrentControlIndex;
             do

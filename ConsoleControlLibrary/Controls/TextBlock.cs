@@ -8,7 +8,7 @@ using ConsoleControlLibrary.Controls.BaseTypes;
 
 namespace ConsoleControlLibrary.Controls
 {
-    public class TextBlock : ControlBase, IControl, ITextControl
+    public class TextBlock : ControlBase, IControl, IControlFormOperations, ITextControl
     {
         private string _text;
         private char[,] _characterGrid;
@@ -111,8 +111,8 @@ namespace ConsoleControlLibrary.Controls
                     ScrollUp();
             }
         }
-        protected internal override void KeyPressed(Keys key) { }
-        protected internal override void Draw(Graphics g, IDrawEngine drawEngine)
+        public override void KeyPressed(Keys key) { }
+        public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             for(var y = 0; y < Height; y++)
                 for(var x = 0; x < Width; x++)

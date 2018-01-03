@@ -8,7 +8,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
         public ConsoleForm ParentForm { get; }
         public int TabIndex { get; set; }
         public bool CanGetFocus { get; protected set; }
-        public bool HasFocus { get; internal set; }
+        public bool HasFocus { get; set; }
         public int X { get; }
         public int Y { get; }
         public int Width { get; }
@@ -47,8 +47,8 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
             }
         }
         protected void Invalidate() => ParentForm.Invalidate();
-        protected internal abstract void KeyPressed(Keys key);
-        protected internal abstract void Draw(Graphics g, IDrawEngine drawEngine);
+        public abstract void KeyPressed(Keys key);
+        public abstract void Draw(Graphics g, IDrawEngine drawEngine);
         public bool HitTest(int x, int y) => x >= X && y >= Y && x < X + Width && y < Y + Height;
     }
 }

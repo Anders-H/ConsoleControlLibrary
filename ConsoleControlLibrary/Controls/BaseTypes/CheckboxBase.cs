@@ -45,7 +45,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
                 Invalidate();
             }
         }
-        protected internal override void KeyPressed(Keys key)
+        public override void KeyPressed(Keys key)
         {
             if (key != Keys.Enter)
                 return;
@@ -55,7 +55,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
         protected abstract char LeftBracket { get; }
         protected abstract char RightBracket { get; }
         private string VisibleText => _visibleText ?? (_visibleText = $"{LeftBracket}{(Checked ? "X" : " ")}{RightBracket}" + (_text.Length <= Width - 3 ? _text : _text.Substring(0, Width - 3)));
-        protected internal override void Draw(Graphics g, IDrawEngine drawEngine)
+        public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             if (Width <= 0)
                 return;

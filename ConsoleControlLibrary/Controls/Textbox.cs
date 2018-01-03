@@ -5,7 +5,7 @@ using ConsoleControlLibrary.Controls.BaseTypes;
 
 namespace ConsoleControlLibrary.Controls
 {
-    public class Textbox : ControlBase, IControl, ITextControl
+    public class Textbox : ControlBase, IControl, IControlFormOperations, ITextControl
     {
         private int _displayOffset;
         private int _cursorX;
@@ -20,10 +20,10 @@ namespace ConsoleControlLibrary.Controls
             Visible = true;
             CanGetFocus = true;
         }
-        protected internal override void KeyPressed(Keys key)
+        public override void KeyPressed(Keys key)
         {
         }
-        protected internal override void Draw(Graphics g, IDrawEngine drawEngine)
+        public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             if (Width <= 0)
                 return;

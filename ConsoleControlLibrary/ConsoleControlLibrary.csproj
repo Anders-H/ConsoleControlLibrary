@@ -51,6 +51,7 @@
     <Compile Include="Controls\BaseTypes\CheckboxBase.cs" />
     <Compile Include="Controls\BaseTypes\ICheckControl.cs" />
     <Compile Include="Controls\BaseTypes\IControl.cs" />
+    <Compile Include="Controls\BaseTypes\IControlFormOperations.cs" />
     <Compile Include="Controls\BaseTypes\ITextControl.cs" />
     <Compile Include="Controls\Button.cs" />
     <Compile Include="Controls\Checkbox.cs" />
