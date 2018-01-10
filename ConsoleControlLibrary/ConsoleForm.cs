@@ -55,6 +55,12 @@ namespace ConsoleControlLibrary
             g.Clear(ControlColorScheme.BackColor);
             Controls.Where(x => x.Visible).Cast<IControlFormOperations>().ToList().ForEach(x => x.Draw(g, drawEngine));
 #if DEBUG
+            using (var p = new Pen(Color.FromArgb(40, 40, 40)))
+            {
+                for (var y = 0; y < drawEngine.RowCount; y++)
+                    for (var x = 0; x < drawEngine.ColumnCount; x++)
+                        drawEngine.DrawCursor(g, p, x, y);
+            }
             using (var p = new Pen(Color.FromArgb(0, 0, 255)))
                 foreach (var c in Controls.Where(x => x.Visible && !x.HasFocus))
                     drawEngine.OutlineControl(g, p, c.ControlOutline);

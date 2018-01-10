@@ -22,6 +22,10 @@ namespace ConsoleControlLibrary.Controls
         }
         public override void KeyPressed(Keys key)
         {
+            switch (key)
+            {
+                    
+            }
         }
         public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
