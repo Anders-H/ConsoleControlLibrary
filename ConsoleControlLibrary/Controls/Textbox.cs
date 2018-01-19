@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Configuration;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls.BaseTypes;
 
@@ -11,7 +13,6 @@ namespace ConsoleControlLibrary.Controls
         private int _cursorX;
         private char[] _characters;
         public int MaxLength { get; }
-
         public Textbox(ConsoleForm parentForm, int x, int y, int width, int maxLength) : base(parentForm, x, y, width, 1)
         {
             MaxLength = maxLength;
@@ -25,6 +26,29 @@ namespace ConsoleControlLibrary.Controls
             switch (key)
             {
                     
+            }
+        }
+        public override void CharacterInput(char c)
+        {
+            SetChar(c);
+            Invalidate();
+        }
+        private void SetChar(char c)
+        {
+            Insert();
+            _characters[_cursorX] = c;
+            if (_cursorX < MaxLength - 1)
+                _cursorX++;
+            if (_cursorX >= _displayOffset + Width)
+                _displayOffset = _cursorX - Width + 1;
+
+        }
+        private void Insert()
+        {
+            if (_cursorX >= MaxLength - 1)
+            {
+                _cursorX = MaxLength - 1;
+                return;
             }
         }
         public override void Draw(Graphics g, IDrawEngine drawEngine)

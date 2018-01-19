@@ -112,6 +112,7 @@ namespace ConsoleControlLibrary.Controls
             }
         }
         public override void KeyPressed(Keys key) { }
+        public override void CharacterInput(char c) { }
         public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             for(var y = 0; y < Height; y++)

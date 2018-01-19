@@ -85,7 +85,6 @@ namespace ConsoleControlLibrary
         [DefaultValue(true)]
         [Category("Console Settings")]
         public bool UppercaseInput { get; set; } = true;
-
         private void InitializeConsole()
         {
             if (DesignMode)
@@ -153,8 +152,11 @@ namespace ConsoleControlLibrary
         }
         private void ConsoleControl_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (CurrentForm?.CurrentControl != null)
+            if (CurrentForm != null)
+            {
+                CurrentForm.CharacterInput(e.KeyChar);
                 return;
+            }
             if (e.KeyChar == 13)
             {
                 HandleInput();
@@ -230,7 +232,7 @@ namespace ConsoleControlLibrary
                 ShiftKey = true;
                 return;
             }
-            if (CurrentForm != null)
+            if (CurrentForm != null && IsControlKey(e.KeyCode))
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
@@ -294,6 +296,25 @@ namespace ConsoleControlLibrary
                     break;
             }
             Invalidate();
+        }
+        private bool IsControlKey(Keys key)
+        {
+            switch (key)
+            {
+                case Keys.Up:
+                case Keys.Down:
+                case Keys.Left:
+                case Keys.Right:
+                case Keys.Home:
+                case Keys.End:
+                case Keys.Tab:
+                case Keys.Enter:
+                case Keys.Back:
+                case Keys.Delete:
+                    return true;
+                default:
+                    return false;
+            }
         }
         private void GoToEnd()
         {

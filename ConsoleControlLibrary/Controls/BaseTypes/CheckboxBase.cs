@@ -52,6 +52,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
             Checked = !Checked;
             ParentForm.TriggerEvent(this, new ConsoleControlEventArgs(ConsoleControlEventType.CheckChange));
         }
+        public override void CharacterInput(char c) { }
         protected abstract char LeftBracket { get; }
         protected abstract char RightBracket { get; }
         private string VisibleText => _visibleText ?? (_visibleText = $"{LeftBracket}{(Checked ? "X" : " ")}{RightBracket}" + (_text.Length <= Width - 3 ? _text : _text.Substring(0, Width - 3)));

@@ -7,6 +7,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
     {
         bool HasFocus { get; set; }
         void KeyPressed(Keys key);
+        void CharacterInput(char c);
         void Draw(Graphics g, IDrawEngine drawEngine);
     }
 }

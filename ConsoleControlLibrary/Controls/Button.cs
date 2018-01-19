@@ -34,6 +34,7 @@ namespace ConsoleControlLibrary.Controls
                 return;
             ParentForm.TriggerEvent(this, new ConsoleControlEventArgs(ConsoleControlEventType.Click));
         }
+        public override void CharacterInput(char c) { }
         public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             if (Width <= 0 || _visibleText.Length <= 0)

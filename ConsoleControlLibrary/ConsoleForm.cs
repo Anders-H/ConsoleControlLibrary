@@ -84,6 +84,13 @@ namespace ConsoleControlLibrary
             if (CurrentControl.Visible && CurrentControl.Enabled)
                 ((IControlFormOperations)CurrentControl).KeyPressed(key);
         }
+        public void CharacterInput(char c)
+        {
+            if (CurrentControl == null)
+                return;
+            if (CurrentControl.Visible && CurrentControl.Enabled)
+                ((IControlFormOperations)CurrentControl).CharacterInput(c);
+        }
         public void SetFocus(IControl control)
         {
             Controls.Cast<IControlFormOperations>().ToList().ForEach(x => x.HasFocus = false);
