@@ -14,25 +14,30 @@ namespace ConsoleControlLibrary
         private int _columnCount = 40;
         private int _rowCount = 20;
         private int _cursorPosition;
-        internal static bool CursorBlink { get; set; }
         private Font _font;
         private bool _needsRecalcSize;
         private bool _hasFocus;
         private History History { get; } = new History();
         private bool RowChanged { get; set; }
         private ConsoleForm _currentForm;
+        private bool ShiftKey { get; set; }
+        internal static bool CursorBlink { get; set; }
         public event EventHandler CurrentFormChanged;
         public event UserInputHandler UserInput;
         public event ConsoleControlEventHandler ControlEvent;
         public IDrawEngine DrawEngine { get; set; } = new DrawEngine();
-        private bool ShiftKey { get; set; }
+        
         public ConsoleControl()
         {
             InitializeComponent();
             InitializeConsole();
         }
+        
         internal void HideCursor() => CursorBlink = false;
-        public Font GetConsoleFont() => _font;
+        
+        public Font GetConsoleFont() =>
+            _font;
+
         public void SetText(int row, int col, string text)
         {
             if (col < 0 || col >= ColumnCount || row < 0 || row >= RowCount || string.IsNullOrEmpty(text) || text.Length <= 0)
@@ -45,6 +50,7 @@ namespace ConsoleControlLibrary
                 _characterArray[row, x] = text[i];
             }
         }
+        
         public int CursorPosition
         {
             get => _cursorPosition;
@@ -54,6 +60,7 @@ namespace ConsoleControlLibrary
                 Invalidate();
             }
         }
+
         [DefaultValue(40)]
         [Category("Console Settings")]
         [Description("Number of columns (3 to 200).")]
@@ -68,6 +75,7 @@ namespace ConsoleControlLibrary
                 InitializeConsole();
             }
         }
+
         [DefaultValue(20)]
         [Category("Console Settings")]
         [Description("Number of rows (3 to 200).")]
@@ -82,6 +90,7 @@ namespace ConsoleControlLibrary
                 InitializeConsole();
             }
         }
+
         [DefaultValue(true)]
         [Category("Console Settings")]
         public bool UppercaseInput { get; set; } = true;
@@ -93,22 +102,26 @@ namespace ConsoleControlLibrary
             _needsRecalcSize = true;
             Invalidate();
         }
+
         private void CalcSize(Graphics g)
         {
             _needsRecalcSize = false;
             DrawEngine.CalculateSizes(g, ref _font, ColumnCount, RowCount, Width, Height);
             System.Diagnostics.Debug.WriteLine(_font.Name);
         }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             CursorBlink = !CursorBlink;
             Invalidate();
         }
+
         private void ConsoleControl_Resize(object sender, EventArgs e)
         {
             _needsRecalcSize = true;
             Invalidate();
         }
+
         private void ConsoleControl_Paint(object sender, PaintEventArgs e)
         {
             if (DesignMode)
@@ -125,6 +138,7 @@ namespace ConsoleControlLibrary
                 CurrentForm.Draw(e.Graphics, DrawEngine);
             }
         }
+
         private void DrawTextConsole(Graphics g)
         {
             g.Clear(BackColor);
@@ -150,6 +164,7 @@ namespace ConsoleControlLibrary
                 }
             }
         }
+
         private void ConsoleControl_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (CurrentForm != null)
@@ -167,16 +182,19 @@ namespace ConsoleControlLibrary
                 CursorPosition++;
             RowChanged = true;
         }
+
         private void ConsoleControl_Enter(object sender, EventArgs e)
         {
             _hasFocus = true;
             Invalidate();
         }
+
         private void ConsoleControl_Leave(object sender, EventArgs e)
         {
             _hasFocus = false;
             Invalidate();
         }
+
         private void BackspaceAt(int col)
         {
             if (col <= 0)
@@ -215,6 +233,7 @@ namespace ConsoleControlLibrary
             }
             return base.IsInputKey(keyData);
         }
+
         private int LastCharacterIndex
         {
             get
@@ -225,6 +244,7 @@ namespace ConsoleControlLibrary
                 return -1;
             }
         }
+
         private void ConsoleControl_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.ShiftKey)
@@ -297,6 +317,7 @@ namespace ConsoleControlLibrary
             }
             Invalidate();
         }
+
         private bool IsControlKey(Keys key)
         {
             switch (key)
@@ -316,12 +337,14 @@ namespace ConsoleControlLibrary
                     return false;
             }
         }
+
         private void GoToEnd()
         {
             RestoreBlink();
             var lastCharacterIndex = LastCharacterIndex;
             CursorPosition = lastCharacterIndex < ColumnCount - 2 ? lastCharacterIndex + 1 : ColumnCount - 1;
         }
+
         public void RestoreBlink()
         {
             timer1.Stop();
@@ -329,6 +352,7 @@ namespace ConsoleControlLibrary
             timer1.Start();
             Invalidate();
         }
+
         private void RestoreInput(string text)
         {
             for (var i = 0; i < ColumnCount; i++)
@@ -337,6 +361,7 @@ namespace ConsoleControlLibrary
             GoToEnd();
             RowChanged = false;
         }
+
         private void HandleInput()
         {
             var text = GetText(RowCount - 1, 0);
@@ -347,6 +372,7 @@ namespace ConsoleControlLibrary
             CursorPosition = 0;
             UserInput?.Invoke(this, new UserInputEventArgs(text));
         }
+
         private string GetText(int row, int col)
         {
             var s = new StringBuilder();
@@ -354,6 +380,7 @@ namespace ConsoleControlLibrary
                 s.Append(_characterArray[row, c] == (char)0 ? ' ' : _characterArray[row, c]);
             return s.ToString().Trim();
         }
+
         private void ScrollUp()
         {
             for (var row = 1; row < RowCount; row++)
@@ -362,6 +389,7 @@ namespace ConsoleControlLibrary
             for (var col = 0; col < ColumnCount; col++)
                 _characterArray[RowCount - 1, col] = (char)0;
         }
+
         public void WriteText(int msDelay, string text)
         {
             var rows = WordWrapper.WordWrap(ColumnCount, (text ?? "").Trim()).Split('\n');
@@ -385,6 +413,7 @@ namespace ConsoleControlLibrary
             }
             timer1.Enabled = true;
         }
+
         public ConsoleForm CurrentForm
         {
             get => _currentForm;
@@ -398,12 +427,16 @@ namespace ConsoleControlLibrary
                 CurrentFormChanged?.Invoke(this, new EventArgs());
             }
         }
-        internal void TriggerEvent(object sender, ConsoleControlEventArgs e) => ControlEvent?.Invoke(sender, e);
+
+        internal void TriggerEvent(object sender, ConsoleControlEventArgs e) =>
+            ControlEvent?.Invoke(sender, e);
+
         private void ConsoleControl_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.ShiftKey)
                 ShiftKey = false;
         }
+
         private void ConsoleControl_MouseClick(object sender, MouseEventArgs e)
         {
             if (CurrentForm == null)

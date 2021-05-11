@@ -10,7 +10,10 @@ namespace ControlsTestProject
         {
             InitializeComponent();
         }
-        private void consoleControl1_CurrentFormChanged(object sender, EventArgs e) => Debug.WriteLine("CurrentFormChanged");
-        private void Form1_Load(object sender, EventArgs e) => consoleControl1.CurrentForm = new ButtonsForm(consoleControl1);
+        private void consoleControl1_CurrentFormChanged(object sender, EventArgs e) =>
+            Debug.WriteLine("CurrentFormChanged");
+
+        private void Form1_Load(object sender, EventArgs e) =>
+            consoleControl1.CurrentForm = new ButtonsForm(consoleControl1);
     }
 }

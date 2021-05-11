@@ -18,8 +18,8 @@ namespace ControlsTestProject
             AddControl(_checkbox1);
             _checkbox2 = new Checkbox(this, true, 1, 11, "Show button");
             AddControl(_checkbox2);
-            AddControl(new Radiobutton(this, false, "group", 1, 12, "Enable button"));
-            AddControl(new Radiobutton(this, false, "group", 1, 13, "Show button"));
+            AddControl(new Radiobutton(this, false, "group", 1, 12, "Radio button 1"));
+            AddControl(new Radiobutton(this, false, "group", 1, 13, "Radio button 2"));
             _button = new Button(this, 1, 15, "To textboxes form");
             AddControl(_button);
         }
