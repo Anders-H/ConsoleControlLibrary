@@ -52,6 +52,7 @@
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ConsoleControl_KeyUp);
             this.Leave += new System.EventHandler(this.ConsoleControl_Leave);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ConsoleControl_MouseClick);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ConsoleControl_MouseMove);
             this.Resize += new System.EventHandler(this.ConsoleControl_Resize);
             this.ResumeLayout(false);
 

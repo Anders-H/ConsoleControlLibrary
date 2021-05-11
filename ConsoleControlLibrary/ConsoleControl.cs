@@ -4,7 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.Events;
+using Button = System.Windows.Forms.Button;
 
 namespace ConsoleControlLibrary
 {
@@ -449,6 +451,45 @@ namespace ConsoleControlLibrary
                 return;
             CurrentForm.SetFocus(hit);
             CurrentForm.KeyPressed(Keys.Enter, ShiftKey);
+        }
+
+        private void ConsoleControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (CurrentForm == null)
+            {
+                Cursor = Cursors.Arrow;
+                return;
+            }
+
+            var point = DrawEngine.PhysicalCoordinateToFormCoordinate(e.X, e.Y);
+            if (point == null)
+            {
+                Cursor = Cursors.Arrow;
+                return;
+            }
+
+            var hit = CurrentForm.GetControlAt(point.Item1, point.Item2);
+            if (hit == null)
+            {
+                Cursor = Cursors.Arrow;
+                return;
+            }
+
+            var type = hit.GetType();
+
+            if (type == typeof(Button) || type == typeof(CheckBox) || type == typeof(RadioButton))
+            {
+                Cursor = Cursors.Hand;
+                return;
+            }
+
+            if (type == typeof(Textbox) || type == typeof(TextBlock))
+            {
+                Cursor = Cursors.IBeam;
+                return;
+            }
+
+            Cursor = Cursors.Hand;
         }
     }
 }
