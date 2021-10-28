@@ -15,6 +15,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
         public int Height { get; }
         private bool _enabled;
         private bool _visible;
+
         protected ControlBase(ConsoleForm parentForm, int x, int y, int width, int height)
         {
             ParentForm = parentForm;
@@ -23,7 +24,9 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
             Width = width;
             Height = height;
         }
-        public Rectangle ControlOutline => new Rectangle(X, Y, Width, Height);
+        public Rectangle ControlOutline =>
+            new Rectangle(X, Y, Width, Height);
+        
         public bool Enabled
         {
             get => _enabled;
@@ -35,6 +38,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
                 Invalidate();
             }
         }
+
         public bool Visible
         {
             get => _visible;
@@ -46,10 +50,17 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
                 Invalidate();
             }
         }
-        protected void Invalidate() => ParentForm.Invalidate();
+
+        protected void Invalidate() =>
+            ParentForm.Invalidate();
+
         public abstract void KeyPressed(Keys key);
+
         public abstract void CharacterInput(char c);
+
         public abstract void Draw(Graphics g, IDrawEngine drawEngine);
-        public bool HitTest(int x, int y) => x >= X && y >= Y && x < X + Width && y < Y + Height;
+
+        public bool HitTest(int x, int y) =>
+            x >= X && y >= Y && x < X + Width && y < Y + Height;
     }
 }

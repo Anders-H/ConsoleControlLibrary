@@ -220,10 +220,11 @@ namespace ConsoleControlLibrary
         {
             if (col == ColumnCount - 1)
                 _characterArray[RowCount - 1, ColumnCount - 1] = (char)0;
-            for (var i = ColumnCount - 2; i > col; i--)
+            for (var i = ColumnCount - 1; i > col; i--)
                 _characterArray[RowCount - 1, i] = _characterArray[RowCount - 1, i - 1];
             _characterArray[RowCount - 1, col] = (char)0;
         }
+
         protected override bool IsInputKey(Keys keyData)
         {
             switch (keyData)
@@ -290,6 +291,11 @@ namespace ConsoleControlLibrary
                     RestoreInput(History.Next());
                     break;
                 case Keys.Insert:
+                    if (_currentForm?.CurrentControl is Textbox textbox)
+                    {
+                        textbox.KeyPressed(Keys.Insert);
+                        return;
+                    }
                     e.SuppressKeyPress = true;
                     InsertAt(CursorPosition);
                     Invalidate();

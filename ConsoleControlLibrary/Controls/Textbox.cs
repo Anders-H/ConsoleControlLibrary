@@ -44,6 +44,10 @@ namespace ConsoleControlLibrary.Controls
                         _cursorX--;
                     Invalidate();
                     break;
+                case Keys.Insert:
+                    InsertAt(_cursorX);
+                    Invalidate();
+                    break;
             }
         }
 
@@ -91,7 +95,16 @@ namespace ConsoleControlLibrary.Controls
             if (_cursorX >= MaxLength - 1)
                 _cursorX = MaxLength - 1;
         }
-        
+
+        private void InsertAt(int col)
+        {
+            if (col == MaxLength - 1)
+                _characters[MaxLength - 1] = (char)0;
+            for (var i = MaxLength - 1; i > col; i--)
+                _characters[i] = _characters[i - 1];
+            _characters[col] = (char)0;
+        }
+
         public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             if (Width <= 0)
