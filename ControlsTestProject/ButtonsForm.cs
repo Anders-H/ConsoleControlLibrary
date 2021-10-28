@@ -14,9 +14,11 @@ namespace ControlsTestProject
         private readonly Button _button3;
         private readonly Button _button4;
         private readonly Button _button5;
+
         public ButtonsForm(ConsoleControl parentConsole) : base(parentConsole)
         {
             const string text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis justo vel eros egestas commodo sed vel ante.";
+            
             _textBlock = new TextBlock(this, 0, 0, parentConsole.ColumnCount, 7, text, 10, HorizontalTextAlignment.Top);
             AddControl(_textBlock);
             AddControl(new Label(this, 10, 8, "Five buttons:"));
@@ -31,6 +33,7 @@ namespace ControlsTestProject
             _button5 = new Button(this, 10, 15, "To checkboxes form");
             AddControl(_button5);
         }
+
         protected override void EventOccured(object sender, ConsoleControlEventArgs e)
         {
             if (sender == _button1)
@@ -38,17 +41,20 @@ namespace ControlsTestProject
                 _button1.Enabled = false;
                 return;
             }
+
             if (sender == _button2)
             {
                 _button2.Visible = false;
                 return;
             }
+
             if (sender == _button3)
             {
                 _button1.Enabled = true;
                 _button2.Visible = true;
                 return;
             }
+
             if (sender == _button4)
             {
                 switch (new Random().Next(0, 6))
@@ -73,6 +79,7 @@ namespace ControlsTestProject
                         break;
                 }
             }
+
             if (sender == _button5)
             {
                 ParentConsole.CurrentForm = new CheckboxesForm(ParentConsole);

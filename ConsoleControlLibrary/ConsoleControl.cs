@@ -34,8 +34,9 @@ namespace ConsoleControlLibrary
             InitializeComponent();
             InitializeConsole();
         }
-        
-        internal void HideCursor() => CursorBlink = false;
+
+        public void HideCursor() =>
+            CursorBlink = false;
         
         public Font GetConsoleFont() =>
             _font;
@@ -145,23 +146,26 @@ namespace ConsoleControlLibrary
         {
             g.Clear(BackColor);
             var cursy = RowCount - 1;
-            using (var b = new SolidBrush(ForeColor))
+
+            using var b = new SolidBrush(ForeColor);
+            
+            for (var y = 0; y < RowCount; y++)
             {
-                for (var y = 0; y < RowCount; y++)
+                for (var x = 0; x < ColumnCount; x++)
                 {
-                    for (var x = 0; x < ColumnCount; x++)
+                    if (_characterArray[y, x] > 0 && _characterArray[y, x] != ' ')
+                        DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, b, x, y);
+                    
+                    if (_hasFocus && CursorBlink && x == _cursorPosition && y == cursy)
                     {
-                        if (_characterArray[y, x] > 0 && _characterArray[y, x] != ' ')
-                            DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, b, x, y);
-                        if (_hasFocus && CursorBlink && x == _cursorPosition && y == cursy)
-                        {
-                            DrawEngine.DrawCursor(g, b, x, y);
-                            using (var bb = new SolidBrush(BackColor))
-                                DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, bb, x, y);
-                        }
-                        else if (!_hasFocus && x == _cursorPosition && y == cursy)
-                            using (var p = new Pen(ForeColor))
-                                DrawEngine.DrawCursor(g, p, x, y);
+                        DrawEngine.DrawCursor(g, b, x, y);
+                        using var bb = new SolidBrush(BackColor);
+                        DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, bb, x, y);
+                    }
+                    else if (!_hasFocus && x == _cursorPosition && y == cursy)
+                    {
+                        using var p = new Pen(ForeColor);
+                        DrawEngine.DrawCursor(g, p, x, y);
                     }
                 }
             }
@@ -174,14 +178,18 @@ namespace ConsoleControlLibrary
                 CurrentForm.CharacterInput(e.KeyChar);
                 return;
             }
+
             if (e.KeyChar == 13)
             {
                 HandleInput();
                 return;
             }
+
             _characterArray[RowCount - 1, CursorPosition] = UppercaseInput ? char.ToUpper(e.KeyChar) : e.KeyChar;
+            
             if (CursorPosition < ColumnCount - 1)
                 CursorPosition++;
+            
             RowChanged = true;
         }
 
@@ -201,8 +209,11 @@ namespace ConsoleControlLibrary
         {
             if (col <= 0)
                 return;
-            for (var c = col - 1; c < RowCount; c++)
-                _characterArray[RowCount - 1, c] = c < RowCount - 1 ? _characterArray[RowCount - 1, c + 1] : (char)0;
+
+            for (var c = col - 1; c < ColumnCount; c++)
+                _characterArray[RowCount - 1, c] = c < RowCount - 1
+                    ? _characterArray[RowCount - 1, c + 1]
+                    : (char)0;
         }
 
         private void InsertAt(int col)

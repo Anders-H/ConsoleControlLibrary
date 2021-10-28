@@ -1,7 +1,4 @@
-﻿using System;
-using System.Configuration;
-using System.Drawing;
-using System.Linq;
+﻿using System.Drawing;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls.BaseTypes;
 
@@ -11,8 +8,9 @@ namespace ConsoleControlLibrary.Controls
     {
         private int _displayOffset;
         private int _cursorX;
-        private char[] _characters;
+        private readonly char[] _characters;
         public int MaxLength { get; }
+
         public Textbox(ConsoleForm parentForm, int x, int y, int width, int maxLength) : base(parentForm, x, y, width, 1)
         {
             MaxLength = maxLength;
@@ -21,18 +19,41 @@ namespace ConsoleControlLibrary.Controls
             Visible = true;
             CanGetFocus = true;
         }
+        
         public override void KeyPressed(Keys key)
         {
             switch (key)
             {
-                    
+                case Keys.Left:
+                    break;
+                case Keys.Right:
+                    break;
+                case Keys.Back:
+                    BackspaceAt(_cursorX);
+                    if (_cursorX > 0)
+                        _cursorX--;
+                    Invalidate();
+                    break;
             }
         }
+
+        private void BackspaceAt(int col)
+        {
+            if (col <= 0)
+                return;
+
+            for (var c = col - 1; c < MaxLength; c++)
+                _characters[c] = c < MaxLength - 1
+                    ? _characters[c + 1]
+                    : (char)0;
+        }
+
         public override void CharacterInput(char c)
         {
             SetChar(c);
             Invalidate();
         }
+        
         private void SetChar(char c)
         {
             Insert();
@@ -43,14 +64,13 @@ namespace ConsoleControlLibrary.Controls
                 _displayOffset = _cursorX - Width + 1;
 
         }
+        
         private void Insert()
         {
             if (_cursorX >= MaxLength - 1)
-            {
                 _cursorX = MaxLength - 1;
-                return;
-            }
         }
+        
         public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             if (Width <= 0)
@@ -93,12 +113,12 @@ namespace ConsoleControlLibrary.Controls
                 }
             }
         }
+        
         public string Text
         {
-            get => _characters.ToString().Trim();
+            get => (_characters.ToString() ?? "").Trim();
             set
             {
-                Text = "";
                 var index = 0;
                 foreach (var c in (value ?? "").ToCharArray())
                 {
