@@ -7,7 +7,7 @@ namespace ConsoleControlLibrary
     {
         public static string WordWrap(int columnCount, string text)
         {
-            int Break(string breakText, int breakPos, int max)
+            static int Break(string breakText, int breakPos, int max)
             {
                 var position = max;
                 while (position >= 0 && !char.IsWhiteSpace(breakText[breakPos + position]))
@@ -18,6 +18,7 @@ namespace ConsoleControlLibrary
                     position--;
                 return position + 1;
             }
+
             int wordBreak;
             var s = new StringBuilder();
             for (var charPointer = 0; charPointer < text.Length; charPointer = wordBreak)

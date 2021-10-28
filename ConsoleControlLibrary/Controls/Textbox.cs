@@ -25,8 +25,18 @@ namespace ConsoleControlLibrary.Controls
             switch (key)
             {
                 case Keys.Left:
+                    if (_cursorX > 0)
+                    {
+                        _cursorX--;
+                        Invalidate();
+                    }
                     break;
                 case Keys.Right:
+                    if (_cursorX < MaxLength - 1 && _cursorX < LastCharacterIndex + 1)
+                    {
+                        _cursorX++;
+                        Invalidate();
+                    }
                     break;
                 case Keys.Back:
                     BackspaceAt(_cursorX);
@@ -46,6 +56,17 @@ namespace ConsoleControlLibrary.Controls
                 _characters[c] = c < MaxLength - 1
                     ? _characters[c + 1]
                     : (char)0;
+        }
+
+        private int LastCharacterIndex
+        {
+            get
+            {
+                for (var c = MaxLength - 1; c >= 0; c--)
+                    if (_characters[c] != (char)0 && _characters[c] != ' ')
+                        return c;
+                return -1;
+            }
         }
 
         public override void CharacterInput(char c)
