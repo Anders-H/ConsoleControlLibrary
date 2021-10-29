@@ -12,20 +12,25 @@ namespace ConsoleControlLibrary.Controls
         }
         public Radiobutton(ConsoleForm parentForm, bool isChecked, object group, int x, int y, int width, string text) : this(parentForm, isChecked, group, x, y, width, 1, text) { }
         public Radiobutton(ConsoleForm parentForm, bool isChecked, object group, int x, int y, string text) : this(parentForm, isChecked, group, x, y, text.Length + 3, 1, text) { }
-        protected override char LeftBracket => '(';
-        protected override char RightBracket => ')';
+        protected override char LeftBracket =>'(';
+
+        protected override char RightBracket =>
+            ')';
+
         protected override void CheckedChanged()
         {
             if (!Checked)
                 return;
-            var radioButtons = ParentForm.GetControls().Where(x => x.GetType() == typeof(Radiobutton));
-            var group = radioButtons.Where(x => ((Radiobutton)x).Group == Group).ToList();
-            foreach (var g in group)
-            {
-                if (g == this)
-                    continue;
+            
+            var radioButtons = ParentForm.GetControls()
+                .Where(x => x.GetType() == typeof(Radiobutton));
+            
+            var group = radioButtons
+                .Where(x => ((Radiobutton)x).Group == Group)
+                .ToList();
+            
+            foreach (var g in @group.Where(g => g != this))
                 ((Radiobutton)g).Checked = false;
-            }
         }
     }
 }

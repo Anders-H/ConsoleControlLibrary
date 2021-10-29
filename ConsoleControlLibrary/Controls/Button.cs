@@ -9,6 +9,7 @@ namespace ConsoleControlLibrary.Controls
     {
         private string _text;
         private string _visibleText;
+
         public Button(ConsoleForm parentForm, int x, int y, int width, int height, string text) : base(parentForm, x, y, width, height)
         {
             Text = text ?? "";
@@ -16,15 +17,28 @@ namespace ConsoleControlLibrary.Controls
             Enabled = true;
             Visible = true;
         }
-        public Button(ConsoleForm parentForm, int x, int y, int width, string text) : this(parentForm, x, y, width, 1, text) { }
-        public Button(ConsoleForm parentForm, int x, int y, string text) : this(parentForm, x, y, text.Length, 1, text) { }
+
+        public Button(ConsoleForm parentForm, int x, int y, int width, string text)
+            : this(parentForm, x, y, width, 1, text)
+        {
+        }
+
+        public Button(ConsoleForm parentForm, int x, int y, string text)
+            : this(parentForm, x, y, text.Length, 1, text)
+        {
+        }
+        
         public string Text
         {
             get => _text;
             set
             {
                 _text = value ?? "";
-                _visibleText = _text.Length <= Width ? _text : _text.Substring(0, Width);
+
+                _visibleText = _text.Length <= Width
+                    ? _text
+                    : _text.Substring(0, Width);
+
                 Invalidate();
             }
         }
@@ -34,11 +48,22 @@ namespace ConsoleControlLibrary.Controls
                 return;
             ParentForm.TriggerEvent(this, new ConsoleControlEventArgs(ConsoleControlEventType.Click));
         }
-        public override void CharacterInput(char c) { }
+
+        public override void CharacterInput(char c)
+        {
+        }
+
         public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
-            if (Width <= 0 || _visibleText.Length <= 0)
+            if (Width <= 0)
                 return;
+
+            //TODO: Draw some kind of outline.
+            //drawEngine.OutlineControl(g, Pens.White, ControlOutline);
+
+            if (_visibleText.Length <= 0)
+                return;
+
             if (Enabled)
             {
                 for (var i = 0; i < _visibleText.Length; i++)

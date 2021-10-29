@@ -17,6 +17,7 @@ namespace ConsoleControlLibrary
         protected internal Brush BackColorBrush { get; }
         protected internal Brush ForeColorBrush { get; }
         protected internal Brush DisabledForeColorBrush { get; }
+
         public ConsoleForm(ConsoleControl parentConsole)
         {
             BackColorBrush = new SolidBrush(ControlColorScheme.BackColor);
@@ -25,13 +26,19 @@ namespace ConsoleControlLibrary
             ParentConsole = parentConsole;
             Controls = new List<IControl>();
         }
+
         public void Dispose()
         {
             BackColorBrush.Dispose();
             ForeColorBrush.Dispose();
         }
-        internal void HideCursor() => ParentConsole.HideCursor();
-        public void AddControl<T>(T control) where T : IControl, IControlFormOperations => Controls.Add(control);
+
+        internal void HideCursor() =>
+            ParentConsole.HideCursor();
+
+        public void AddControl<T>(T control) where T : IControl, IControlFormOperations =>
+            Controls.Add(control);
+
         public void Run()
         {
             if (Controls.Count <= 0)
@@ -43,18 +50,24 @@ namespace ConsoleControlLibrary
             if (!CurrentControl.CanGetFocus || !CurrentControl.Enabled)
                 FocusNextControl();
         }
-        internal void Invalidate() => ParentConsole.Invalidate();
-        internal void Refresh() => ParentConsole.Refresh();
+
+        internal void Invalidate() =>
+            ParentConsole.Invalidate();
+
+        internal void Refresh() =>
+            ParentConsole.Refresh();
+        
         internal void TriggerEvent(object sender, ConsoleControlEventArgs e)
         {
             EventOccured(sender, e);
             ParentConsole.TriggerEvent(sender, e);
         }
+
         internal void Draw(Graphics g, IDrawEngine drawEngine)
         {
             g.Clear(ControlColorScheme.BackColor);
             Controls.Where(x => x.Visible).Cast<IControlFormOperations>().ToList().ForEach(x => x.Draw(g, drawEngine));
-#if DEBUG
+#if DEBUGRENDER
             using (var p = new Pen(Color.FromArgb(40, 40, 40)))
             {
                 for (var y = 0; y < drawEngine.RowCount; y++)
@@ -69,6 +82,7 @@ namespace ConsoleControlLibrary
                     drawEngine.OutlineControl(g, p, c.ControlOutline);
 #endif
         }
+
         internal void KeyPressed(Keys key, bool shift)
         {
             if (key == Keys.Tab)
@@ -84,6 +98,7 @@ namespace ConsoleControlLibrary
             if (CurrentControl.Visible && CurrentControl.Enabled)
                 ((IControlFormOperations)CurrentControl).KeyPressed(key);
         }
+
         public void CharacterInput(char c)
         {
             if (CurrentControl == null)
@@ -91,6 +106,7 @@ namespace ConsoleControlLibrary
             if (CurrentControl.Visible && CurrentControl.Enabled)
                 ((IControlFormOperations)CurrentControl).CharacterInput(c);
         }
+
         public void SetFocus(IControl control)
         {
             Controls.Cast<IControlFormOperations>().ToList().ForEach(x => x.HasFocus = false);
@@ -99,6 +115,7 @@ namespace ConsoleControlLibrary
             CurrentControlIndex = Controls.IndexOf(CurrentControl);
             ParentConsole.RestoreBlink();
         }
+
         protected internal void FocusPreviousControl()
         {
             if (Controls.Count <= 0)
@@ -120,6 +137,7 @@ namespace ConsoleControlLibrary
                 break;
             } while (nextindex != startindex);
         }
+
         protected internal void FocusNextControl()
         {
             if (Controls.Count <= 0)
@@ -141,9 +159,20 @@ namespace ConsoleControlLibrary
                 break;
             } while (nextindex != startindex);
         }
-        internal Font Font => ParentConsole.GetConsoleFont();
-        protected virtual void EventOccured(object sender, ConsoleControlEventArgs e) { }
-        public IControl GetControlAt(int x, int y) => Controls.FirstOrDefault(c => c.HitTest(x, y) && c.Enabled && c.CanGetFocus && c.Visible);
-        public List<IControl> GetControls() => Controls;
+        
+        internal Font Font =>
+            ParentConsole.GetConsoleFont();
+
+        protected virtual void EventOccured(object sender, ConsoleControlEventArgs e)
+        {
+        }
+        
+        public IControl GetControlAt(int x, int y) =>
+            Controls.FirstOrDefault(c =>
+                c.HitTest(x, y) && c.Enabled && c.CanGetFocus && c.Visible
+            );
+        
+        public List<IControl> GetControls() =>
+            Controls;
     }
 }

@@ -10,6 +10,7 @@ namespace ControlsTestProject
         private readonly Textbox _textbox2;
         private readonly Textbox _textbox3;
         private readonly Button _button;
+
         public TextboxesForm(ConsoleControl parentConsole) : base(parentConsole)
         {
             AddControl(new Label(this, 3, 5, "Write some text (5 characters):"));

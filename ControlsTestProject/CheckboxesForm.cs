@@ -11,6 +11,7 @@ namespace ControlsTestProject
         private readonly Checkbox _checkbox1;
         private readonly Checkbox _checkbox2;
         private readonly Button _button;
+
         public CheckboxesForm(ConsoleControl parentConsole) : base(parentConsole)
         {
             AddControl(new Label(this, 1, 8, "Two checkboxes, two radiobuttons and a button:"));
@@ -23,6 +24,7 @@ namespace ControlsTestProject
             _button = new Button(this, 1, 15, "To textboxes form");
             AddControl(_button);
         }
+
         protected override void EventOccured(object sender, ConsoleControlEventArgs e)
         {
             if (sender == _checkbox1)
