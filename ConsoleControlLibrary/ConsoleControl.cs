@@ -291,15 +291,18 @@ namespace ConsoleControlLibrary
                     RestoreInput(History.Next());
                     break;
                 case Keys.Insert:
+                {
                     if (_currentForm?.CurrentControl is Textbox textbox)
                     {
                         textbox.KeyPressed(Keys.Insert);
                         return;
                     }
+
                     e.SuppressKeyPress = true;
                     InsertAt(CursorPosition);
                     Invalidate();
                     break;
+                }
                 case Keys.Back:
                     e.SuppressKeyPress = true;
                     BackspaceAt(CursorPosition);
@@ -308,10 +311,18 @@ namespace ConsoleControlLibrary
                     Invalidate();
                     break;
                 case Keys.Delete:
+                {
+                    if (_currentForm?.CurrentControl is Textbox textbox)
+                    {
+                        textbox.KeyPressed(Keys.Delete);
+                        return;
+                    }
+
                     e.SuppressKeyPress = true;
                     BackspaceAt(CursorPosition + 1);
                     Invalidate();
                     break;
+                }
                 case Keys.Right:
                     if (CursorPosition < ColumnCount - 1 && CursorPosition < LastCharacterIndex + 1)
                     {

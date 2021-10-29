@@ -48,6 +48,10 @@ namespace ConsoleControlLibrary.Controls
                     InsertAt(_cursorX);
                     Invalidate();
                     break;
+                case Keys.Delete:
+                    BackspaceAt(_cursorX + 1);
+                    Invalidate();
+                    break;
             }
         }
 
