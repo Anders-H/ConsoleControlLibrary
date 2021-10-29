@@ -23,11 +23,6 @@ namespace ConsoleControlLibrary.Controls
         {
         }
 
-        public Button(ConsoleForm parentForm, int x, int y, string text)
-            : this(parentForm, x, y, text.Length, 1, text)
-        {
-        }
-        
         public string Text
         {
             get => _text;
@@ -35,13 +30,31 @@ namespace ConsoleControlLibrary.Controls
             {
                 _text = value ?? "";
 
-                _visibleText = _text.Length <= Width
-                    ? _text
-                    : _text.Substring(0, Width);
+                if (Width > 2)
+                    _visibleText = $"[{EnsureLength(_text, Width - 2)}]";
+                else
+                    _visibleText = _text.Length <= Width
+                        ? _text
+                        : _text.Substring(0, Width);
 
                 Invalidate();
             }
         }
+
+        public string EnsureLength(string s, int length)
+        {
+            if (s.Length == length)
+                return s;
+
+            if (s.Length > length)
+                return s.Substring(0, length);
+
+            while (s.Length < length)
+                s += " ";
+
+            return s;
+        }
+
         public override void KeyPressed(Keys key)
         {
             if (key != Keys.Enter)
@@ -57,9 +70,6 @@ namespace ConsoleControlLibrary.Controls
         {
             if (Width <= 0)
                 return;
-
-            //TODO: Draw some kind of outline.
-            //drawEngine.OutlineControl(g, Pens.White, ControlOutline);
 
             if (_visibleText.Length <= 0)
                 return;

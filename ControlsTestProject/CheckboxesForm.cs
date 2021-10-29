@@ -15,13 +15,13 @@ namespace ControlsTestProject
         public CheckboxesForm(ConsoleControl parentConsole) : base(parentConsole)
         {
             AddControl(new Label(this, 1, 8, "Two checkboxes, two radiobuttons and a button:"));
-            _checkbox1 = new Checkbox(this, true, 1, 10, "Enable button");
+            _checkbox1 = new Checkbox(this, true, 1, 10, 16, "Enable button");
             AddControl(_checkbox1);
-            _checkbox2 = new Checkbox(this, true, 1, 11, "Show button");
+            _checkbox2 = new Checkbox(this, true, 1, 11, 16, "Show button");
             AddControl(_checkbox2);
-            AddControl(new Radiobutton(this, false, "group", 1, 12, "Radio button 1"));
-            AddControl(new Radiobutton(this, false, "group", 1, 13, "Radio button 2"));
-            _button = new Button(this, 1, 15, "To textboxes form");
+            AddControl(new Radiobutton(this, false, "group", 1, 12, 16, "Radio button 1"));
+            AddControl(new Radiobutton(this, false, "group", 1, 13, 16, "Radio button 2"));
+            _button = new Button(this, 1, 15, 19, "To textboxes form");
             AddControl(_button);
         }
 

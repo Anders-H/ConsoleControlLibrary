@@ -22,15 +22,15 @@ namespace ControlsTestProject
             _textBlock = new TextBlock(this, 0, 0, parentConsole.ColumnCount, 7, text, 10, HorizontalTextAlignment.Top);
             AddControl(_textBlock);
             AddControl(new Label(this, 10, 8, "Five buttons:"));
-            _button1 = new Button(this, 10, 10, "Disable me");
+            _button1 = new Button(this, 10, 10, 16, "Disable me");
             AddControl(_button1);
-            _button2 = new Button(this, 10, 11, "Hide me");
+            _button2 = new Button(this, 10, 11, 16, "Hide me");
             AddControl(_button2);
-            _button3 = new Button(this, 10, 12, "Restore");
+            _button3 = new Button(this, 10, 12, 16, "Restore");
             AddControl(_button3);
-            _button4 = new Button(this, 10, 13, "Add text");
+            _button4 = new Button(this, 10, 13, 16, "Add text");
             AddControl(_button4);
-            _button5 = new Button(this, 10, 15, "To checkboxes form");
+            _button5 = new Button(this, 10, 15, 20, "To checkboxes form");
             AddControl(_button5);
         }
 

@@ -22,7 +22,7 @@ namespace ControlsTestProject
             AddControl(new Label(this, 3, 9, "Write a number (0-100):"));
             _textbox3 = new Textbox(this, 3, 10, 10, 3);
             AddControl(_textbox3);
-            _button = new Button(this, 3, 15, "To buttons form");
+            _button = new Button(this, 3, 15, 17, "To buttons form");
             AddControl(_button);
         }
         protected override void EventOccured(object sender, ConsoleControlEventArgs e)
