@@ -8,6 +8,7 @@ namespace ConsoleControlLibrary.Controls
     {
         private string _text;
         private string _visibleText;
+        
         public Label(ConsoleForm parentForm, int x, int y, int width, int height, string text) : base(parentForm, x, y, width, height)
         {
             Text = text ?? "";
@@ -15,8 +16,17 @@ namespace ConsoleControlLibrary.Controls
             Enabled = true;
             Visible = true;
         }
-        public Label(ConsoleForm parentForm, int x, int y, int width, string text) : this(parentForm, x, y, width, 1, text) { }
-        public Label(ConsoleForm parentForm, int x, int y, string text) : this(parentForm, x, y, text.Length, 1, text) { }
+
+        public Label(ConsoleForm parentForm, int x, int y, int width, string text)
+            : this(parentForm, x, y, width, 1, text)
+        {
+        }
+
+        public Label(ConsoleForm parentForm, int x, int y, string text)
+            : this(parentForm, x, y, text.Length, 1, text)
+        {
+        }
+        
         public string Text
         {
             get => _text;
@@ -27,15 +37,21 @@ namespace ConsoleControlLibrary.Controls
                 Invalidate();
             }
         }
-        public override void KeyPressed(Keys key) { }
-        public override void CharacterInput(char c) { }
-        public override void Draw(Graphics g, IDrawEngine drawEngine)
+
+        public override void KeyPressed(Keys key)
+        {
+        }
+
+        public override void CharacterInput(char c)
+        {
+        }
+
+        public override void Draw(Graphics g, IDrawEngine drawEngine, bool activeNow)
         {
             if (Width <= 0 || _visibleText.Length <= 0)
                 return;
             for (var i = 0; i < _visibleText.Length; i++)
                 drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.DisabledForeColorBrush, X + i, Y);
         }
-
     }
 }

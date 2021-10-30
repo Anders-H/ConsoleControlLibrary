@@ -57,6 +57,7 @@ namespace ControlsTestProject
 
             if (sender == _button4)
             {
+                ParentConsole.BeginWait();
                 switch (new Random().Next(0, 6))
                 {
                     case 0:
@@ -78,6 +79,7 @@ namespace ControlsTestProject
                         _textBlock.Write("While the sun hangs in the sky and the desert has sand. While the waves crash in the sea and meet the land. While there's a wind and the stars and the rainbow. Till the mountains crumble into the plain.");
                         break;
                 }
+                ParentConsole.EndWait();
             }
 
             if (sender == _button5)

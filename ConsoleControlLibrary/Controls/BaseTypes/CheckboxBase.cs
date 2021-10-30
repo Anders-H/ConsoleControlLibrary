@@ -10,7 +10,9 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
         private string _text;
         private string _visibleText;
         private bool _checked;
-        protected CheckboxBase(ConsoleForm parentForm, bool isChecked, int x, int y, int width, int height, string text) : base(parentForm, x, y, width, height)
+        
+        protected CheckboxBase(ConsoleForm parentForm, bool isChecked, int x, int y, int width, int height, string text)
+            : base(parentForm, x, y, width, height)
         {
             if (width < 3)
                 throw new ArgumentOutOfRangeException(nameof(width));
@@ -20,8 +22,17 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
             Enabled = true;
             Visible = true;
         }
-        protected CheckboxBase(ConsoleForm parentForm, bool isChecked, int x, int y, int width, string text) : this(parentForm, isChecked, x, y, width, 1, text) { }
-        protected CheckboxBase(ConsoleForm parentForm, bool isChecked, int x, int y, string text) : this(parentForm, isChecked, x, y, text.Length + 3, 1, text) { }
+
+        protected CheckboxBase(ConsoleForm parentForm, bool isChecked, int x, int y, int width, string text)
+            : this(parentForm, isChecked, x, y, width, 1, text)
+        {
+        }
+
+        protected CheckboxBase(ConsoleForm parentForm, bool isChecked, int x, int y, string text)
+            : this(parentForm, isChecked, x, y, text.Length + 3, 1, text)
+        {
+        }
+        
         public bool Checked
         {
             get => _checked;
@@ -35,7 +46,11 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
                 CheckedChanged();
             }
         }
-        protected virtual void CheckedChanged() { }
+
+        protected virtual void CheckedChanged()
+        {
+        }
+        
         public string Text
         {
             get => _text;
@@ -45,6 +60,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
                 Invalidate();
             }
         }
+
         public override void KeyPressed(Keys key)
         {
             if (key != Keys.Enter)
@@ -52,11 +68,20 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
             Checked = !Checked;
             ParentForm.TriggerEvent(this, new ConsoleControlEventArgs(ConsoleControlEventType.CheckChange));
         }
-        public override void CharacterInput(char c) { }
+
+        public override void CharacterInput(char c)
+        {
+        }
+        
         protected abstract char LeftBracket { get; }
+        
         protected abstract char RightBracket { get; }
-        private string VisibleText => _visibleText ?? (_visibleText = $"{LeftBracket}{(Checked ? "X" : " ")}{RightBracket}" + (_text.Length <= Width - 3 ? _text : _text.Substring(0, Width - 3)));
-        public override void Draw(Graphics g, IDrawEngine drawEngine)
+
+        private string VisibleText =>
+            _visibleText
+            ??= $"{LeftBracket}{(Checked ? "X" : " ")}{RightBracket}" + (_text.Length <= Width - 3 ? _text : _text.Substring(0, Width - 3));
+
+        public override void Draw(Graphics g, IDrawEngine drawEngine, bool activeNow)
         {
             if (Width <= 0)
                 return;

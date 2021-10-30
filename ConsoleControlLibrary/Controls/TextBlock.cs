@@ -138,7 +138,7 @@ namespace ConsoleControlLibrary.Controls
         {
         }
         
-        public override void Draw(Graphics g, IDrawEngine drawEngine)
+        public override void Draw(Graphics g, IDrawEngine drawEngine, bool activeNow)
         {
             for(var y = 0; y < Height; y++)
                 for(var x = 0; x < Width; x++)

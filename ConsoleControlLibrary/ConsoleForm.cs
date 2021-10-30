@@ -12,12 +12,13 @@ namespace ConsoleControlLibrary
     {
         protected List<IControl> Controls { get; }
         protected internal IControl CurrentControl { get; private set; }
+        protected IControl ActiveControl { get; set; }
         protected int CurrentControlIndex { get; private set; }
         protected ConsoleControl ParentConsole { get; }
         protected internal Brush BackColorBrush { get; }
         protected internal Brush ForeColorBrush { get; }
         protected internal Brush DisabledForeColorBrush { get; }
-
+        
         public ConsoleForm(ConsoleControl parentConsole)
         {
             BackColorBrush = new SolidBrush(ControlColorScheme.BackColor);
@@ -66,7 +67,22 @@ namespace ConsoleControlLibrary
         internal void Draw(Graphics g, IDrawEngine drawEngine)
         {
             g.Clear(ControlColorScheme.BackColor);
-            Controls.Where(x => x.Visible).Cast<IControlFormOperations>().ToList().ForEach(x => x.Draw(g, drawEngine));
+
+            if (ActiveControl == null)
+                Controls
+                    .Where(x => x.Visible).Cast<IControlFormOperations>()
+                    .ToList()
+                    .ForEach(x => x.Draw(g, drawEngine, false));
+            else
+            {
+                Controls
+                    .Where(x => x.Visible).Cast<IControlFormOperations>()
+                    .ToList()
+                    .ForEach(x => x.Draw(g, drawEngine, x == CurrentControl));
+
+                ActiveControl = null;
+            }
+
 #if DEBUGRENDER
             using (var p = new Pen(Color.FromArgb(40, 40, 40)))
             {

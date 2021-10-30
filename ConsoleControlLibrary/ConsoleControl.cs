@@ -28,11 +28,17 @@ namespace ConsoleControlLibrary
         public event UserInputHandler UserInput;
         public event ConsoleControlEventHandler ControlEvent;
         public IDrawEngine DrawEngine { get; set; } = new DrawEngine();
-        
+        private bool _waitMode;
+        private int _mouseX;
+        private int _mouseY;
+
         public ConsoleControl()
         {
             InitializeComponent();
             InitializeConsole();
+            _waitMode = false;
+            _mouseX = -1;
+            _mouseY = -1;
         }
 
         public void HideCursor() =>
@@ -483,13 +489,24 @@ namespace ConsoleControlLibrary
 
         private void ConsoleControl_MouseMove(object sender, MouseEventArgs e)
         {
+            _mouseX = e.X;
+            _mouseY = e.Y;
+
+            if (_waitMode)
+                return;
+
+            SetCursor();
+        }
+
+        private void SetCursor()
+        {
             if (CurrentForm == null)
             {
                 Cursor = Cursors.Arrow;
                 return;
             }
 
-            var point = DrawEngine.PhysicalCoordinateToFormCoordinate(e.X, e.Y);
+            var point = DrawEngine.PhysicalCoordinateToFormCoordinate(_mouseX, _mouseY);
             if (point == null)
             {
                 Cursor = Cursors.Arrow;
@@ -518,6 +535,19 @@ namespace ConsoleControlLibrary
             }
 
             Cursor = Cursors.Hand;
+        }
+
+        public void BeginWait()
+        {
+            _waitMode = true;
+            Cursor = Cursors.WaitCursor;
+        }
+
+        public void EndWait()
+        {
+            //Clear buffers
+            _waitMode = false;
+            SetCursor();
         }
     }
 }

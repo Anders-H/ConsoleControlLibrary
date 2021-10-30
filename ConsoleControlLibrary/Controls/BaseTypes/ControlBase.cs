@@ -58,7 +58,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
 
         public abstract void CharacterInput(char c);
 
-        public abstract void Draw(Graphics g, IDrawEngine drawEngine);
+        public abstract void Draw(Graphics g, IDrawEngine drawEngine, bool activeNow);
 
         public bool HitTest(int x, int y) =>
             x >= X && y >= Y && x < X + Width && y < Y + Height;

@@ -66,7 +66,7 @@ namespace ConsoleControlLibrary.Controls
         {
         }
 
-        public override void Draw(Graphics g, IDrawEngine drawEngine)
+        public override void Draw(Graphics g, IDrawEngine drawEngine, bool activeNow)
         {
             if (Width <= 0)
                 return;
