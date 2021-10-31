@@ -65,9 +65,12 @@ namespace ConsoleControlLibrary.Controls
         private void CreateCharacterGrid()
         {
             _characterGrid = new char[Width, Height];
+
             if (string.IsNullOrWhiteSpace(Text))
                 return;
+            
             var rowList = PrepareText(Text);
+            
             switch (HorizontalTextAlignment)
             {
                 case HorizontalTextAlignment.Top:
@@ -97,6 +100,7 @@ namespace ConsoleControlLibrary.Controls
         {
             if (_firstFreeRow >= Height - 1 && _characterGrid[0, Height - 1] > (char)0)
                 ScrollUp();
+            
             var rowList = PrepareText(text);
             DoWrite(rowList, CharacterDelayMs);
         }
@@ -111,10 +115,13 @@ namespace ConsoleControlLibrary.Controls
                     _firstFreeRow = y;
                     break;
                 }
+
             ParentForm.HideCursor();
+            
             foreach (var row in rowList)
             {
                 var r = row.Trim();
+                
                 for (var i = 0; i < r.Length; i++)
                 {
                     _characterGrid[i, _firstFreeRow] = r[i];
@@ -123,6 +130,7 @@ namespace ConsoleControlLibrary.Controls
                     System.Threading.Thread.Sleep(delay);
                     ParentForm.Refresh();
                 }
+                
                 if (_firstFreeRow < Height - 1)
                     _firstFreeRow++;
                 else if (row != rowList.Last())

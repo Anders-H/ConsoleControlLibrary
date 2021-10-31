@@ -24,6 +24,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
             Width = width;
             Height = height;
         }
+
         public Rectangle ControlOutline =>
             new Rectangle(X, Y, Width, Height);
         

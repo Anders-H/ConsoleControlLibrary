@@ -1,4 +1,6 @@
-﻿using System;
+﻿#undef DEBUGRENDER
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -44,10 +46,12 @@ namespace ConsoleControlLibrary
         {
             if (Controls.Count <= 0)
                 return;
+
             CurrentControl = Controls.OrderBy(x => x.TabIndex).First();
             CurrentControlIndex = Controls.IndexOf(CurrentControl);
             var c = (IControlFormOperations)CurrentControl;
             c.HasFocus = true;
+            
             if (!CurrentControl.CanGetFocus || !CurrentControl.Enabled)
                 FocusNextControl();
         }
@@ -109,8 +113,10 @@ namespace ConsoleControlLibrary
                     FocusNextControl();
                 return;
             }
+
             if (CurrentControl == null)
                 return;
+
             if (CurrentControl.Visible && CurrentControl.Enabled)
                 ((IControlFormOperations)CurrentControl).KeyPressed(key);
         }
@@ -119,6 +125,7 @@ namespace ConsoleControlLibrary
         {
             if (CurrentControl == null)
                 return;
+
             if (CurrentControl.Visible && CurrentControl.Enabled)
                 ((IControlFormOperations)CurrentControl).CharacterInput(c);
         }
@@ -136,9 +143,11 @@ namespace ConsoleControlLibrary
         {
             if (Controls.Count <= 0)
                 return;
+
             Controls.Cast<IControlFormOperations>().ToList().ForEach(x => x.HasFocus = false);
             var startindex = CurrentControlIndex;
             var nextindex = CurrentControlIndex;
+            
             do
             {
                 nextindex--;
@@ -158,9 +167,11 @@ namespace ConsoleControlLibrary
         {
             if (Controls.Count <= 0)
                 return;
+
             Controls.Cast<IControlFormOperations>().ToList().ForEach(x => x.HasFocus = false);
             var startindex = CurrentControlIndex;
             var nextindex = CurrentControlIndex;
+
             do
             {
                 nextindex++;

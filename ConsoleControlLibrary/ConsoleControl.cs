@@ -51,6 +51,7 @@ namespace ConsoleControlLibrary
         {
             if (col < 0 || col >= ColumnCount || row < 0 || row >= RowCount || string.IsNullOrEmpty(text) || text.Length <= 0)
                 return;
+
             for (var i = 0; i < text.Length; i++)
             {
                 var x = i + col;
@@ -103,10 +104,12 @@ namespace ConsoleControlLibrary
         [DefaultValue(true)]
         [Category("Console Settings")]
         public bool UppercaseInput { get; set; } = true;
+
         private void InitializeConsole()
         {
             if (DesignMode)
                 return;
+
             _characterArray = new char[RowCount, ColumnCount];
             _needsRecalcSize = true;
             Invalidate();
@@ -135,8 +138,10 @@ namespace ConsoleControlLibrary
         {
             if (DesignMode)
                 return;
+
             if (_needsRecalcSize)
                 CalcSize(e.Graphics);
+
             if (CurrentForm == null)
             {
                 e.Graphics.Clear(BackColor);
@@ -226,8 +231,10 @@ namespace ConsoleControlLibrary
         {
             if (col == ColumnCount - 1)
                 _characterArray[RowCount - 1, ColumnCount - 1] = (char)0;
+
             for (var i = ColumnCount - 1; i > col; i--)
                 _characterArray[RowCount - 1, i] = _characterArray[RowCount - 1, i - 1];
+            
             _characterArray[RowCount - 1, col] = (char)0;
         }
 
@@ -261,6 +268,7 @@ namespace ConsoleControlLibrary
                 for (var c = ColumnCount - 1; c >= 0; c--)
                     if (_characterArray[RowCount - 1, c] != (char)0 && _characterArray[RowCount - 1, c] != ' ')
                         return c;
+
                 return -1;
             }
         }
@@ -272,6 +280,7 @@ namespace ConsoleControlLibrary
                 ShiftKey = true;
                 return;
             }
+
             if (CurrentForm != null && IsControlKey(e.KeyCode))
             {
                 e.Handled = true;
@@ -279,7 +288,9 @@ namespace ConsoleControlLibrary
                 CurrentForm.KeyPressed(e.KeyCode, ShiftKey);
                 return;
             }
+            
             string text;
+            
             switch (e.KeyCode)
             {
                 case Keys.Up:
@@ -312,8 +323,10 @@ namespace ConsoleControlLibrary
                 case Keys.Back:
                     e.SuppressKeyPress = true;
                     BackspaceAt(CursorPosition);
+
                     if (CursorPosition > 0)
                         CursorPosition--;
+
                     Invalidate();
                     break;
                 case Keys.Delete:
@@ -378,7 +391,10 @@ namespace ConsoleControlLibrary
         {
             RestoreBlink();
             var lastCharacterIndex = LastCharacterIndex;
-            CursorPosition = lastCharacterIndex < ColumnCount - 2 ? lastCharacterIndex + 1 : ColumnCount - 1;
+
+            CursorPosition = lastCharacterIndex < ColumnCount - 2
+                ? lastCharacterIndex + 1
+                : ColumnCount - 1;
         }
 
         public void RestoreBlink()
@@ -393,6 +409,7 @@ namespace ConsoleControlLibrary
         {
             for (var i = 0; i < ColumnCount; i++)
                 _characterArray[RowCount - 1, i] = (char)0;
+
             SetText(RowCount - 1, 0, text);
             GoToEnd();
             RowChanged = false;
@@ -401,8 +418,10 @@ namespace ConsoleControlLibrary
         private void HandleInput()
         {
             var text = GetText(RowCount - 1, 0);
+
             if (!string.IsNullOrWhiteSpace(text))
                 History.Remember(text.Trim());
+            
             RowChanged = false;
             ScrollUp();
             CursorPosition = 0;
@@ -412,8 +431,10 @@ namespace ConsoleControlLibrary
         private string GetText(int row, int col)
         {
             var s = new StringBuilder();
+
             for (var c = col; c < ColumnCount; c++)
                 s.Append(_characterArray[row, c] == (char)0 ? ' ' : _characterArray[row, c]);
+            
             return s.ToString().Trim();
         }
 
@@ -422,6 +443,7 @@ namespace ConsoleControlLibrary
             for (var row = 1; row < RowCount; row++)
                 for (var col = 0; col < ColumnCount; col++)
                     _characterArray[row - 1, col] = _characterArray[row, col];
+
             for (var col = 0; col < ColumnCount; col++)
                 _characterArray[RowCount - 1, col] = (char)0;
         }
@@ -431,11 +453,14 @@ namespace ConsoleControlLibrary
             var rows = WordWrapper.WordWrap(ColumnCount, (text ?? "").Trim()).Split('\n');
             timer1.Enabled = false;
             CursorBlink = false;
+
             foreach (var row in rows)
             {
                 var r = row.Trim();
+
                 if (string.IsNullOrEmpty(r) && row == rows.Last())
                     continue;
+                
                 for (var i = 0; i < r.Length; i++)
                 {
                     SetText(RowCount - 1, i, r[i].ToString());
@@ -444,6 +469,7 @@ namespace ConsoleControlLibrary
                     Refresh();
                     System.Threading.Thread.Sleep(msDelay);
                 }
+
                 ScrollUp();
                 Invalidate();
             }
@@ -457,6 +483,7 @@ namespace ConsoleControlLibrary
             {
                 if (_currentForm == value)
                     return;
+
                 _currentForm = value;
                 _currentForm?.Run();
                 Invalidate();
@@ -477,12 +504,17 @@ namespace ConsoleControlLibrary
         {
             if (CurrentForm == null)
                 return;
+
             var point = DrawEngine.PhysicalCoordinateToFormCoordinate(e.X, e.Y);
+
             if (point == null)
                 return;
+
             var hit = CurrentForm.GetControlAt(point.Item1, point.Item2);
+
             if (hit == null)
                 return;
+
             CurrentForm.SetFocus(hit);
             CurrentForm.KeyPressed(Keys.Enter, ShiftKey);
         }

@@ -73,6 +73,7 @@ namespace ConsoleControlLibrary.Controls
                 for (var c = MaxLength - 1; c >= 0; c--)
                     if (_characters[c] != (char)0 && _characters[c] != ' ')
                         return c;
+
                 return -1;
             }
         }
@@ -87,8 +88,10 @@ namespace ConsoleControlLibrary.Controls
         {
             Insert();
             _characters[_cursorX] = c;
+
             if (_cursorX < MaxLength - 1)
                 _cursorX++;
+            
             if (_cursorX >= _displayOffset + Width)
                 _displayOffset = _cursorX - Width + 1;
 
@@ -104,8 +107,10 @@ namespace ConsoleControlLibrary.Controls
         {
             if (col == MaxLength - 1)
                 _characters[MaxLength - 1] = (char)0;
+
             for (var i = MaxLength - 1; i > col; i--)
                 _characters[i] = _characters[i - 1];
+            
             _characters[col] = (char)0;
         }
 
@@ -113,20 +118,25 @@ namespace ConsoleControlLibrary.Controls
         {
             if (Width <= 0)
                 return;
+
             var drawCharacters = new char[Width];
+            
             for (var i = 0; i < Width; i++)
             {
                 var source = i + _displayOffset;
                 drawCharacters[i] = source < _characters.Length ? _characters[i + _displayOffset] : (char)0;
             }
+            
             if (Enabled)
             {
                 if (HasFocus)
                 {
                     var cursorX = _cursorX + X - _displayOffset;
                     cursorX = cursorX > X + Width - 1 ? X + Width - 1 : cursorX;
+                    
                     if (ConsoleControl.CursorBlink)
                         drawEngine.DrawCursor(g, ParentForm.ForeColorBrush, cursorX, Y);
+                    
                     for (var i = 0; i < drawCharacters.Length; i++)
                     {
                         var x = X + i;
@@ -162,6 +172,7 @@ namespace ConsoleControlLibrary.Controls
                 {
                     if (index >= MaxLength)
                         return;
+
                     _characters[index] = c;
                     index++;
                 }

@@ -16,11 +16,14 @@ namespace ConsoleControlLibrary
         {
             ColumnCount = columnCount;
             RowCount = rowCount;
+            
             var width = Math.Max(canvasWidth, 30.0);
             var height = Math.Max(canvasHeight, 30.0);
+            
             CharacterWidth = width / ColumnCount;
             CharacterHeight = height / RowCount;
             var fontSize = (float)(Math.Min(CharacterWidth, CharacterHeight) - 1);
+
             for (var i = fontSize + 20; i >= fontSize; i -= 0.5f)
             {
                 f?.Dispose();
@@ -28,6 +31,7 @@ namespace ConsoleControlLibrary
                 if (g.MeasureString("WM", f).Width >= fontSize || g.MeasureString("Åj", f).Height >= fontSize)
                     break;
             }
+
             var csize = g.MeasureString("W", f);
             CharacterOffsetX = (CharacterWidth / 2.0) - (csize.Width / 2.0);
             CharacterOffsetY = (CharacterHeight / 2.0) - (csize.Height / 2.0);
@@ -52,6 +56,12 @@ namespace ConsoleControlLibrary
             g.DrawRectangle(p, (float)(x*CharacterWidth), (float)(y*CharacterHeight), (float)CharacterWidth, (float)CharacterHeight);
        
         public void OutlineControl(Graphics g, Pen p, Rectangle outline) =>
-            g.DrawRectangle(p, new Rectangle((int)(outline.X * CharacterWidth), (int)(outline.Y * CharacterHeight), (int)(outline.Width * CharacterWidth), (int)(outline.Height * CharacterHeight)));
+            g.DrawRectangle(
+                p,
+                new Rectangle((int)(outline.X * CharacterWidth),
+                (int)(outline.Y * CharacterHeight),
+                (int)(outline.Width * CharacterWidth),
+                (int)(outline.Height * CharacterHeight))
+            );
     }
 }

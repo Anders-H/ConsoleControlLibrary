@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using ConsoleControlLibrary.Controls.BaseTypes;
+﻿using ConsoleControlLibrary.Controls.BaseTypes;
 
 namespace ConsoleControlLibrary.Controls
 {

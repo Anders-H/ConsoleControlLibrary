@@ -25,12 +25,11 @@ namespace ControlsTestProject
             _button = new Button(this, 3, 15, 17, "To buttons form");
             AddControl(_button);
         }
+
         protected override void EventOccured(object sender, ConsoleControlEventArgs e)
         {
             if (sender == _button)
-            {
                 ParentConsole.CurrentForm = new ButtonsForm(ParentConsole);
-            }
         }
     }
 }
