@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace ConsoleControlLibrary.Controls.BaseTypes
 {
@@ -16,5 +17,6 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
         bool Visible { get; set; }
         bool HitTest(int x, int y);
         Rectangle ControlOutline { get; }
+        DateTime GotActiveAt { get; set; }
     }
 }

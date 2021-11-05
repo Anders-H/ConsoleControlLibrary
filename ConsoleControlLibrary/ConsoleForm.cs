@@ -14,18 +14,22 @@ namespace ConsoleControlLibrary
     {
         protected List<IControl> Controls { get; }
         protected internal IControl CurrentControl { get; private set; }
-        protected IControl ActiveControl { get; set; }
+        protected internal IControl ActiveControl { get; set; }
         protected int CurrentControlIndex { get; private set; }
         protected ConsoleControl ParentConsole { get; }
         protected internal Brush BackColorBrush { get; }
         protected internal Brush ForeColorBrush { get; }
         protected internal Brush DisabledForeColorBrush { get; }
-        
+        protected internal Brush ActiveControlBackColor { get; }
+        protected internal Brush ActiveControlForeColor { get; }
+
         public ConsoleForm(ConsoleControl parentConsole)
         {
             BackColorBrush = new SolidBrush(ControlColorScheme.BackColor);
             ForeColorBrush = new SolidBrush(ControlColorScheme.ForeColor);
             DisabledForeColorBrush = new SolidBrush(ControlColorScheme.DisabledForeColor);
+            ActiveControlBackColor = new SolidBrush(ControlColorScheme.ActiveControlBackColor);
+            ActiveControlForeColor = new SolidBrush(ControlColorScheme.ActiveControlForeColor);
             ParentConsole = parentConsole;
             Controls = new List<IControl>();
         }
@@ -34,6 +38,9 @@ namespace ConsoleControlLibrary
         {
             BackColorBrush.Dispose();
             ForeColorBrush.Dispose();
+            DisabledForeColorBrush.Dispose();
+            ActiveControlBackColor.Dispose();
+            ActiveControlForeColor.Dispose();
         }
 
         internal void HideCursor() =>

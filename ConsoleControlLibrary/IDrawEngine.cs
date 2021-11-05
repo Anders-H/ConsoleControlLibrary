@@ -17,5 +17,6 @@ namespace ConsoleControlLibrary
         void DrawCursor(Graphics g, Pen p, int x, int y);
         Tuple<int, int> PhysicalCoordinateToFormCoordinate(int x, int y);
         void OutlineControl(Graphics g, Pen p, Rectangle outline);
+        public void FillControl(Graphics g, Brush b, Rectangle outline);
     }
 }

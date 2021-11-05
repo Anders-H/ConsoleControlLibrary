@@ -63,5 +63,14 @@ namespace ConsoleControlLibrary
                 (int)(outline.Width * CharacterWidth),
                 (int)(outline.Height * CharacterHeight))
             );
+
+        public void FillControl(Graphics g, Brush b, Rectangle outline) =>
+            g.FillRectangle(
+                b,
+                new Rectangle((int)(outline.X * CharacterWidth),
+                (int)(outline.Y * CharacterHeight),
+                (int)(outline.Width * CharacterWidth),
+                (int)(outline.Height * CharacterHeight))
+            );
     }
 }

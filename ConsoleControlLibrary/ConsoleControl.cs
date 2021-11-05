@@ -516,6 +516,8 @@ namespace ConsoleControlLibrary
                 return;
 
             CurrentForm.SetFocus(hit);
+            CurrentForm.ActiveControl = hit;
+            CurrentForm.ActiveControl.GotActiveAt = DateTime.Now;
             CurrentForm.KeyPressed(Keys.Enter, ShiftKey);
         }
 

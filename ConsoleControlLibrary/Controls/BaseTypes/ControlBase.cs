@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace ConsoleControlLibrary.Controls.BaseTypes
@@ -13,6 +14,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
         public int Y { get; }
         public int Width { get; }
         public int Height { get; }
+        public DateTime GotActiveAt { get; set; }
         private bool _enabled;
         private bool _visible;
 
@@ -63,5 +65,8 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
 
         public bool HitTest(int x, int y) =>
             x >= X && y >= Y && x < X + Width && y < Y + Height;
+
+        public bool ConsiderAsActiveNow(bool activeNow) =>
+            activeNow || DateTime.Now.Subtract(GotActiveAt).TotalSeconds < 0.5;
     }
 }

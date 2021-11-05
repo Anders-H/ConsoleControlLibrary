@@ -59,6 +59,7 @@ namespace ConsoleControlLibrary.Controls
         {
             if (key != Keys.Enter)
                 return;
+
             ParentForm.TriggerEvent(this, new ConsoleControlEventArgs(ConsoleControlEventType.Click));
         }
 
@@ -76,18 +77,30 @@ namespace ConsoleControlLibrary.Controls
 
             if (Enabled)
             {
+                var foreColor = ConsiderAsActiveNow(activeNow)
+                    ? ParentForm.ActiveControlForeColor
+                    : ParentForm.ForeColorBrush;
+
+                var backColor = ConsiderAsActiveNow(activeNow)
+                    ? ParentForm.ActiveControlBackColor
+                    : ParentForm.BackColorBrush;
+
+                drawEngine.FillControl(g, backColor, new Rectangle(X, Y, Width, Height));
+
                 for (var i = 0; i < _visibleText.Length; i++)
                 {
                     if (i == 0 && HasFocus && ConsoleControl.CursorBlink)
                     {
                         drawEngine.DrawCursor(g, ParentForm.ForeColorBrush, X, Y);
-                        drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.BackColorBrush, X + i, Y);
+                        drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, foreColor, X + i, Y);
                         continue;
                     }
-                    drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.ForeColorBrush, X + i, Y);
+
+                    drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, foreColor, X + i, Y);
                 }
                 return;
             }
+
             for (var i = 0; i < _visibleText.Length; i++)
             {
                 drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.DisabledForeColorBrush, X + i, Y);
