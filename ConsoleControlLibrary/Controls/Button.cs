@@ -67,7 +67,7 @@ namespace ConsoleControlLibrary.Controls
         {
         }
 
-        public override void Draw(Graphics g, IDrawEngine drawEngine, bool activeNow)
+        public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             if (Width <= 0)
                 return;
@@ -77,11 +77,13 @@ namespace ConsoleControlLibrary.Controls
 
             if (Enabled)
             {
-                var foreColor = ConsiderAsActiveNow(activeNow)
+                var activeNow = ConsiderAsActiveNow();
+
+                var foreColor = activeNow
                     ? ParentForm.ActiveControlForeColor
                     : ParentForm.ForeColorBrush;
 
-                var backColor = ConsiderAsActiveNow(activeNow)
+                var backColor = activeNow
                     ? ParentForm.ActiveControlBackColor
                     : ParentForm.BackColorBrush;
 

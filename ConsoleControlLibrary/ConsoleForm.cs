@@ -79,20 +79,10 @@ namespace ConsoleControlLibrary
         {
             g.Clear(ControlColorScheme.BackColor);
 
-            if (ActiveControl == null)
-                Controls
-                    .Where(x => x.Visible).Cast<IControlFormOperations>()
-                    .ToList()
-                    .ForEach(x => x.Draw(g, drawEngine, false));
-            else
-            {
-                Controls
-                    .Where(x => x.Visible).Cast<IControlFormOperations>()
-                    .ToList()
-                    .ForEach(x => x.Draw(g, drawEngine, x == CurrentControl));
-
-                ActiveControl = null;
-            }
+            Controls
+                .Where(x => x.Visible).Cast<IControlFormOperations>()
+                .ToList()
+                .ForEach(x => x.Draw(g, drawEngine));
 
 #if DEBUGRENDER
             using (var p = new Pen(Color.FromArgb(40, 40, 40)))

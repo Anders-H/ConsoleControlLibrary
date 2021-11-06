@@ -61,12 +61,12 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
 
         public abstract void CharacterInput(char c);
 
-        public abstract void Draw(Graphics g, IDrawEngine drawEngine, bool activeNow);
+        public abstract void Draw(Graphics g, IDrawEngine drawEngine);
 
         public bool HitTest(int x, int y) =>
             x >= X && y >= Y && x < X + Width && y < Y + Height;
 
-        public bool ConsiderAsActiveNow(bool activeNow) =>
-            activeNow || DateTime.Now.Subtract(GotActiveAt).TotalSeconds < 0.5;
+        protected bool ConsiderAsActiveNow() =>
+            DateTime.Now.Subtract(GotActiveAt).TotalSeconds < 0.1;
     }
 }

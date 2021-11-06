@@ -81,21 +81,33 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
             _visibleText
             ??= $"{LeftBracket}{(Checked ? "X" : " ")}{RightBracket}" + (_text.Length <= Width - 3 ? _text : _text.Substring(0, Width - 3));
 
-        public override void Draw(Graphics g, IDrawEngine drawEngine, bool activeNow)
+        public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             if (Width <= 0)
                 return;
             if (Enabled)
             {
+                var activeNow = ConsiderAsActiveNow();
+
+                var foreColor = activeNow
+                    ? ParentForm.ActiveControlForeColor
+                    : ParentForm.ForeColorBrush;
+
+                var backColor = activeNow
+                    ? ParentForm.ActiveControlBackColor
+                    : ParentForm.BackColorBrush;
+
+                drawEngine.FillControl(g, backColor, new Rectangle(X, Y, Width, Height));
+
                 for (var i = 0; i < VisibleText.Length; i++)
                 {
                     if (i == 1 && HasFocus && ConsoleControl.CursorBlink)
                     {
-                        drawEngine.DrawCursor(g, ParentForm.ForeColorBrush, X + 1, Y);
-                        drawEngine.DrawCharacter(g, VisibleText[i], ParentForm.Font, ParentForm.BackColorBrush, X + i, Y);
+                        drawEngine.DrawCursor(g, foreColor, X + 1, Y);
+                        drawEngine.DrawCharacter(g, VisibleText[i], ParentForm.Font, backColor, X + i, Y);
                         continue;
                     }
-                    drawEngine.DrawCharacter(g, VisibleText[i], ParentForm.Font, ParentForm.ForeColorBrush, X + i, Y);
+                    drawEngine.DrawCharacter(g, VisibleText[i], ParentForm.Font, foreColor, X + i, Y);
                 }
                 return;
             }
