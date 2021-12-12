@@ -23,9 +23,10 @@ namespace ControlsTestProject
             AddControl(new Radiobutton(this, false, "group", 1, 13, 16, "Radio button 2"));
             _button = new Button(this, 1, 15, 19, "To textboxes form");
             AddControl(_button);
+            TriggerFormLoadedEvent();
         }
 
-        protected override void EventOccured(object sender, ConsoleControlEventArgs e)
+        protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
         {
             if (sender == _checkbox1)
             {

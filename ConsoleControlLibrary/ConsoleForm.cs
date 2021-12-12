@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls.Events;
 using ConsoleControlLibrary.Controls.BaseTypes;
@@ -12,6 +13,9 @@ namespace ConsoleControlLibrary
 {
     public class ConsoleForm : IDisposable
     {
+        private delegate void TriggerFormLoadedDelegate();
+
+        private Thread _thread;
         protected List<IControl> Controls { get; }
         protected internal IControl CurrentControl { get; private set; }
         protected internal IControl ActiveControl { get; set; }
@@ -68,10 +72,29 @@ namespace ConsoleControlLibrary
 
         internal void Refresh() =>
             ParentConsole.Refresh();
-        
+
+        protected void TriggerFormLoadedEvent()
+        {
+            _thread = new Thread(DoTriggerFormLoadEvent);
+            _thread.Start();
+        }
+
+        private void DoTriggerFormLoadEvent()
+        {
+            Thread.Sleep(200);
+            var executeTriggerLoadEvent = new TriggerFormLoadedDelegate(ExecuteTriggerLoadEvent);
+            ParentConsole.Invoke(executeTriggerLoadEvent);
+        }
+
+        private void ExecuteTriggerLoadEvent()
+        {
+            TriggerEvent(this, new ConsoleControlEventArgs(ConsoleControlEventType.FormLoaded));
+        }
+
         internal void TriggerEvent(object sender, ConsoleControlEventArgs e)
         {
-            EventOccured(sender, e);
+            Thread.Sleep(100);
+            EventOccurred(sender, e);
             ParentConsole.TriggerEvent(sender, e);
         }
 
@@ -187,7 +210,7 @@ namespace ConsoleControlLibrary
         internal Font Font =>
             ParentConsole.GetConsoleFont();
 
-        protected virtual void EventOccured(object sender, ConsoleControlEventArgs e)
+        protected virtual void EventOccurred(object sender, ConsoleControlEventArgs e)
         {
         }
         

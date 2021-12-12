@@ -24,6 +24,7 @@ namespace ConsoleControlLibrary.Controls
             Visible = true;
             Text = text ?? "";
             CharacterDelayMs = characterDelayMs;
+            Text = "";
         }
 
         public TextBlock(ConsoleForm parentForm, int x, int y, int width, int height, string text, HorizontalTextAlignment horizontalTextAlignment)
@@ -66,9 +67,6 @@ namespace ConsoleControlLibrary.Controls
         {
             _characterGrid = new char[Width, Height];
 
-            if (string.IsNullOrWhiteSpace(Text))
-                return;
-            
             var rowList = PrepareText(Text);
             
             switch (HorizontalTextAlignment)
@@ -103,6 +101,15 @@ namespace ConsoleControlLibrary.Controls
             
             var rowList = PrepareText(text);
             DoWrite(rowList, CharacterDelayMs);
+        }
+
+        public void Add(string text)
+        {
+            if (_firstFreeRow >= Height - 1 && _characterGrid[0, Height - 1] > (char)0)
+                ScrollUp();
+
+            var rowList = PrepareText(text);
+            DoWrite(rowList, 0);
         }
 
         private void DoWrite(List<string> rowList, int delay)

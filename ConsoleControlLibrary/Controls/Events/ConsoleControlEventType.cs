@@ -3,6 +3,8 @@
     public enum ConsoleControlEventType
     {
         CheckChange,
-        Click
+        Click,
+        FormLoaded,
+        TextboxEnter
     }
 }

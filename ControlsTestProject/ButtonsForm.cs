@@ -32,9 +32,10 @@ namespace ControlsTestProject
             AddControl(_button4);
             _button5 = new Button(this, 10, 15, 20, "To checkboxes form");
             AddControl(_button5);
+            TriggerFormLoadedEvent();
         }
 
-        protected override void EventOccured(object sender, ConsoleControlEventArgs e)
+        protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
         {
             if (sender == _button1)
             {

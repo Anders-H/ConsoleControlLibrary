@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls.BaseTypes;
+using ConsoleControlLibrary.Controls.Events;
 
 namespace ConsoleControlLibrary.Controls
 {
@@ -51,6 +52,12 @@ namespace ConsoleControlLibrary.Controls
                 case Keys.Delete:
                     BackspaceAt(_cursorX + 1);
                     Invalidate();
+                    break;
+                case Keys.Enter:
+                    ParentForm.TriggerEvent(
+                        this,
+                        new ConsoleControlEventArgs(ConsoleControlEventType.TextboxEnter)
+                    );
                     break;
             }
         }
@@ -164,9 +171,14 @@ namespace ConsoleControlLibrary.Controls
         
         public string Text
         {
-            get => (_characters.ToString() ?? "").Trim();
+            get => (new string(_characters)).Trim();
             set
             {
+                for (var i = 0; i < MaxLength; i++)
+                    _characters[i] = (char)0;
+
+                _cursorX = 0;
+
                 var index = 0;
                 foreach (var c in (value ?? "").ToCharArray())
                 {
