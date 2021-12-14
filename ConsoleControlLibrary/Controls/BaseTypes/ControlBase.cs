@@ -29,7 +29,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
 
         public Rectangle ControlOutline =>
             new Rectangle(X, Y, Width, Height);
-        
+
         public bool Enabled
         {
             get => _enabled;

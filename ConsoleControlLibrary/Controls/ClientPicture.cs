@@ -1,13 +1,12 @@
 ﻿using ConsoleControlLibrary.Controls.BaseTypes;
 using System.Drawing;
 using System.Windows.Forms;
+using ConsoleControlLibrary.Controls.Picture;
 
 namespace ConsoleControlLibrary.Controls
 {
     public class ClientPicture : ControlBase, IControl, IControlFormOperations
     {
-        public delegate void DrawPictureDelegate(ClientPicture picture, Graphics g);
-
         private DrawPictureDelegate _drawPictureDelegate;
 
         public ClientPicture(ConsoleForm parentForm, int x, int y, int width, int height) : base(parentForm, x, y, width, height)
@@ -28,11 +27,8 @@ namespace ConsoleControlLibrary.Controls
         {
         }
 
-        public override void Draw(Graphics g, IDrawEngine drawEngine)
-        {
-            if (_drawPictureDelegate != null)
-                _drawPictureDelegate.Invoke(this, g);
-        }
+        public override void Draw(Graphics g, IDrawEngine drawEngine) =>
+            _drawPictureDelegate?.Invoke(this, g);
 
         public override void KeyPressed(Keys key)
         {

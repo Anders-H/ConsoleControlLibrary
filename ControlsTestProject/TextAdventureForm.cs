@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Drawing;
 using System.Threading;
 using ConsoleControlLibrary;
 using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.Events;
+using ConsoleControlLibrary.Controls.Picture;
 
 namespace ControlsTestProject
 {
@@ -11,6 +13,7 @@ namespace ControlsTestProject
         private readonly ClientPicture _picture;
         private readonly TextBlock _output;
         private readonly Textbox _input;
+        private readonly TestImage _image;
 
         public TextAdventureForm(ConsoleControl parentConsole) : base(parentConsole)
         {
@@ -21,6 +24,20 @@ namespace ControlsTestProject
             _input = new Textbox(this, 0, 39, 90, 90);
             AddControl(_input);
             TriggerFormLoadedEvent();
+            _image = new TestImage(parentConsole.DrawEngine, _picture, 320, 200);
+        }
+
+        private class TestImage : VectorImageBase
+        {
+            public TestImage(IDrawEngine drawEngine, ClientPicture clientPicture, int virtualWidth, int virtualHeight) : base(drawEngine, physicalPosition, virtualWidth, virtualHeight)
+            {
+            }
+
+            public override void DrawPicture(ClientPicture picture, Graphics g)
+            {
+                g.DrawLine(Pens.Red, VirtualToPhysical(0, 199), VirtualToPhysical(319, 0));
+                g.DrawLine(Pens.Green, VirtualToPhysical(0, 0), VirtualToPhysical(319, 199));
+            }
         }
 
         protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
