@@ -11,6 +11,9 @@ namespace ConsoleControlLibrary.Controls
 
         public ClientPicture(ConsoleForm parentForm, int x, int y, int width, int height) : base(parentForm, x, y, width, height)
         {
+            CanGetFocus = false;
+            Enabled = true;
+            Visible = true;
         }
 
         public DrawPictureDelegate DrawPicture

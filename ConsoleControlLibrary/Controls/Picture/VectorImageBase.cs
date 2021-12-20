@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace ConsoleControlLibrary.Controls.Picture
 {
@@ -6,12 +7,20 @@ namespace ConsoleControlLibrary.Controls.Picture
     {
         protected IDrawEngine DrawEngine { get; }
         protected ClientPicture ClientPicture { get; }
-        protected int PhysicalX { get; }
-        protected int PhysicalY { get; }
-        protected int PhysicalWidth { get; }
-        protected int PhysicalHeight { get; }
         protected int VirtualWidth { get; }
         protected int VirtualHeight { get; }
+
+        protected int PhysicalX =>
+            (int)Math.Round(ClientPicture.X * DrawEngine.CharacterWidth);
+
+        protected int PhysicalY =>
+            (int)Math.Round(ClientPicture.Y * DrawEngine.CharacterHeight);
+
+        protected int PhysicalWidth =>
+            (int)Math.Round(ClientPicture.Width * DrawEngine.CharacterWidth);
+
+        protected int PhysicalHeight =>
+            (int)Math.Round(ClientPicture.Height * DrawEngine.CharacterHeight);
 
         public VectorImageBase(IDrawEngine drawEngine, ClientPicture clientPicture, int virtualWidth, int virtualHeight)
         {
@@ -19,11 +28,7 @@ namespace ConsoleControlLibrary.Controls.Picture
             ClientPicture = clientPicture;
             VirtualWidth = virtualWidth;
             VirtualHeight = virtualHeight;
-
-            PhysicalX = (int)(clientPicture.X * drawEngine.CharacterWidth);
-            PhysicalY = (int)(clientPicture.Y * drawEngine.CharacterHeight);
-            PhysicalWidth = (int)(clientPicture.Width * drawEngine.CharacterWidth);
-            PhysicalHeight = (int)(clientPicture.Height * drawEngine.CharacterHeight);
+            clientPicture.DrawPicture = DrawPicture;
         }
 
         public virtual void DrawPicture(ClientPicture picture, Graphics g)
@@ -32,7 +37,18 @@ namespace ConsoleControlLibrary.Controls.Picture
 
         public Point VirtualToPhysical(int x, int y)
         {
+            var adjustedX = (int)Math.Round(LinearInterpolation(x, 0, VirtualWidth, PhysicalX, PhysicalX + PhysicalWidth));
+            var adjustedY = (int)Math.Round(LinearInterpolation(y, 0, VirtualHeight, PhysicalY, PhysicalY + PhysicalHeight));
 
+            return new Point(adjustedX, adjustedY);
+        }
+
+        private static double LinearInterpolation(double value, double inputMin, double inputMax, double outputMin, double outputMax)
+        {
+            if ((inputMax - inputMin) == 0)
+                return (outputMin + outputMax) / 2;
+
+            return outputMin + (value - inputMin) * (outputMax - outputMin) / (inputMax - inputMin);
         }
     }
 }

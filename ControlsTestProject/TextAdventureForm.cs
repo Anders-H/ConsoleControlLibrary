@@ -29,7 +29,7 @@ namespace ControlsTestProject
 
         private class TestImage : VectorImageBase
         {
-            public TestImage(IDrawEngine drawEngine, ClientPicture clientPicture, int virtualWidth, int virtualHeight) : base(drawEngine, physicalPosition, virtualWidth, virtualHeight)
+            public TestImage(IDrawEngine drawEngine, ClientPicture clientPicture, int virtualWidth, int virtualHeight) : base(drawEngine, clientPicture, virtualWidth, virtualHeight)
             {
             }
 
