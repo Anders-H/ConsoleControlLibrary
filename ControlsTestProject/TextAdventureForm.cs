@@ -10,21 +10,19 @@ namespace ControlsTestProject
 {
     internal class TextAdventureForm : ConsoleForm
     {
-        private readonly ClientPicture _picture;
         private readonly TextBlock _output;
         private readonly Textbox _input;
-        private readonly TestImage _image;
 
         public TextAdventureForm(ConsoleControl parentConsole) : base(parentConsole)
         {
-            _picture = new ClientPicture(this, 0, 0, 90, 20);
-            AddControl(_picture);
+            var picture = new ClientPicture(this, 0, 0, 90, 20);
+            AddControl(picture);
             _output = new TextBlock(this, 0, 20, 90, 19, "", 20, HorizontalTextAlignment.Bottom);
             AddControl(_output);
             _input = new Textbox(this, 0, 39, 90, 90);
             AddControl(_input);
             TriggerFormLoadedEvent();
-            _image = new TestImage(parentConsole.DrawEngine, _picture, 320, 200);
+            var _ = new TestImage(parentConsole.DrawEngine, picture, 320, 200);
         }
 
         private class TestImage : VectorImageBase
@@ -45,13 +43,20 @@ namespace ControlsTestProject
             switch (e.EventType)
             {
                 case ConsoleControlEventType.FormLoaded:
-                    _output.Write("Type QUIT to return to the buttons form.");
+                    _output.Write("Type QUIT to continue to the text based vector image form.");
                     break;
                 case ConsoleControlEventType.TextboxEnter:
-                    _output.Add(_input.Text);
+                    var t = _input.Text.Trim();
+                    _output.Add(t);
                     _input.Text = "";
                     ParentConsole.Refresh();
                     Thread.Sleep(100);
+
+                    if (string.Compare(t, "quit", StringComparison.CurrentCultureIgnoreCase) == 0)
+                    {
+                        ParentConsole.CurrentForm = new TextBasedVectorImageForm(ParentConsole);
+                        return;
+                    }
 
                     switch (DateTime.Now.Second % 4)
                     {
