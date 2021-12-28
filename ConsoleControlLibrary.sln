@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31605.320
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleControlLibrary", "ConsoleControlLibrary\ConsoleControlLibrary.csproj", "{104E86FC-88DD-4B7D-812B-FE8E0DF50767}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleControlLibrary", "ConsoleControlLibrary\ConsoleControlLibrary.csproj", "{104E86FC-88DD-4B7D-812B-FE8E0DF50767}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlsTestProject", "ControlsTestProject\ControlsTestProject.csproj", "{D18EB561-0917-4D29-8EFB-2ADC8F030567}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControlsTestProject", "ControlsTestProject\ControlsTestProject.csproj", "{D18EB561-0917-4D29-8EFB-2ADC8F030567}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCalculator", "SimpleCalculator\SimpleCalculator.csproj", "{DEF0A071-A84C-4FFE-A23A-535471794F54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCalculator", "SimpleCalculator\SimpleCalculator.csproj", "{DEF0A071-A84C-4FFE-A23A-535471794F54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

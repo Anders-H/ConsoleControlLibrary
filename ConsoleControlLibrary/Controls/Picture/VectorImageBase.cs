@@ -1,6 +1,6 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 
 namespace ConsoleControlLibrary.Controls.Picture
 {
@@ -36,12 +36,33 @@ namespace ConsoleControlLibrary.Controls.Picture
         {
         }
 
+        public int VirtualToPhysical(int v) =>
+            (int)Math.Round(
+                LinearInterpolation(
+                    v,
+                    0,
+                    VirtualWidth,
+                    PhysicalX,
+                    PhysicalX + PhysicalWidth
+                )
+            );
+
         public Point VirtualToPhysical(int x, int y)
         {
-            var adjustedX = (int)Math.Round(LinearInterpolation(x, 0, VirtualWidth, PhysicalX, PhysicalX + PhysicalWidth));
-            var adjustedY = (int)Math.Round(LinearInterpolation(y, 0, VirtualHeight, PhysicalY, PhysicalY + PhysicalHeight));
+            var adjustedX = VirtualToPhysical(x);
+            var adjustedY = VirtualToPhysical(y);
 
             return new Point(adjustedX, adjustedY);
+        }
+
+        public Rectangle VirtualToPhysical(int x, int y, int width, int height)
+        {
+            var adjustedX = VirtualToPhysical(x);
+            var adjustedY = VirtualToPhysical(y);
+            var adjustedWidth = VirtualToPhysical(width);
+            var adjustedHeight = VirtualToPhysical(height);
+
+            return new Rectangle(adjustedX, adjustedY, adjustedWidth, adjustedHeight);
         }
 
         private static double LinearInterpolation(double value, double inputMin, double inputMax, double outputMin, double outputMax)

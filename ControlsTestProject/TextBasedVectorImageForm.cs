@@ -17,7 +17,10 @@ namespace ControlsTestProject
             AddControl(picture);
             var _ = new TextBasedVectorImage(parentConsole.DrawEngine, picture, 320, 200, @"
 
-
+CLEAR #000066;
+//LINE #ff0000 (0,199)-(319,0);
+//LINE #00ff00 (0,0)-(319,199);
+//LINE (10,10)-(20,10)-(20,20)-(10,20)-(10,10);
 ");
         }
 
