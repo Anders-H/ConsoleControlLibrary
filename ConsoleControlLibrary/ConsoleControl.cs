@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -12,21 +13,21 @@ namespace ConsoleControlLibrary
 {
     public partial class ConsoleControl : UserControl
     {
-        private char[,] _characterArray;
+        private char[,]? _characterArray;
         private int _columnCount = 40;
         private int _rowCount = 20;
         private int _cursorPosition;
-        private Font _font;
+        private Font? _font;
         private bool _needsRecalcSize;
         private bool _hasFocus;
-        private History History { get; } = new History();
+        private History History { get; }
         private bool RowChanged { get; set; }
-        private ConsoleForm _currentForm;
+        private ConsoleForm? _currentForm;
         private bool ShiftKey { get; set; }
         internal static bool CursorBlink { get; set; }
-        public event EventHandler CurrentFormChanged;
-        public event UserInputHandler UserInput;
-        public event ConsoleControlEventHandler ControlEvent;
+        public event EventHandler? CurrentFormChanged;
+        public event UserInputHandler? UserInput;
+        public event ConsoleControlEventHandler? ControlEvent;
         public IDrawEngine DrawEngine { get; set; } = new DrawEngine();
         private bool _waitMode;
         private int _mouseX;
@@ -34,6 +35,7 @@ namespace ConsoleControlLibrary
 
         public ConsoleControl()
         {
+            History = new History();
             InitializeComponent();
             InitializeConsole();
             _waitMode = false;
@@ -44,7 +46,7 @@ namespace ConsoleControlLibrary
         public void HideCursor() =>
             CursorBlink = false;
         
-        public Font GetConsoleFont() =>
+        public Font? GetConsoleFont() =>
             _font;
 
         public void SetText(int row, int col, string text)
@@ -57,7 +59,7 @@ namespace ConsoleControlLibrary
                 var x = i + col;
                 if (x >= ColumnCount)
                     return;
-                _characterArray[row, x] = text[i];
+                _characterArray![row, x] = text[i];
             }
         }
         
@@ -118,8 +120,15 @@ namespace ConsoleControlLibrary
         private void CalcSize(Graphics g)
         {
             _needsRecalcSize = false;
-            DrawEngine.CalculateSizes(g, ref _font, ColumnCount, RowCount, Width, Height);
-            System.Diagnostics.Debug.WriteLine(_font.Name);
+
+            DrawEngine.CalculateSizes(
+                g,
+                ref _font,
+                ColumnCount,
+                RowCount,
+                Width,
+                Height
+            );
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -156,7 +165,11 @@ namespace ConsoleControlLibrary
         private void DrawTextConsole(Graphics g)
         {
             g.Clear(BackColor);
-            var cursy = RowCount - 1;
+
+            if (_font == null)
+                return;
+
+            var cursY = RowCount - 1;
 
             using var b = new SolidBrush(ForeColor);
             
@@ -164,16 +177,16 @@ namespace ConsoleControlLibrary
             {
                 for (var x = 0; x < ColumnCount; x++)
                 {
-                    if (_characterArray[y, x] > 0 && _characterArray[y, x] != ' ')
+                    if (_characterArray![y, x] > 0 && _characterArray[y, x] != ' ')
                         DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, b, x, y);
                     
-                    if (_hasFocus && CursorBlink && x == _cursorPosition && y == cursy)
+                    if (_hasFocus && CursorBlink && x == _cursorPosition && y == cursY)
                     {
                         DrawEngine.DrawCursor(g, b, x, y);
                         using var bb = new SolidBrush(BackColor);
                         DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, bb, x, y);
                     }
-                    else if (!_hasFocus && x == _cursorPosition && y == cursy)
+                    else if (!_hasFocus && x == _cursorPosition && y == cursY)
                     {
                         using var p = new Pen(ForeColor);
                         DrawEngine.DrawCursor(g, p, x, y);
@@ -196,7 +209,7 @@ namespace ConsoleControlLibrary
                 return;
             }
 
-            _characterArray[RowCount - 1, CursorPosition] = UppercaseInput ? char.ToUpper(e.KeyChar) : e.KeyChar;
+            _characterArray![RowCount - 1, CursorPosition] = UppercaseInput ? char.ToUpper(e.KeyChar) : e.KeyChar;
             
             if (CursorPosition < ColumnCount - 1)
                 CursorPosition++;
@@ -222,20 +235,20 @@ namespace ConsoleControlLibrary
                 return;
 
             for (var c = col - 1; c < ColumnCount; c++)
-                _characterArray[RowCount - 1, c] = c < RowCount - 1
-                    ? _characterArray[RowCount - 1, c + 1]
+                _characterArray![RowCount - 1, c] = c < RowCount - 1
+                    ? _characterArray![RowCount - 1, c + 1]
                     : (char)0;
         }
 
         private void InsertAt(int col)
         {
             if (col == ColumnCount - 1)
-                _characterArray[RowCount - 1, ColumnCount - 1] = (char)0;
+                _characterArray![RowCount - 1, ColumnCount - 1] = (char)0;
 
             for (var i = ColumnCount - 1; i > col; i--)
-                _characterArray[RowCount - 1, i] = _characterArray[RowCount - 1, i - 1];
+                _characterArray![RowCount - 1, i] = _characterArray[RowCount - 1, i - 1];
             
-            _characterArray[RowCount - 1, col] = (char)0;
+            _characterArray![RowCount - 1, col] = (char)0;
         }
 
         protected override bool IsInputKey(Keys keyData)
@@ -266,7 +279,7 @@ namespace ConsoleControlLibrary
             get
             {
                 for (var c = ColumnCount - 1; c >= 0; c--)
-                    if (_characterArray[RowCount - 1, c] != (char)0 && _characterArray[RowCount - 1, c] != ' ')
+                    if (_characterArray![RowCount - 1, c] != (char)0 && _characterArray[RowCount - 1, c] != ' ')
                         return c;
 
                 return -1;
@@ -408,7 +421,7 @@ namespace ConsoleControlLibrary
         private void RestoreInput(string text)
         {
             for (var i = 0; i < ColumnCount; i++)
-                _characterArray[RowCount - 1, i] = (char)0;
+                _characterArray![RowCount - 1, i] = (char)0;
 
             SetText(RowCount - 1, 0, text);
             GoToEnd();
@@ -433,7 +446,7 @@ namespace ConsoleControlLibrary
             var s = new StringBuilder();
 
             for (var c = col; c < ColumnCount; c++)
-                s.Append(_characterArray[row, c] == (char)0 ? ' ' : _characterArray[row, c]);
+                s.Append(_characterArray![row, c] == (char)0 ? ' ' : _characterArray[row, c]);
             
             return s.ToString().Trim();
         }
@@ -442,10 +455,10 @@ namespace ConsoleControlLibrary
         {
             for (var row = 1; row < RowCount; row++)
                 for (var col = 0; col < ColumnCount; col++)
-                    _characterArray[row - 1, col] = _characterArray[row, col];
+                    _characterArray![row - 1, col] = _characterArray[row, col];
 
             for (var col = 0; col < ColumnCount; col++)
-                _characterArray[RowCount - 1, col] = (char)0;
+                _characterArray![RowCount - 1, col] = (char)0;
         }
 
         public void WriteText(int msDelay, string text)
@@ -474,9 +487,15 @@ namespace ConsoleControlLibrary
                 Invalidate();
             }
             timer1.Enabled = true;
+
+            if (ParentForm != null)
+            {
+                WindowsInput.Buffer.FlushKeyboardBuffer(ParentForm.Handle);
+                WindowsInput.Buffer.FlushMouseBuffer(ParentForm.Handle);
+            }
         }
 
-        public ConsoleForm CurrentForm
+        public ConsoleForm? CurrentForm
         {
             get => _currentForm;
             set
@@ -487,7 +506,7 @@ namespace ConsoleControlLibrary
                 _currentForm = value;
                 _currentForm?.Run();
                 Invalidate();
-                CurrentFormChanged?.Invoke(this, new EventArgs());
+                CurrentFormChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -505,12 +524,11 @@ namespace ConsoleControlLibrary
             if (CurrentForm == null)
                 return;
 
-            var point = DrawEngine.PhysicalCoordinateToFormCoordinate(e.X, e.Y);
+            var point = DrawEngine
+                .PhysicalCoordinateToFormCoordinate(e.X, e.Y);
 
-            if (point == null)
-                return;
-
-            var hit = CurrentForm.GetControlAt(point.Item1, point.Item2);
+            var hit = CurrentForm
+                .GetControlAt(point);
 
             if (hit == null)
                 return;
@@ -541,13 +559,8 @@ namespace ConsoleControlLibrary
             }
 
             var point = DrawEngine.PhysicalCoordinateToFormCoordinate(_mouseX, _mouseY);
-            if (point == null)
-            {
-                Cursor = Cursors.Arrow;
-                return;
-            }
 
-            var hit = CurrentForm.GetControlAt(point.Item1, point.Item2);
+            var hit = CurrentForm.GetControlAt(point);
             if (hit == null)
             {
                 Cursor = Cursors.Arrow;
@@ -579,7 +592,11 @@ namespace ConsoleControlLibrary
 
         public void EndWait()
         {
-            //Clear buffers
+            if (ParentForm != null)
+            {
+                WindowsInput.Buffer.FlushKeyboardBuffer(ParentForm.Handle);
+                WindowsInput.Buffer.FlushMouseBuffer(ParentForm.Handle);
+            }
             _waitMode = false;
             SetCursor();
         }

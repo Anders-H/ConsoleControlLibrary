@@ -15,11 +15,11 @@ namespace SimpleCalculator
             try
             {
                 var svar = Evaluator.Eval(e.RawInput);
-                consoleControl1.WriteText(100, svar.ToString("n4"));
+                consoleControl1.WriteText(50, svar.ToString("n4"));
             }
             catch (Exception ex)
             {
-                consoleControl1.WriteText(100, ex.Message);
+                consoleControl1.WriteText(50, ex.Message);
             }
         }
     }

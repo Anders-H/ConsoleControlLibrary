@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿#nullable enable
+using System.Drawing;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls.BaseTypes;
 using ConsoleControlLibrary.Controls.Events;
@@ -124,6 +125,9 @@ namespace ConsoleControlLibrary.Controls
         public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
             if (Width <= 0)
+                return;
+
+            if (ParentForm.Font == null)
                 return;
 
             var drawCharacters = new char[Width];

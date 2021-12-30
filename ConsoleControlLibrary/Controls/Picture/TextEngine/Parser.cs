@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Text.RegularExpressions;
 using ConsoleControlLibrary.Controls.Picture.TextEngine.Instructions;
 

@@ -1,4 +1,5 @@
-﻿namespace ConsoleControlLibrary.Controls.BaseTypes
+﻿#nullable enable
+namespace ConsoleControlLibrary.Controls.BaseTypes
 {
     public interface ITextControl
     {

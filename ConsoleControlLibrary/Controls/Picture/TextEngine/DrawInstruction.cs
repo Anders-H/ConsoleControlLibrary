@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿#nullable enable
+using System.Drawing;
 
 namespace ConsoleControlLibrary.Controls.Picture.TextEngine
 {

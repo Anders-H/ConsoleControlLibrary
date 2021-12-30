@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿#nullable enable
+using System.Drawing;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls.BaseTypes;
 
@@ -11,6 +12,8 @@ namespace ConsoleControlLibrary.Controls
         
         public Label(ConsoleForm parentForm, int x, int y, int width, int height, string text) : base(parentForm, x, y, width, height)
         {
+            _text = "";
+            _visibleText = "";
             Text = text ?? "";
             CanGetFocus = false;
             Enabled = true;
@@ -50,6 +53,10 @@ namespace ConsoleControlLibrary.Controls
         {
             if (Width <= 0 || _visibleText.Length <= 0)
                 return;
+
+            if (ParentForm.Font == null)
+                return;
+
             for (var i = 0; i < _visibleText.Length; i++)
                 drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.DisabledForeColorBrush, X + i, Y);
         }

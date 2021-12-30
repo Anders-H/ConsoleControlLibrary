@@ -1,4 +1,6 @@
-﻿namespace ConsoleControlLibrary
+﻿#nullable enable
+
+namespace ConsoleControlLibrary
 {
     public enum HorizontalTextAlignment
     {

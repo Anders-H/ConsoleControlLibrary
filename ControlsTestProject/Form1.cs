@@ -15,6 +15,6 @@ namespace ControlsTestProject
             Debug.WriteLine("CurrentFormChanged");
 
         private void Form1_Load(object sender, EventArgs e) =>
-            consoleControl1.CurrentForm = new ButtonsForm(consoleControl1);
+            consoleControl1.CurrentForm = new ButtonsForm(Handle, consoleControl1);
     }
 }

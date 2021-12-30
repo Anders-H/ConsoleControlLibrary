@@ -10,14 +10,16 @@ namespace ControlsTestProject
 {
     internal class TextAdventureForm : ConsoleForm
     {
+        private IntPtr _handle;
         private readonly TextBlock _output;
         private readonly Textbox _input;
 
-        public TextAdventureForm(ConsoleControl parentConsole) : base(parentConsole)
+        public TextAdventureForm(IntPtr handle, ConsoleControl parentConsole) : base(parentConsole)
         {
+            _handle = handle;
             var picture = new ClientPicture(this, 0, 0, 90, 20);
             AddControl(picture);
-            _output = new TextBlock(this, 0, 20, 90, 19, "", 20, HorizontalTextAlignment.Bottom);
+            _output = new TextBlock(_handle, this, 0, 20, 90, 19, "", 20, HorizontalTextAlignment.Bottom);
             AddControl(_output);
             _input = new Textbox(this, 0, 39, 90, 90);
             AddControl(_input);
@@ -54,7 +56,7 @@ namespace ControlsTestProject
 
                     if (string.Compare(t, "quit", StringComparison.CurrentCultureIgnoreCase) == 0)
                     {
-                        ParentConsole.CurrentForm = new TextBasedVectorImageForm(ParentConsole);
+                        ParentConsole.CurrentForm = new TextBasedVectorImageForm(_handle, ParentConsole);
                         return;
                     }
 

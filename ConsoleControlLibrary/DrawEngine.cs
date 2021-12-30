@@ -1,5 +1,7 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace ConsoleControlLibrary
 {
@@ -12,7 +14,7 @@ namespace ConsoleControlLibrary
         public double CharacterOffsetX { get; private set; }
         public double CharacterOffsetY { get; private set; }
         
-        public void CalculateSizes(Graphics g, ref Font f, int columnCount, int rowCount, int canvasWidth, int canvasHeight)
+        public void CalculateSizes(Graphics g, ref Font? f, int columnCount, int rowCount, int canvasWidth, int canvasHeight)
         {
             ColumnCount = columnCount;
             RowCount = rowCount;
@@ -32,18 +34,21 @@ namespace ConsoleControlLibrary
                     break;
             }
 
+            if (f == null)
+                return;
+
             var csize = g.MeasureString("W", f);
             CharacterOffsetX = (CharacterWidth / 2.0) - (csize.Width / 2.0);
             CharacterOffsetY = (CharacterHeight / 2.0) - (csize.Height / 2.0);
         }
 
-        public Tuple<int, int> PhysicalCoordinateToFormCoordinate(int x, int y)
+        public Point PhysicalCoordinateToFormCoordinate(int x, int y)
         {
-            var sourcex = x - CharacterOffsetX;
-            var sourcey = y - CharacterOffsetY;
-            var cx = x > 0 ? (int)(sourcex / CharacterWidth) : 0;
-            var cy = y > 0 ? (int)(sourcey / CharacterHeight) : 0;
-            return Tuple.Create(cx, cy);
+            var sourceX = x - CharacterOffsetX;
+            var sourceY = y - CharacterOffsetY;
+            var cx = x > 0 ? (int)(sourceX / CharacterWidth) : 0;
+            var cy = y > 0 ? (int)(sourceY / CharacterHeight) : 0;
+            return new Point(cx, cy);
         }
 
         public void DrawCharacter(Graphics g, char c, Font f, Brush b, int x, int y) =>

@@ -1,4 +1,5 @@
-﻿using ConsoleControlLibrary.Controls.BaseTypes;
+﻿#nullable enable
+using ConsoleControlLibrary.Controls.BaseTypes;
 
 namespace ConsoleControlLibrary.Controls
 {

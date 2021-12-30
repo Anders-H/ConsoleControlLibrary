@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls.Events;
@@ -8,7 +9,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
     public abstract class CheckboxBase : ControlBase
     {
         private string _text;
-        private string _visibleText;
+        private string? _visibleText;
         private bool _checked;
         
         protected CheckboxBase(ConsoleForm parentForm, bool isChecked, int x, int y, int width, int height, string text)
@@ -17,6 +18,7 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
             if (width < 3)
                 throw new ArgumentOutOfRangeException(nameof(width));
             Checked = isChecked;
+            _text = "";
             Text = text ?? "";
             CanGetFocus = true;
             Enabled = true;
@@ -85,6 +87,10 @@ namespace ConsoleControlLibrary.Controls.BaseTypes
         {
             if (Width <= 0)
                 return;
+
+            if (ParentForm.Font == null)
+                return;
+
             if (Enabled)
             {
                 var activeNow = ConsiderAsActiveNow();

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿#nullable enable
+using System.Drawing;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls.BaseTypes;
 using ConsoleControlLibrary.Controls.Events;
@@ -12,6 +13,8 @@ namespace ConsoleControlLibrary.Controls
 
         public Button(ConsoleForm parentForm, int x, int y, int width, int height, string text) : base(parentForm, x, y, width, height)
         {
+            _text = "";
+            _visibleText = "";
             Text = text ?? "";
             CanGetFocus = true;
             Enabled = true;
@@ -73,6 +76,9 @@ namespace ConsoleControlLibrary.Controls
                 return;
 
             if (_visibleText.Length <= 0)
+                return;
+
+            if (ParentForm.Font == null)
                 return;
 
             if (Enabled)

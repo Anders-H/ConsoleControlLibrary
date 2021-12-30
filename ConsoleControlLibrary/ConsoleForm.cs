@@ -1,5 +1,5 @@
-﻿#undef DEBUGRENDER
-
+﻿#nullable enable
+#undef DEBUGRENDER
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,10 +15,10 @@ namespace ConsoleControlLibrary
     {
         private delegate void TriggerFormLoadedDelegate();
 
-        private Thread _thread;
+        private Thread? _thread;
         protected List<IControl> Controls { get; }
-        protected internal IControl CurrentControl { get; private set; }
-        protected internal IControl ActiveControl { get; set; }
+        protected internal IControl? CurrentControl { get; private set; }
+        protected internal IControl? ActiveControl { get; set; }
         protected int CurrentControlIndex { get; private set; }
         protected ConsoleControl ParentConsole { get; }
         protected internal Brush BackColorBrush { get; }
@@ -207,14 +207,17 @@ namespace ConsoleControlLibrary
             } while (nextindex != startindex);
         }
         
-        internal Font Font =>
+        internal Font? Font =>
             ParentConsole.GetConsoleFont();
 
         protected virtual void EventOccurred(object sender, ConsoleControlEventArgs e)
         {
         }
-        
-        public IControl GetControlAt(int x, int y) =>
+
+        public IControl? GetControlAt(Point point) =>
+            GetControlAt(point.X, point.Y);
+
+        public IControl? GetControlAt(int x, int y) =>
             Controls.FirstOrDefault(c =>
                 c.HitTest(x, y) && c.Enabled && c.CanGetFocus && c.Visible
             );

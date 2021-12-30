@@ -1,4 +1,6 @@
-﻿using ConsoleControlLibrary;
+﻿#nullable enable
+using System;
+using ConsoleControlLibrary;
 using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.Events;
 using ConsoleControlLibrary.Controls.Picture;
@@ -7,11 +9,13 @@ namespace ControlsTestProject
 {
     internal class TextBasedVectorImageForm : ConsoleForm
     {
+        private readonly IntPtr _handle;
         private readonly Button _button;
 
-        public TextBasedVectorImageForm(ConsoleControl parentConsole) : base(parentConsole)
+        public TextBasedVectorImageForm(IntPtr handle, ConsoleControl parentConsole) : base(parentConsole)
         {
-            _button = new Button(this, 10, 30, 20, "To buttons form");
+            _handle = handle;
+            _button = new Button(this, 10, 30, 17, "To buttons form");
             AddControl(_button);
             var picture = new ClientPicture(this, 0, 0, 90, 20);
             AddControl(picture);
@@ -28,7 +32,7 @@ CLEAR #000066;
         {
             if (sender == _button)
             {
-                ParentConsole.CurrentForm = new ButtonsForm(ParentConsole);
+                ParentConsole.CurrentForm = new ButtonsForm(_handle, ParentConsole);
             }
         }
     }

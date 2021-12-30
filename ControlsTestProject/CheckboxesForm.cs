@@ -1,4 +1,6 @@
-﻿using ConsoleControlLibrary;
+﻿using System;
+using Accessibility;
+using ConsoleControlLibrary;
 using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.Events;
 using Button = ConsoleControlLibrary.Controls.Button;
@@ -8,12 +10,14 @@ namespace ControlsTestProject
 {
     public class CheckboxesForm : ConsoleForm
     {
+        private readonly IntPtr _handle;
         private readonly Checkbox _checkbox1;
         private readonly Checkbox _checkbox2;
         private readonly Button _button;
 
-        public CheckboxesForm(ConsoleControl parentConsole) : base(parentConsole)
+        public CheckboxesForm(IntPtr handle, ConsoleControl parentConsole) : base(parentConsole)
         {
+            _handle = handle;
             AddControl(new Label(this, 1, 8, "Two checkboxes, two radiobuttons and a button:"));
             _checkbox1 = new Checkbox(this, true, 1, 10, 16, "Enable button");
             AddControl(_checkbox1);
@@ -40,7 +44,7 @@ namespace ControlsTestProject
             }
             if (sender == _button)
             {
-                ParentConsole.CurrentForm = new TextboxesForm(ParentConsole);
+                ParentConsole.CurrentForm = new TextboxesForm(_handle, ParentConsole);
             }
         }
     }

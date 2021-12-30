@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,21 +10,28 @@ namespace ConsoleControlLibrary
     {
         private class HistoryString
         {
-            public bool IsTemporary { get; set; }
-            public string Value { get; set; }
+            public HistoryString()
+            {
+                IsTemporary = false;
+                Value = "";
+            }
+
+            public bool IsTemporary { get; init; }
+            public string Value { get; init; }
         }
         
-        private List<HistoryString> Strings { get; } = new List<HistoryString>();
-        
+        private List<HistoryString> Strings { get; }
         private int PositionPointer { get; set; }
-        
+
+        public History()
+        {
+            Strings = new();
+        }
+
         public void Remember(string text)
         {
-            Strings.Remove(
-                Strings.FirstOrDefault(x =>
-                    string.Compare(x.Value, text, StringComparison.CurrentCultureIgnoreCase) == 0
-                )
-            );
+            if (Strings.FirstOrDefault(x => string.Compare(x.Value, text, StringComparison.CurrentCultureIgnoreCase) == 0) != null)
+                return;
             
             Strings.Add(
                 new HistoryString

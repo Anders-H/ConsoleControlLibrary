@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -10,30 +11,31 @@ namespace ConsoleControlLibrary.Controls
 {
     public class TextBlock : ControlBase, IControl, IControlFormOperations, ITextControl
     {
+        private readonly IntPtr _handle;
         private string _text;
-        
-        private char[,] _characterGrid;
-        
+        private char[,]? _characterGrid;
         private int _firstFreeRow;
         
-        public TextBlock(ConsoleForm parentForm, int x, int y, int width, int height, string text, int characterDelayMs, HorizontalTextAlignment horizontalTextAlignment) : base(parentForm, x, y, width, height)
+        public TextBlock(IntPtr handle, ConsoleForm parentForm, int x, int y, int width, int height, string text, int characterDelayMs, HorizontalTextAlignment horizontalTextAlignment) : base(parentForm, x, y, width, height)
         {
+            _handle = handle;
             HorizontalTextAlignment = horizontalTextAlignment;
             CanGetFocus = false;
             Enabled = true;
             Visible = true;
+            _text = "";
             Text = text ?? "";
             CharacterDelayMs = characterDelayMs;
             Text = "";
         }
 
-        public TextBlock(ConsoleForm parentForm, int x, int y, int width, int height, string text, HorizontalTextAlignment horizontalTextAlignment)
-            : this(parentForm, x, y, width, height, text, 0, horizontalTextAlignment)
+        public TextBlock(IntPtr handle, ConsoleForm parentForm, int x, int y, int width, int height, string text, HorizontalTextAlignment horizontalTextAlignment)
+            : this(handle, parentForm, x, y, width, height, text, 0, horizontalTextAlignment)
         {
         }
 
-        public TextBlock(ConsoleForm parentForm, int x, int y, int width, int height, HorizontalTextAlignment horizontalTextAlignment)
-            : this(parentForm, x, y, width, height, "", 0, horizontalTextAlignment)
+        public TextBlock(IntPtr handle, ConsoleForm parentForm, int x, int y, int width, int height, HorizontalTextAlignment horizontalTextAlignment)
+            : this(handle, parentForm, x, y, width, height, "", 0, horizontalTextAlignment)
         {
         }
         
@@ -48,7 +50,7 @@ namespace ConsoleControlLibrary.Controls
             set
             {
                 _text = value ?? "";
-                CreateCharacterGrid();
+                CreateCharacterGrid(_handle);
                 Invalidate();
             }
         }
@@ -63,7 +65,7 @@ namespace ConsoleControlLibrary.Controls
             return rowList;
         }
 
-        private void CreateCharacterGrid()
+        private void CreateCharacterGrid(IntPtr handle)
         {
             _characterGrid = new char[Width, Height];
 
@@ -96,7 +98,7 @@ namespace ConsoleControlLibrary.Controls
 
         public void Write(string text)
         {
-            if (_firstFreeRow >= Height - 1 && _characterGrid[0, Height - 1] > (char)0)
+            if (_firstFreeRow >= Height - 1 && _characterGrid![0, Height - 1] > (char)0)
                 ScrollUp();
             
             var rowList = PrepareText(text);
@@ -105,7 +107,7 @@ namespace ConsoleControlLibrary.Controls
 
         public void Add(string text)
         {
-            if (_firstFreeRow >= Height - 1 && _characterGrid[0, Height - 1] > (char)0)
+            if (_firstFreeRow >= Height - 1 && _characterGrid![0, Height - 1] > (char)0)
                 ScrollUp();
 
             var rowList = PrepareText(text);
@@ -117,7 +119,7 @@ namespace ConsoleControlLibrary.Controls
             if (_firstFreeRow < Height - 1)
                 for (var y = 0; y < Height; y++)
                 {
-                    if (_characterGrid[0, y] > 0)
+                    if (_characterGrid![0, y] > 0)
                         continue;
                     _firstFreeRow = y;
                     break;
@@ -131,7 +133,7 @@ namespace ConsoleControlLibrary.Controls
                 
                 for (var i = 0; i < r.Length; i++)
                 {
-                    _characterGrid[i, _firstFreeRow] = r[i];
+                    _characterGrid![i, _firstFreeRow] = r[i];
                     if (delay <= 0)
                         continue;
                     System.Threading.Thread.Sleep(delay);
@@ -143,6 +145,9 @@ namespace ConsoleControlLibrary.Controls
                 else if (row != rowList.Last())
                     ScrollUp();
             }
+
+            WindowsInput.Buffer.FlushKeyboardBuffer(_handle);
+            WindowsInput.Buffer.FlushMouseBuffer(_handle);
         }
 
         public override void KeyPressed(Keys key)
@@ -155,9 +160,12 @@ namespace ConsoleControlLibrary.Controls
         
         public override void Draw(Graphics g, IDrawEngine drawEngine)
         {
+            if (ParentForm.Font == null)
+                return;
+
             for(var y = 0; y < Height; y++)
                 for(var x = 0; x < Width; x++)
-                    drawEngine.DrawCharacter(g, _characterGrid[x, y], ParentForm.Font, ParentForm.ForeColorBrush, x + X, y + Y);
+                    drawEngine.DrawCharacter(g, _characterGrid![x, y], ParentForm.Font, ParentForm.ForeColorBrush, x + X, y + Y);
         }
 
         private void ScrollUp()
@@ -167,10 +175,10 @@ namespace ConsoleControlLibrary.Controls
 
             for (var y = 0; y < Height - 1; y++)
                 for (var x = 0; x < Width; x++)
-                    _characterGrid[x, y] = _characterGrid[x, y + 1];
+                    _characterGrid![x, y] = _characterGrid![x, y + 1];
 
             for (var x = 0; x < Width; x++)
-                _characterGrid[x, Height - 1] = (char)0;
+                _characterGrid![x, Height - 1] = (char)0;
         }
     }
 }
