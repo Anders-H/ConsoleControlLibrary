@@ -8,8 +8,8 @@ namespace ConsoleControlLibrary.Controls.Picture
     {
         protected IDrawEngine DrawEngine { get; }
         protected ClientPicture ClientPicture { get; }
-        protected int VirtualWidth { get; }
-        protected int VirtualHeight { get; }
+        protected internal int VirtualWidth { get; }
+        protected internal int VirtualHeight { get; }
 
         protected int PhysicalX =>
             (int)Math.Round(ClientPicture.X * DrawEngine.CharacterWidth);
@@ -36,31 +36,41 @@ namespace ConsoleControlLibrary.Controls.Picture
         {
         }
 
-        public int VirtualToPhysical(int v) =>
-            (int)Math.Round(
-                LinearInterpolation(
-                    v,
-                    0,
-                    VirtualWidth,
-                    PhysicalX,
-                    PhysicalX + PhysicalWidth
+        public int VirtualToPhysical(bool width, int v) =>
+            width
+                ? (int)Math.Round(
+                    LinearInterpolation(
+                        v,
+                        0,
+                        VirtualWidth,
+                        PhysicalX,
+                        PhysicalX + PhysicalWidth
+                    )
                 )
-            );
+                : (int)Math.Round(
+                    LinearInterpolation(
+                        v,
+                        0,
+                        VirtualHeight,
+                        PhysicalY,
+                        PhysicalY + PhysicalHeight
+                    )
+                );
 
         public Point VirtualToPhysical(int x, int y)
         {
-            var adjustedX = VirtualToPhysical(x);
-            var adjustedY = VirtualToPhysical(y);
+            var adjustedX = VirtualToPhysical(true, x);
+            var adjustedY = VirtualToPhysical(false, y);
 
             return new Point(adjustedX, adjustedY);
         }
 
         public Rectangle VirtualToPhysical(int x, int y, int width, int height)
         {
-            var adjustedX = VirtualToPhysical(x);
-            var adjustedY = VirtualToPhysical(y);
-            var adjustedWidth = VirtualToPhysical(width);
-            var adjustedHeight = VirtualToPhysical(height);
+            var adjustedX = VirtualToPhysical(true, x);
+            var adjustedY = VirtualToPhysical(false, y);
+            var adjustedWidth = VirtualToPhysical(true, width);
+            var adjustedHeight = VirtualToPhysical(false, height);
 
             return new Rectangle(adjustedX, adjustedY, adjustedWidth, adjustedHeight);
         }

@@ -10,7 +10,7 @@ namespace ControlsTestProject
 {
     internal class TextAdventureForm : ConsoleForm
     {
-        private IntPtr _handle;
+        private readonly IntPtr _handle;
         private readonly TextBlock _output;
         private readonly Textbox _input;
 

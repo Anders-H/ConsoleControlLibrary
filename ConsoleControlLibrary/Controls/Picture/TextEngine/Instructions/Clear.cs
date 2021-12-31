@@ -50,7 +50,7 @@ namespace ConsoleControlLibrary.Controls.Picture.TextEngine.Instructions
         public override void Draw(ClientPicture picture, Graphics g, VectorImageBase owner)
         {
             using var b = new SolidBrush(_backgroundColor);
-            g.FillRectangle(b, owner.VirtualToPhysical(0, 0, picture.Width, picture.Height));
+            g.FillRectangle(b, owner.VirtualToPhysical(0, 0, owner.VirtualWidth, owner.VirtualHeight));
         }
     }
 }
