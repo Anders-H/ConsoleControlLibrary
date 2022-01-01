@@ -8,7 +8,7 @@ namespace ConsoleControlLibrary.Controls.Picture.TextEngine.Instructions
     {
         private static Color _lastBackgroundColor;
 
-        private Color _backgroundColor;
+        private readonly Color _backgroundColor;
 
         static Clear()
         {
