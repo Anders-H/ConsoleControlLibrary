@@ -57,6 +57,9 @@ namespace ConsoleControlLibrary.Controls.Picture
                     )
                 );
 
+        public Point VirtualToPhysical(Point p) =>
+            VirtualToPhysical(p.X, p.Y);
+
         public Point VirtualToPhysical(int x, int y)
         {
             var adjustedX = VirtualToPhysical(true, x);

@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System;
+using System.Drawing.Drawing2D;
 using System.Text.RegularExpressions;
 using ConsoleControlLibrary.Controls.Picture.TextEngine.Instructions;
 
@@ -28,7 +29,16 @@ namespace ConsoleControlLibrary.Controls.Picture.TextEngine
                 if (string.IsNullOrEmpty(r) || r.StartsWith("//"))
                     continue;
 
-                var i = Clear.Parse(r);
+                DrawInstruction? i = Clear.Parse(r);
+
+                if (i != null)
+                {
+                    result.Add(i);
+                    continue;
+                }
+
+                i = Line.Parse(r);
+                
                 if (i != null)
                 {
                     result.Add(i);
