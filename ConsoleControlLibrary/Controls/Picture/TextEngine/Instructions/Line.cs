@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-
-#nullable enable
 
 namespace ConsoleControlLibrary.Controls.Picture.TextEngine.Instructions
 {
@@ -27,10 +25,12 @@ namespace ConsoleControlLibrary.Controls.Picture.TextEngine.Instructions
 
         public static Line? Parse(string s)
         {
-            var matchWithoutColor = Regex.Match(
-                s,
-                @"^LINE\s*(\([0-9]+,[0-9]+\)\s*-?\s*)*$"
+            var regexWithoutColor = RegexBuilder.Get(
+                RegexBuilder.Line,
+                RegexBuilder.CoordinatesGroup
             );
+
+            var matchWithoutColor = Regex.Match(s, regexWithoutColor);
 
             if (matchWithoutColor.Success)
             {
@@ -42,17 +42,17 @@ namespace ConsoleControlLibrary.Controls.Picture.TextEngine.Instructions
                 return result;
             }
 
-            var matchWithColor = Regex.Match(
-                s,
-                @"^LINE\s*(#[0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F])\s*(\([0-9]+,[0-9]+\)\s*-?\s*)*$"
+            var regexWithColor = RegexBuilder.Get(
+                RegexBuilder.Line,
+                RegexBuilder.Color,
+                RegexBuilder.CoordinatesGroup
             );
+
+            var matchWithColor = Regex.Match(s, regexWithColor);
 
             if (matchWithColor.Success)
             {
-                _lastForegroundColor = ColorTranslator.FromHtml(
-                    matchWithColor.Groups[1].Value
-                );
-
+                _lastForegroundColor = ParseColor(matchWithColor.Groups[1]);
                 var result = new Line(_lastForegroundColor);
 
                 foreach (Capture capture in matchWithColor.Groups[2].Captures)

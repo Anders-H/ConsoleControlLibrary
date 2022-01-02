@@ -29,7 +29,16 @@ LINE #ff0000 (0,199)-(319,0);
 LINE #00ff00 (0,0)-(319,199);
 
 // Polyline without color information;
-LINE (10,10)-(20,10)-(20,20)-(10,20)-(10,10);
+LINE (10,10)-(30,10)-(30,30)-(10,30)-(10,10);
+
+// Box outline with and without color;
+BOX #00ff00 (20,20,20,20);
+BOX (30,30,20,20);
+
+// Filled box with and without color;
+BOX-FILLED #0000ff (40,40,20,20);
+BOX-FILLED (50,50,20,20);
+
 ");
         }
 

@@ -68,6 +68,9 @@ namespace ConsoleControlLibrary.Controls.Picture
             return new Point(adjustedX, adjustedY);
         }
 
+        public Rectangle VirtualToPhysical(Rectangle rectangle) =>
+            VirtualToPhysical(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+
         public Rectangle VirtualToPhysical(int x, int y, int width, int height)
         {
             var adjustedX = VirtualToPhysical(true, x);

@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System;
-using System.Drawing.Drawing2D;
 using System.Text.RegularExpressions;
 using ConsoleControlLibrary.Controls.Picture.TextEngine.Instructions;
 
@@ -39,6 +38,14 @@ namespace ConsoleControlLibrary.Controls.Picture.TextEngine
 
                 i = Line.Parse(r);
                 
+                if (i != null)
+                {
+                    result.Add(i);
+                    continue;
+                }
+
+                i = Box.Parse(r);
+
                 if (i != null)
                 {
                     result.Add(i);

@@ -480,6 +480,7 @@ namespace ConsoleControlLibrary
                     if (msDelay <= 0)
                         continue;
                     Refresh();
+                    Application.DoEvents();
                     System.Threading.Thread.Sleep(msDelay);
                 }
 

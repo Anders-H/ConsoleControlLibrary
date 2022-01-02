@@ -21,7 +21,7 @@ namespace ControlsTestProject
             const string text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis justo vel eros egestas commodo sed vel ante.";
 
             _handle = handle;
-            _textBlock = new TextBlock(_handle, this, 0, 0, parentConsole.ColumnCount, 7, text, 10, HorizontalTextAlignment.Top);
+            _textBlock = new TextBlock(_handle, this, 0, 0, parentConsole.ColumnCount, 7, text, 5, HorizontalTextAlignment.Top);
             AddControl(_textBlock);
             AddControl(new Label(this, 10, 8, "Five buttons:"));
             _button1 = new Button(this, 10, 10, 16, "Disable me");

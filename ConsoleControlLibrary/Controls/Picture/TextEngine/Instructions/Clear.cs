@@ -22,25 +22,25 @@ namespace ConsoleControlLibrary.Controls.Picture.TextEngine.Instructions
 
         public static Clear? Parse(string s)
         {
-            var matchWithoutColor = Regex.Match(
-                s,
-                @"^CLEAR$"
+            var regexWithoutColor = RegexBuilder.Get(
+                RegexBuilder.Clear
             );
+
+            var matchWithoutColor = Regex.Match(s, regexWithoutColor);
 
             if (matchWithoutColor.Success)
                 return new Clear(_lastBackgroundColor);
 
-            var matchWithColor = Regex.Match(
-                s,
-                @"^CLEAR\s*(#[0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F][0-9A-F])$"
+            var regexWithColor = RegexBuilder.Get(
+                RegexBuilder.Clear,
+                RegexBuilder.Color
             );
+
+            var matchWithColor = Regex.Match(s, regexWithColor);
 
             if (matchWithColor.Success)
             {
-                _lastBackgroundColor = ColorTranslator.FromHtml(
-                    matchWithColor.Groups[1].Value
-                );
-
+                _lastBackgroundColor = ParseColor(matchWithColor.Groups[1]);
                 return new Clear(_lastBackgroundColor);
             }
 
