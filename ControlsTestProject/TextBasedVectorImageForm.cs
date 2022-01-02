@@ -22,7 +22,7 @@ namespace ControlsTestProject
             var _ = new TextBasedVectorImage(parentConsole.DrawEngine, picture, 320, 200, @"
 
 // Clear the drawing area;
-CLEAR #000066;
+CLEAR #000044;
 
 // Single line with color information;
 LINE #ff0000 (0,199)-(319,0);

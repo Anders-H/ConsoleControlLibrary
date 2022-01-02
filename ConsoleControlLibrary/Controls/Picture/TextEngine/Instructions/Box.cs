@@ -81,7 +81,7 @@ namespace ConsoleControlLibrary.Controls.Picture.TextEngine.Instructions
             }
 
             using var p = new Pen(_foregroundColor);
-            g.DrawRectangle(p, _rectangle);
+            g.DrawRectangle(p, owner.VirtualToPhysical(_rectangle));
         }
     }
 }
