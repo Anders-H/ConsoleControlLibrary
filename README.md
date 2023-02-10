@@ -8,6 +8,8 @@ Controls are added to forms (inherits the `ConsoleForm` class) and a form is add
 
 Example: [https://github.com/Anders-H/ConsoleControlLibrary/blob/master/ControlsTestProject/Form1.cs](https://github.com/Anders-H/ConsoleControlLibrary/blob/master/ControlsTestProject/Form1.cs)
 
+![Screenshot](screenshot.jpg)
+
 ## Picture
 
 Usage: Add a `ClientPicture` to a form and send the instance to an object inherited from `VectorImageBase`. Override the `DrawPicture` method.
