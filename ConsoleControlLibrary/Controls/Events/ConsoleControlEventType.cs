@@ -1,12 +1,9 @@
-﻿#nullable enable
+﻿namespace ConsoleControlLibrary.Controls.Events;
 
-namespace ConsoleControlLibrary.Controls.Events
+public enum ConsoleControlEventType
 {
-    public enum ConsoleControlEventType
-    {
-        CheckChange,
-        Click,
-        FormLoaded,
-        TextboxEnter
-    }
+    CheckChange,
+    Click,
+    FormLoaded,
+    TextBoxEnter
 }

@@ -3,37 +3,33 @@ using ConsoleControlLibrary;
 using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.Events;
 
-namespace ControlsTestProject
+namespace ControlsTestProject;
+
+public class TextboxesForm : ConsoleForm
 {
-    public class TextboxesForm : ConsoleForm
+    private readonly IntPtr _handle;
+    private readonly Button _button;
+
+    public TextboxesForm(IntPtr handle, ConsoleControl parentConsole) : base(parentConsole)
     {
-        private readonly IntPtr _handle;
-        private readonly Textbox _textbox1;
-        private readonly Textbox _textbox2;
-        private readonly Textbox _textbox3;
-        private readonly Button _button;
+        _handle = handle;
+        AddControl(new Label(this, 3, 5, "Write some text (5 characters):"));
+        var textBox1 = new TextBox(this, 3, 6, 10, 5);
+        AddControl(textBox1);
+        AddControl(new Label(this, 3, 7, "Write some text (40 characters):"));
+        var textBox2 = new TextBox(this, 3, 8, 10, 40);
+        AddControl(textBox2);
+        AddControl(new Label(this, 3, 9, "Write a number (0-100):"));
+        var textBox3 = new TextBox(this, 3, 10, 10, 3);
+        AddControl(textBox3);
+        _button = new Button(this, 3, 15, 24, "To text adventure form");
+        AddControl(_button);
+        TriggerFormLoadedEvent();
+    }
 
-        public TextboxesForm(IntPtr handle, ConsoleControl parentConsole) : base(parentConsole)
-        {
-            _handle = handle;
-            AddControl(new Label(this, 3, 5, "Write some text (5 characters):"));
-            _textbox1 = new Textbox(this, 3, 6, 10, 5);
-            AddControl(_textbox1);
-            AddControl(new Label(this, 3, 7, "Write some text (40 characters):"));
-            _textbox2 = new Textbox(this, 3, 8, 10, 40);
-            AddControl(_textbox2);
-            AddControl(new Label(this, 3, 9, "Write a number (0-100):"));
-            _textbox3 = new Textbox(this, 3, 10, 10, 3);
-            AddControl(_textbox3);
-            _button = new Button(this, 3, 15, 24, "To text adventure form");
-            AddControl(_button);
-            TriggerFormLoadedEvent();
-        }
-
-        protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
-        {
-            if (sender == _button)
-                ParentConsole.CurrentForm = new TextAdventureForm(_handle, ParentConsole);
-        }
+    protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
+    {
+        if (sender == _button)
+            ParentConsole.CurrentForm = new TextAdventureForm(_handle, ParentConsole);
     }
 }

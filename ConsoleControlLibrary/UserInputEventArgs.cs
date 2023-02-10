@@ -1,15 +1,13 @@
-﻿#nullable enable
-using System;
+﻿using System;
 
-namespace ConsoleControlLibrary
+namespace ConsoleControlLibrary;
+
+public class UserInputEventArgs : EventArgs
 {
-    public class UserInputEventArgs : EventArgs
-    {
-        public string RawInput { get; }
+    public string RawInput { get; }
         
-        public UserInputEventArgs(string rawInput)
-        {
-            RawInput = rawInput;
-        }
+    public UserInputEventArgs(string rawInput)
+    {
+        RawInput = rawInput;
     }
 }

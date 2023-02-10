@@ -1,25 +1,24 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using ConsoleControlLibrary;
 using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.Events;
 using ConsoleControlLibrary.Controls.Picture;
 
-namespace ControlsTestProject
-{
-    internal class TextBasedVectorImageForm : ConsoleForm
-    {
-        private readonly IntPtr _handle;
-        private readonly Button _button;
+namespace ControlsTestProject;
 
-        public TextBasedVectorImageForm(IntPtr handle, ConsoleControl parentConsole) : base(parentConsole)
-        {
-            _handle = handle;
-            _button = new Button(this, 10, 30, 17, "To buttons form");
-            AddControl(_button);
-            var picture = new ClientPicture(this, 0, 0, 90, 20);
-            AddControl(picture);
-            var _ = new TextBasedVectorImage(parentConsole.DrawEngine, picture, 320, 200, @"
+internal class TextBasedVectorImageForm : ConsoleForm
+{
+    private readonly IntPtr _handle;
+    private readonly Button _button;
+
+    public TextBasedVectorImageForm(IntPtr handle, ConsoleControl parentConsole) : base(parentConsole)
+    {
+        _handle = handle;
+        _button = new Button(this, 10, 30, 17, "To buttons form");
+        AddControl(_button);
+        var picture = new ClientPicture(this, 0, 0, 90, 20);
+        AddControl(picture);
+        var _ = new TextBasedVectorImage(parentConsole.DrawEngine, picture, 320, 200, @"
 
 // Clear the drawing area;
 CLEAR #000044;
@@ -40,14 +39,13 @@ BOX-FILLED #0000ff (40,40,20,20);
 BOX-FILLED (50,50,20,20);
 
 ");
-        }
+    }
 
-        protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
+    protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
+    {
+        if (sender == _button)
         {
-            if (sender == _button)
-            {
-                ParentConsole.CurrentForm = new ButtonsForm(_handle, ParentConsole);
-            }
+            ParentConsole.CurrentForm = new ButtonsForm(_handle, ParentConsole);
         }
     }
 }

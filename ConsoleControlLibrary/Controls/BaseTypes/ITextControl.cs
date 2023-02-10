@@ -1,8 +1,6 @@
-﻿#nullable enable
-namespace ConsoleControlLibrary.Controls.BaseTypes
+﻿namespace ConsoleControlLibrary.Controls.BaseTypes;
+
+public interface ITextControl
 {
-    public interface ITextControl
-    {
-        string Text { get; set; }
-    }
+    string Text { get; set; }
 }

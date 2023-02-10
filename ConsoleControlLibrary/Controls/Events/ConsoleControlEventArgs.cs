@@ -1,15 +1,13 @@
-﻿#nullable enable
-using System;
+﻿using System;
 
-namespace ConsoleControlLibrary.Controls.Events
+namespace ConsoleControlLibrary.Controls.Events;
+
+public class ConsoleControlEventArgs : EventArgs
 {
-    public class ConsoleControlEventArgs : EventArgs
-    {
-        public ConsoleControlEventType EventType { get; }
+    public ConsoleControlEventType EventType { get; }
         
-        public ConsoleControlEventArgs(ConsoleControlEventType eventType)
-        {
-            EventType = eventType;
-        }
+    public ConsoleControlEventArgs(ConsoleControlEventType eventType)
+    {
+        EventType = eventType;
     }
 }

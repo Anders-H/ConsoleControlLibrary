@@ -1,6 +1,3 @@
-﻿#nullable enable
+﻿namespace ConsoleControlLibrary.Controls.Events;
 
-namespace ConsoleControlLibrary.Controls.Events
-{
-    public delegate void ConsoleControlEventHandler(object sender, ConsoleControlEventArgs e);
-}
+public delegate void ConsoleControlEventHandler(object sender, ConsoleControlEventArgs e);

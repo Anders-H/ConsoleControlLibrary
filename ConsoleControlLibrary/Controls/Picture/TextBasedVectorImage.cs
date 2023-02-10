@@ -1,25 +1,23 @@
-﻿#nullable enable
-using System.Drawing;
+﻿using System.Drawing;
 using ConsoleControlLibrary.Controls.Picture.TextEngine;
 
-namespace ConsoleControlLibrary.Controls.Picture
+namespace ConsoleControlLibrary.Controls.Picture;
+
+public class TextBasedVectorImage : VectorImageBase
 {
-    public class TextBasedVectorImage : VectorImageBase
+    private readonly DrawInstructionList _drawInstructions;
+
+    public TextBasedVectorImage(IDrawEngine drawEngine, ClientPicture clientPicture, int virtualWidth, int virtualHeight, string drawData) : base(drawEngine, clientPicture, virtualWidth, virtualHeight)
     {
-        private readonly DrawInstructionList _drawInstructions;
+        _drawInstructions = new Parser(drawData)
+            .Parse();
+    }
 
-        public TextBasedVectorImage(IDrawEngine drawEngine, ClientPicture clientPicture, int virtualWidth, int virtualHeight, string drawData) : base(drawEngine, clientPicture, virtualWidth, virtualHeight)
+    public override void DrawPicture(ClientPicture picture, Graphics g)
+    {
+        foreach (var drawInstruction in _drawInstructions)
         {
-            _drawInstructions = new Parser(drawData)
-                .Parse();
-        }
-
-        public override void DrawPicture(ClientPicture picture, Graphics g)
-        {
-            foreach (var drawInstruction in _drawInstructions)
-            {
-                drawInstruction.Draw(picture, g, this);
-            }
+            drawInstruction.Draw(picture, g, this);
         }
     }
 }

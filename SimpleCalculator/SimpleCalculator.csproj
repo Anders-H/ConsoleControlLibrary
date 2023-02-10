@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Jint" Version="2.11.58" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Jint" Version="2.11.58" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ConsoleControlLibrary\ConsoleControlLibrary.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ConsoleControlLibrary\ConsoleControlLibrary.csproj" />
+	</ItemGroup>
 
 </Project>

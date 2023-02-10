@@ -1,7 +1,5 @@
-﻿#nullable enable
-using System.Drawing;
+﻿using System.Drawing;
 
-namespace ConsoleControlLibrary.Controls.Picture
-{
-    public delegate void DrawPictureDelegate(ClientPicture picture, Graphics g);
-}
+namespace ConsoleControlLibrary.Controls.Picture;
+
+public delegate void DrawPictureDelegate(ClientPicture picture, Graphics g);

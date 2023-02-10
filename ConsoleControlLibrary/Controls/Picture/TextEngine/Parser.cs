@@ -1,61 +1,59 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using ConsoleControlLibrary.Controls.Picture.TextEngine.Instructions;
 
-namespace ConsoleControlLibrary.Controls.Picture.TextEngine
+namespace ConsoleControlLibrary.Controls.Picture.TextEngine;
+
+internal class Parser
 {
-    internal class Parser
+    private readonly string _source;
+
+    public Parser(string source)
     {
-        private readonly string _source;
+        _source = source;
+    }
 
-        public Parser(string source)
+    public DrawInstructionList Parse()
+    {
+        var result = new DrawInstructionList();
+        var rows = Regex.Split(_source, ";", RegexOptions.IgnoreCase);
+
+        foreach (var row in rows)
         {
-            _source = source;
-        }
+            var r = row
+                .Trim()
+                .ToUpper();
 
-        public DrawInstructionList Parse()
-        {
-            var result = new DrawInstructionList();
-            var rows = Regex.Split(_source, ";", RegexOptions.IgnoreCase);
+            if (string.IsNullOrEmpty(r) || r.StartsWith("//"))
+                continue;
 
-            foreach (var row in rows)
+            DrawInstruction? i = Clear.Parse(r);
+
+            if (i != null)
             {
-                var r = row
-                    .Trim()
-                    .ToUpper();
-
-                if (string.IsNullOrEmpty(r) || r.StartsWith("//"))
-                    continue;
-
-                DrawInstruction? i = Clear.Parse(r);
-
-                if (i != null)
-                {
-                    result.Add(i);
-                    continue;
-                }
-
-                i = Line.Parse(r);
-                
-                if (i != null)
-                {
-                    result.Add(i);
-                    continue;
-                }
-
-                i = Box.Parse(r);
-
-                if (i != null)
-                {
-                    result.Add(i);
-                    continue;
-                }
-
-                throw new SystemException($"Syntax error: {r}");
+                result.Add(i);
+                continue;
             }
 
-            return result;
+            i = Line.Parse(r);
+                
+            if (i != null)
+            {
+                result.Add(i);
+                continue;
+            }
+
+            i = Box.Parse(r);
+
+            if (i != null)
+            {
+                result.Add(i);
+                continue;
+            }
+
+            throw new SystemException($"Syntax error: {r}");
         }
+
+        return result;
     }
 }

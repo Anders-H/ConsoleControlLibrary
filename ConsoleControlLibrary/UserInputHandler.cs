@@ -1,6 +1,3 @@
-﻿#nullable enable
+﻿namespace ConsoleControlLibrary;
 
-namespace ConsoleControlLibrary
-{
-    public delegate void UserInputHandler(object sender, UserInputEventArgs e);
-}
+public delegate void UserInputHandler(object sender, UserInputEventArgs e);

@@ -1,8 +1,6 @@
-﻿#nullable enable
-namespace ConsoleControlLibrary.Controls.BaseTypes
+﻿namespace ConsoleControlLibrary.Controls.BaseTypes;
+
+public interface ICheckControl
 {
-    public interface ICheckControl
-    {
-        bool Checked { get; set; }
-    }
+    bool Checked { get; set; }
 }
