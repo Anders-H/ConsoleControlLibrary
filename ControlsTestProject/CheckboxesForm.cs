@@ -9,14 +9,12 @@ namespace ControlsTestProject;
 
 public class CheckboxesForm : ConsoleForm
 {
-    private readonly IntPtr _handle;
     private readonly Checkbox _checkbox1;
     private readonly Checkbox _checkbox2;
     private readonly Button _button;
 
-    public CheckboxesForm(IntPtr handle, ConsoleControl parentConsole) : base(parentConsole)
+    public CheckboxesForm(IntPtr handle, ConsoleControl parentConsole) : base(handle, parentConsole)
     {
-        _handle = handle;
         AddControl(new Label(this, 1, 8, "Two checkboxes, two radiobuttons and a button:"));
         _checkbox1 = new Checkbox(this, true, 1, 10, 16, "Enable button");
         AddControl(_checkbox1);
@@ -43,7 +41,7 @@ public class CheckboxesForm : ConsoleForm
         }
         if (sender == _button)
         {
-            ParentConsole.CurrentForm = new TextboxesForm(_handle, ParentConsole);
+            ParentConsole.CurrentForm = new TextboxesForm(Handle, ParentConsole);
         }
     }
 }

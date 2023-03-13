@@ -8,13 +8,11 @@ namespace ControlsTestProject;
 
 internal class TextBasedVectorImageForm : ConsoleForm
 {
-    private readonly IntPtr _handle;
     private readonly Button _button;
 
-    public TextBasedVectorImageForm(IntPtr handle, ConsoleControl parentConsole) : base(parentConsole)
+    public TextBasedVectorImageForm(IntPtr handle, ConsoleControl parentConsole) : base(handle, parentConsole)
     {
-        _handle = handle;
-        _button = new Button(this, 10, 30, 17, "To buttons form");
+        _button = new Button(this, 10, 30, 17, "To lists form");
         AddControl(_button);
         var picture = new ClientPicture(this, 0, 0, 90, 20);
         AddControl(picture);
@@ -44,8 +42,6 @@ BOX-FILLED (50,50,20,20);
     protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
     {
         if (sender == _button)
-        {
-            ParentConsole.CurrentForm = new ButtonsForm(_handle, ParentConsole);
-        }
+            ParentConsole.CurrentForm = new ListsForm(Handle, ParentConsole);
     }
 }

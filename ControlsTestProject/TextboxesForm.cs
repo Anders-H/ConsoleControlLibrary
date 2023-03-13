@@ -7,12 +7,10 @@ namespace ControlsTestProject;
 
 public class TextboxesForm : ConsoleForm
 {
-    private readonly IntPtr _handle;
     private readonly Button _button;
 
-    public TextboxesForm(IntPtr handle, ConsoleControl parentConsole) : base(parentConsole)
+    public TextboxesForm(IntPtr handle, ConsoleControl parentConsole) : base(handle, parentConsole)
     {
-        _handle = handle;
         AddControl(new Label(this, 3, 5, "Write some text (5 characters):"));
         var textBox1 = new TextBox(this, 3, 6, 10, 5);
         AddControl(textBox1);
@@ -30,6 +28,6 @@ public class TextboxesForm : ConsoleForm
     protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
     {
         if (sender == _button)
-            ParentConsole.CurrentForm = new TextAdventureForm(_handle, ParentConsole);
+            ParentConsole.CurrentForm = new TextAdventureForm(Handle, ParentConsole);
     }
 }

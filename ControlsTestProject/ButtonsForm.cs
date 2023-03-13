@@ -8,7 +8,6 @@ namespace ControlsTestProject;
 
 public class ButtonsForm : ConsoleForm
 {
-    private readonly IntPtr _handle;
     private readonly TextBlock _textBlock;
     private readonly Button _button1;
     private readonly Button _button2;
@@ -16,12 +15,11 @@ public class ButtonsForm : ConsoleForm
     private readonly Button _button4;
     private readonly Button _button5;
 
-    public ButtonsForm(IntPtr handle, ConsoleControl parentConsole) : base(parentConsole)
+    public ButtonsForm(IntPtr handle, ConsoleControl parentConsole) : base(handle, parentConsole)
     {
         const string text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis justo vel eros egestas commodo sed vel ante.";
 
-        _handle = handle;
-        _textBlock = new TextBlock(_handle, this, 0, 0, parentConsole.ColumnCount, 7, text, 5, HorizontalTextAlignment.Top);
+        _textBlock = new TextBlock(Handle, this, 0, 0, parentConsole.ColumnCount, 7, text, 5, HorizontalTextAlignment.Top);
         AddControl(_textBlock);
         AddControl(new Label(this, 10, 8, "Five buttons:"));
         _button1 = new Button(this, 10, 10, 16, "Disable me");
@@ -88,7 +86,7 @@ public class ButtonsForm : ConsoleForm
 
         if (sender == _button5)
         {
-            ParentConsole.CurrentForm = new CheckboxesForm(_handle, ParentConsole);
+            ParentConsole.CurrentForm = new CheckboxesForm(Handle, ParentConsole);
         }
     }
 }

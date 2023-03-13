@@ -24,9 +24,11 @@ public class ConsoleForm : IDisposable
     protected internal Brush DisabledForeColorBrush { get; }
     protected internal Brush ActiveControlBackColor { get; }
     protected internal Brush ActiveControlForeColor { get; }
+    public IntPtr Handle { get; }
 
-    public ConsoleForm(ConsoleControl parentConsole)
+    public ConsoleForm(IntPtr handle, ConsoleControl parentConsole)
     {
+        Handle = handle;
         BackColorBrush = new SolidBrush(ControlColorScheme.BackColor);
         ForeColorBrush = new SolidBrush(ControlColorScheme.ForeColor);
         DisabledForeColorBrush = new SolidBrush(ControlColorScheme.DisabledForeColor);
