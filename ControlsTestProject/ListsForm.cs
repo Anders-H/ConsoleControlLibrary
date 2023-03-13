@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Windows.Forms;
 using ConsoleControlLibrary;
 using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.Events;
+using Button = ConsoleControlLibrary.Controls.Button;
+using Label = ConsoleControlLibrary.Controls.Label;
 
 namespace ControlsTestProject;
 
@@ -31,7 +34,9 @@ internal class ListsForm : ConsoleForm
 
     protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
     {
-        if (sender == _button)
+        if (sender == _simpleList)
+            MessageBox.Show($@"You selected: {_simpleList.SelectedItem}");
+        else if (sender == _button)
             ParentConsole.CurrentForm = new ButtonsForm(Handle, ParentConsole);
     }
 }

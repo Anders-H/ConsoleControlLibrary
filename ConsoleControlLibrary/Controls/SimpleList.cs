@@ -8,12 +8,14 @@ namespace ConsoleControlLibrary.Controls;
 public class SimpleList : ControlBase, IControl, IControlFormOperations
 {
     private int _selectedIndex;
+    private int _viewOffset;
     public List<object> Items { get; }
-    
+
     public SimpleList(ConsoleForm parentForm, int x, int y, int width, int height) : base(parentForm, x, y, width, height)
     {
         Items = new List<object>();
         SelectedIndex = 0;
+        _viewOffset = 0;
     }
 
     public int SelectedIndex
@@ -22,6 +24,7 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
         set
         {
             _selectedIndex = value;
+            EnsureVisible();
             Invalidate();
         }
     }
@@ -49,11 +52,17 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
                     continue;
 
                 SelectedIndex = i;
+                EnsureVisible();
                 return;
             }
 
             SelectedIndex = -1;
         }
+    }
+
+    private void EnsureVisible()
+    {
+        // TODO: Fix offset.
     }
 
     public void AddItem(object item) =>
@@ -69,5 +78,20 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
 
     public override void Draw(Graphics g, IDrawEngine drawEngine)
     {
+        if (Width < 3 || Height <= 0)
+            return;
+
+        if (ParentForm.Font == null)
+            return;
+
+        var drawCharacters = new char[Width, Height];
+
+        for (var height = 0; height < Height; height++)
+        {
+            for (var width = 0; width < Width; width++)
+            {
+
+            }
+        }
     }
 }
