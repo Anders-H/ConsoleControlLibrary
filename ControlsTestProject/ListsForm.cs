@@ -28,7 +28,7 @@ internal class ListsForm : ConsoleForm
         _simpleList.AddItem(new ListItem(9, "Hello! 9"));
         _simpleList.AddItem(new ListItem(10, "The End"));
         AddControl(_simpleList);
-        _button = new Button(this, 3, 25, 24, "To text adventure form");
+        _button = new Button(this, 3, 25, 24, "To text buttons form");
         AddControl(_button);
     }
 

@@ -114,9 +114,11 @@ public class ConsoleForm : IDisposable
                     for (var x = 0; x < drawEngine.ColumnCount; x++)
                         drawEngine.DrawCursor(g, p, x, y);
             }
+
             using (var p = new Pen(Color.FromArgb(0, 0, 255)))
                 foreach (var c in Controls.Where(x => x.Visible && !x.HasFocus))
                     drawEngine.OutlineControl(g, p, c.ControlOutline);
+            
             using (var p = new Pen(Color.FromArgb(0, 255, 255)))
                 foreach (var c in Controls.Where(x => x.Visible && x.HasFocus))
                     drawEngine.OutlineControl(g, p, c.ControlOutline);

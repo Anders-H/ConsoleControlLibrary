@@ -15,5 +15,5 @@ public partial class Form1 : Form
         Debug.WriteLine("CurrentFormChanged");
 
     private void Form1_Load(object sender, EventArgs e) =>
-        consoleControl1.CurrentForm = new ButtonsForm(Handle, consoleControl1);
+        consoleControl1.CurrentForm = new ListsForm(Handle, consoleControl1);
 }

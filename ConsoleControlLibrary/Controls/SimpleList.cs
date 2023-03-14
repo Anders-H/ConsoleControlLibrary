@@ -15,6 +15,9 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
     {
         Items = new List<object>();
         SelectedIndex = 0;
+        CanGetFocus = true;
+        Enabled = true;
+        Visible = true;
         _viewOffset = 0;
     }
 
@@ -78,20 +81,69 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
 
     public override void Draw(Graphics g, IDrawEngine drawEngine)
     {
-        if (Width < 3 || Height <= 0)
+        if (Width <= 0 || Height <= 0)
             return;
 
         if (ParentForm.Font == null)
             return;
 
-        var drawCharacters = new char[Width, Height];
+        var visibleIndex = _viewOffset;
+        var y = Y;
 
         for (var height = 0; height < Height; height++)
         {
-            for (var width = 0; width < Width; width++)
+            if (Items.Count > visibleIndex)
             {
+                var s = Items[visibleIndex]?.ToString() ?? "";
+                
+                if (s.Length > Width)
+                    s = s[..Width];
 
+                var x = X;
+
+                if (HasFocus)
+                {
+                    var brush = visibleIndex == SelectedIndex ? ParentForm.BackColorBrush : ParentForm.ForeColorBrush;
+
+                    if (visibleIndex == SelectedIndex)
+                        drawEngine.FillControl(g, ParentForm.ForeColorBrush, new Rectangle(x, y, Width, 1));
+
+                    foreach (var t in s)
+                    {
+                        drawEngine.DrawCharacter(g, t, ParentForm.Font, brush, x, y);
+                        x++;
+                    }
+                }
+                else if (Enabled)
+                {
+                    var brush = visibleIndex == SelectedIndex ? ParentForm.ForeColorBrush : ParentForm.DisabledForeColorBrush;
+
+                    if (visibleIndex == SelectedIndex)
+                        drawEngine.FillControl(g, ParentForm.DisabledForeColorBrush, new Rectangle(x, y, Width, 1));
+
+                    foreach (var t in s)
+                    {
+                        drawEngine.DrawCharacter(g, t, ParentForm.Font, brush, x, y);
+                        x++;
+                    }
+                }
+                else
+                {
+                    var brush = visibleIndex == SelectedIndex ? ParentForm.BackColorBrush : ParentForm.DisabledForeColorBrush;
+
+                    if (visibleIndex == SelectedIndex)
+                        drawEngine.FillControl(g, ParentForm.DisabledForeColorBrush, new Rectangle(x, y, Width, 1));
+
+                    foreach (var t in s)
+                    {
+                        drawEngine.DrawCharacter(g, t, ParentForm.Font, brush, x, y);
+                        x++;
+                    }
+                }
             }
+
+            y++;
+            visibleIndex++;
         }
     }
 }

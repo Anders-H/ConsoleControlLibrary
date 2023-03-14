@@ -109,7 +109,7 @@ public class Button : ControlBase, IControl, IControlFormOperations, ITextContro
 
         for (var i = 0; i < _visibleText.Length; i++)
         {
-            drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.DisabledForeColorBrush, X + i, Y);
+            drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.ActiveControlForeColor, X + i, Y);
         }
     }
 }
