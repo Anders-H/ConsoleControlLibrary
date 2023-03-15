@@ -538,16 +538,35 @@ public partial class ConsoleControl : UserControl
         if (hit == null)
             return;
 
+        CurrentForm.SetFocus(hit);
+        CurrentForm.ActiveControl = hit;
+        CurrentForm.ActiveControl.GotActiveAt = DateTime.Now;
+
         if (hit is SimpleList simpleList) // TODO: Check for any control with multiple click zones.
         {
             simpleList.MouseClick(point);
             return;
         }
 
-        CurrentForm.SetFocus(hit);
-        CurrentForm.ActiveControl = hit;
-        CurrentForm.ActiveControl.GotActiveAt = DateTime.Now;
         CurrentForm.KeyPressed(Keys.Enter, ShiftKey);
+    }
+
+    private void ConsoleControl_MouseDoubleClick(object sender, MouseEventArgs e)
+    {
+        if (CurrentForm == null)
+            return;
+
+        var point = DrawEngine
+            .PhysicalCoordinateToFormCoordinate(e.X, e.Y);
+
+        var hit = CurrentForm
+            .GetControlAt(point);
+
+        if (hit == null)
+            return;
+
+        if (hit is SimpleList) // TODO: Check for any control with multiple click zones.
+            CurrentForm.KeyPressed(Keys.Enter, ShiftKey);
     }
 
     private void ConsoleControl_MouseMove(object sender, MouseEventArgs e)

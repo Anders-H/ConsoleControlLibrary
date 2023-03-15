@@ -40,11 +40,12 @@
             // 
             // ConsoleControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.DoubleBuffered = true;
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "ConsoleControl";
-            this.Size = new System.Drawing.Size(504, 327);
+            this.Size = new System.Drawing.Size(588, 377);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.ConsoleControl_Paint);
             this.Enter += new System.EventHandler(this.ConsoleControl_Enter);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ConsoleControl_KeyDown);
@@ -52,6 +53,7 @@
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ConsoleControl_KeyUp);
             this.Leave += new System.EventHandler(this.ConsoleControl_Leave);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ConsoleControl_MouseClick);
+            this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ConsoleControl_MouseDoubleClick);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ConsoleControl_MouseMove);
             this.Resize += new System.EventHandler(this.ConsoleControl_Resize);
             this.ResumeLayout(false);
