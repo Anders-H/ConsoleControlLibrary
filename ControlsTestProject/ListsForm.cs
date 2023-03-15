@@ -10,6 +10,8 @@ namespace ControlsTestProject;
 
 internal class ListsForm : ConsoleForm
 {
+    private readonly Button _buttonFirst;
+    private readonly Button _buttonLast;
     private readonly Button _button;
     private readonly SimpleList _simpleList;
 
@@ -28,7 +30,11 @@ internal class ListsForm : ConsoleForm
         _simpleList.AddItem(new ListItem(9, "Hello! 9"));
         _simpleList.AddItem(new ListItem(10, "The End"));
         AddControl(_simpleList);
-        _button = new Button(this, 3, 25, 24, "To text buttons form");
+        _buttonFirst = new Button(this, 3, 27, 24, "Select first");
+        _buttonLast = new Button(this, 3, 28, 24, "Select last");
+        _button = new Button(this, 3, 29, 24, "To text buttons form");
+        AddControl(_buttonFirst);
+        AddControl(_buttonLast);
         AddControl(_button);
     }
 
@@ -38,6 +44,10 @@ internal class ListsForm : ConsoleForm
             MessageBox.Show($@"You selected: {_simpleList.SelectedItem}");
         else if (sender == _button)
             ParentConsole.CurrentForm = new ButtonsForm(Handle, ParentConsole);
+        else if (sender == _buttonFirst)
+            _simpleList.SelectedIndex = 0;
+        else if (sender == _buttonLast)
+            _simpleList.SelectedIndex = 9;
     }
 }
 

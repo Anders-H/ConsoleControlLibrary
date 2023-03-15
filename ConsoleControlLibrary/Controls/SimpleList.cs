@@ -60,12 +60,19 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
             }
 
             SelectedIndex = -1;
+            Invalidate();
         }
     }
 
     private void EnsureVisible()
     {
-        // TODO: Fix offset.
+        if (Height <= 0 || Items.Count <= 0 || SelectedIndex < 0)
+            return;
+
+        if (_viewOffset > SelectedIndex)
+            _viewOffset = SelectedIndex;
+        else if (SelectedIndex >= _viewOffset + Height)
+            _viewOffset = SelectedIndex - Height + 1;
     }
 
     public void AddItem(object item) =>
@@ -73,6 +80,10 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
 
     public override void KeyPressed(Keys key)
     {
+        if (key == Keys.Down && SelectedIndex < Items.Count - 1)
+            SelectedIndex++;
+        if (key == Keys.Up && SelectedIndex > 0)
+            SelectedIndex--;
     }
 
     public override void CharacterInput(char c)
