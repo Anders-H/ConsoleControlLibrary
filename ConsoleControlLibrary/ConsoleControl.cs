@@ -324,9 +324,9 @@ public partial class ConsoleControl : UserControl
                 break;
             case Keys.Insert:
             {
-                if (_currentForm?.CurrentControl is TextBox textbox)
+                if (_currentForm?.CurrentControl is TextBox textBox)
                 {
-                    textbox.KeyPressed(Keys.Insert);
+                    textBox.KeyPressed(Keys.Insert);
                     return;
                 }
 
@@ -346,9 +346,9 @@ public partial class ConsoleControl : UserControl
                 break;
             case Keys.Delete:
             {
-                if (_currentForm?.CurrentControl is TextBox textbox)
+                if (_currentForm?.CurrentControl is TextBox textBox)
                 {
-                    textbox.KeyPressed(Keys.Delete);
+                    textBox.KeyPressed(Keys.Delete);
                     return;
                 }
 
@@ -396,6 +396,8 @@ public partial class ConsoleControl : UserControl
             case Keys.Enter:
             case Keys.Back:
             case Keys.Delete:
+            case Keys.PageUp:
+            case Keys.PageDown:
                 return true;
             default:
                 return false;
@@ -535,6 +537,12 @@ public partial class ConsoleControl : UserControl
 
         if (hit == null)
             return;
+
+        if (hit is SimpleList simpleList) // TODO: Check for any control with multiple click zones.
+        {
+            simpleList.MouseClick(point);
+            return;
+        }
 
         CurrentForm.SetFocus(hit);
         CurrentForm.ActiveControl = hit;

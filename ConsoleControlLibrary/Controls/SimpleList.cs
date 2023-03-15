@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls.BaseTypes;
+using ConsoleControlLibrary.Controls.Events;
 
 namespace ConsoleControlLibrary.Controls;
 
@@ -73,6 +74,11 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
             _viewOffset = SelectedIndex;
         else if (SelectedIndex >= _viewOffset + Height)
             _viewOffset = SelectedIndex - Height + 1;
+
+        while (_viewOffset + Height > Items.Count)
+        {
+            _viewOffset--;
+        }
     }
 
     public void AddItem(object item) =>
@@ -80,10 +86,46 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
 
     public override void KeyPressed(Keys key)
     {
+        if (Items.Count <= 0)
+            return;
+
         if (key == Keys.Down && SelectedIndex < Items.Count - 1)
             SelectedIndex++;
-        if (key == Keys.Up && SelectedIndex > 0)
+        else if (key == Keys.Up && SelectedIndex > 0)
             SelectedIndex--;
+        else if (key == Keys.PageDown)
+        {
+            var newIndex = SelectedIndex += (Height - 1);
+
+            if (newIndex >= Items.Count)
+                newIndex = Items.Count - 1;
+
+            SelectedIndex = newIndex;
+        }
+        else if (key == Keys.PageUp)
+        {
+            var newIndex = SelectedIndex -= (Height - 1);
+
+            if (newIndex < 0)
+                newIndex = 0;
+
+            SelectedIndex = newIndex;
+        }
+        else if (key == Keys.Home)
+            SelectedIndex = 0;
+        else if (key == Keys.End)
+            SelectedIndex = Items.Count - 1;
+        else if (key == Keys.Enter && SelectedIndex >= 0)
+            ParentForm.TriggerEvent(this, new ConsoleControlEventArgs(ConsoleControlEventType.Click));
+    }
+
+    public void MouseClick(Point point)
+    {
+        var y = point.Y - Y;
+        var clickIndex = y - _viewOffset;
+
+        if (clickIndex >= 0 && clickIndex < Items.Count)
+            SelectedIndex = clickIndex;
     }
 
     public override void CharacterInput(char c)
@@ -105,7 +147,7 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
         {
             if (Items.Count > visibleIndex)
             {
-                var s = Items[visibleIndex]?.ToString() ?? "";
+                var s = Items[visibleIndex].ToString() ?? "";
                 
                 if (s.Length > Width)
                     s = s[..Width];
