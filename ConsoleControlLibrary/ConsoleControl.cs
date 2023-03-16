@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls;
+using ConsoleControlLibrary.Controls.BaseTypes;
 using ConsoleControlLibrary.Controls.Events;
 using Button = System.Windows.Forms.Button;
 using TextBox = ConsoleControlLibrary.Controls.TextBox;
@@ -542,9 +543,9 @@ public partial class ConsoleControl : UserControl
         CurrentForm.ActiveControl = hit;
         CurrentForm.ActiveControl.GotActiveAt = DateTime.Now;
 
-        if (hit is SimpleList simpleList) // TODO: Check for any control with multiple click zones.
+        if (hit is IMultipleClickZoneControl c)
         {
-            simpleList.MouseClick(point);
+            c.MouseClick(point);
             return;
         }
 
@@ -565,7 +566,7 @@ public partial class ConsoleControl : UserControl
         if (hit == null)
             return;
 
-        if (hit is SimpleList) // TODO: Check for any control with multiple click zones.
+        if (hit is IMultipleClickZoneControl)
             CurrentForm.KeyPressed(Keys.Enter, ShiftKey);
     }
 

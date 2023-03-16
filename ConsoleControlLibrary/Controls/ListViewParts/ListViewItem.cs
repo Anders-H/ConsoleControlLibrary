@@ -12,4 +12,7 @@ public class ListViewItem
         Value = value;
         SubValues = new List<string>();
     }
+
+    public override string ToString() =>
+        Value.ToString() ?? "";
 }

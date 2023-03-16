@@ -4,7 +4,6 @@ using System.Windows.Forms.VisualStyles;
 using ConsoleControlLibrary;
 using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.Events;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Button = ConsoleControlLibrary.Controls.Button;
 using Label = ConsoleControlLibrary.Controls.Label;
 using ListView = ConsoleControlLibrary.Controls.ListView;
@@ -65,7 +64,7 @@ internal class ListsForm : ConsoleForm
         if (sender == _simpleList)
             MessageBox.Show($@"You selected from the simple list: {_simpleList.SelectedItem}");
         else if (sender == _listView)
-            MessageBox.Show($@"You selected from the list view: {_simpleList.SelectedItem}");
+            MessageBox.Show($@"You selected from the list view: {_listView.SelectedItem}");
         else if (sender == _button)
             ParentConsole.CurrentForm = new ButtonsForm(Handle, ParentConsole);
         else if (sender == _buttonFirst)

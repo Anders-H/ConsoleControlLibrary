@@ -6,31 +6,13 @@ using ConsoleControlLibrary.Controls.Events;
 
 namespace ConsoleControlLibrary.Controls;
 
-public class SimpleList : ControlBase, IControl, IControlFormOperations
+public class SimpleList : ListBase, IMultipleClickZoneControl
 {
-    private int _selectedIndex;
-    private int _viewOffset;
     public List<object> Items { get; }
 
     public SimpleList(ConsoleForm parentForm, int x, int y, int width, int height) : base(parentForm, x, y, width, height)
     {
         Items = new List<object>();
-        SelectedIndex = 0;
-        CanGetFocus = true;
-        Enabled = true;
-        Visible = true;
-        _viewOffset = 0;
-    }
-
-    public int SelectedIndex
-    {
-        get => _selectedIndex;
-        set
-        {
-            _selectedIndex = value;
-            EnsureVisible();
-            Invalidate();
-        }
     }
 
     public object? SelectedItem
@@ -65,19 +47,19 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
         }
     }
 
-    private void EnsureVisible()
+    protected override void EnsureVisible()
     {
         if (Height <= 0 || Items.Count <= 0 || SelectedIndex < 0)
             return;
 
-        if (_viewOffset > SelectedIndex)
-            _viewOffset = SelectedIndex;
-        else if (SelectedIndex >= _viewOffset + Height)
-            _viewOffset = SelectedIndex - Height + 1;
+        if (ViewOffset > SelectedIndex)
+            ViewOffset = SelectedIndex;
+        else if (SelectedIndex >= ViewOffset + Height)
+            ViewOffset = SelectedIndex - Height + 1;
 
-        while (_viewOffset + Height > Items.Count)
+        while (ViewOffset + Height > Items.Count)
         {
-            _viewOffset--;
+            ViewOffset--;
         }
     }
 
@@ -122,14 +104,10 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
     public void MouseClick(Point point)
     {
         var y = point.Y - Y;
-        var clickIndex = y - _viewOffset;
+        var clickIndex = y - ViewOffset;
 
         if (clickIndex >= 0 && clickIndex < Items.Count)
             SelectedIndex = clickIndex;
-    }
-
-    public override void CharacterInput(char c)
-    {
     }
 
     public override void Draw(Graphics g, IDrawEngine drawEngine)
@@ -140,7 +118,7 @@ public class SimpleList : ControlBase, IControl, IControlFormOperations
         if (ParentForm.Font == null)
             return;
 
-        var visibleIndex = _viewOffset;
+        var visibleIndex = ViewOffset;
         var y = Y;
 
         for (var height = 0; height < Height; height++)

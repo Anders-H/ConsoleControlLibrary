@@ -9,10 +9,8 @@ using ListViewItem = ConsoleControlLibrary.Controls.ListViewParts.ListViewItem;
 
 namespace ConsoleControlLibrary.Controls;
 
-public class ListView : ControlBase, IControl, IControlFormOperations
+public class ListView : ListBase, IMultipleClickZoneControl
 {
-    private int _selectedIndex;
-    private int _viewOffset;
     public List<ListViewItem> Items { get; }
     public List<ListViewColumn> Columns { get; }
 
@@ -20,28 +18,12 @@ public class ListView : ControlBase, IControl, IControlFormOperations
     {
         Items = new List<ListViewItem>();
         Columns = new List<ListViewColumn>();
-        SelectedIndex = 0;
-        CanGetFocus = true;
-        Enabled = true;
-        Visible = true;
-        _viewOffset = 0;
     }
 
     public void AddColumn(string title, int width, HorizontalAlign align) =>
         Columns.Add(new ListViewColumn(title, width, align));
 
-    public int SelectedIndex
-    {
-        get => _selectedIndex;
-        set
-        {
-            _selectedIndex = value;
-            EnsureVisible();
-            Invalidate();
-        }
-    }
-
-    public object? SelectedItem
+    public ListViewItem? SelectedItem
     {
         get
         {
@@ -73,19 +55,19 @@ public class ListView : ControlBase, IControl, IControlFormOperations
         }
     }
 
-    private void EnsureVisible()
+    protected override void EnsureVisible()
     {
         if (Height <= 0 || Items.Count <= 0 || SelectedIndex < 0)
             return;
 
-        if (_viewOffset > SelectedIndex)
-            _viewOffset = SelectedIndex;
-        else if (SelectedIndex >= _viewOffset + Height)
-            _viewOffset = SelectedIndex - Height + 1;
+        if (ViewOffset > SelectedIndex)
+            ViewOffset = SelectedIndex;
+        else if (SelectedIndex >= ViewOffset + Height)
+            ViewOffset = SelectedIndex - Height + 1;
 
-        while (_viewOffset + Height > Items.Count)
+        while (ViewOffset + Height > Items.Count)
         {
-            _viewOffset--;
+            ViewOffset--;
         }
     }
 
@@ -140,14 +122,10 @@ public class ListView : ControlBase, IControl, IControlFormOperations
     public void MouseClick(Point point)
     {
         var y = point.Y - Y;
-        var clickIndex = y - _viewOffset;
+        var clickIndex = y - ViewOffset;
 
         if (clickIndex >= 0 && clickIndex < Items.Count)
             SelectedIndex = clickIndex;
-    }
-
-    public override void CharacterInput(char c)
-    {
     }
 
     public override void Draw(Graphics g, IDrawEngine drawEngine)
@@ -158,7 +136,7 @@ public class ListView : ControlBase, IControl, IControlFormOperations
         if (ParentForm.Font == null)
             return;
 
-        var visibleIndex = _viewOffset;
+        var visibleIndex = ViewOffset;
         var y = Y;
 
         for (var height = 0; height < Height; height++)
