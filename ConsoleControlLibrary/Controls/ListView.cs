@@ -139,16 +139,29 @@ public class ListView : ListBase, IMultipleClickZoneControl
         var visibleIndex = ViewOffset;
         var y = Y;
 
-        for (var height = 0; height < Height; height++)
+        var x = X;
+        foreach (var c in Columns)
+        {
+            // TODO: Render column headers
+        }
+
+        if (Height <= 1)
+            return;
+
+        y++;
+
+        for (var height = 1; height < Height; height++)
         {
             if (Items.Count > visibleIndex)
             {
+                // TODO: Render columns
+
                 var s = Items[visibleIndex].Value.ToString() ?? "";
 
                 if (s.Length > Width)
                     s = s[..Width];
 
-                var x = X;
+                x = X;
 
                 if (HasFocus)
                 {
