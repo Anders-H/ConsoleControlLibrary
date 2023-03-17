@@ -136,13 +136,25 @@ public class ListView : ListBase, IMultipleClickZoneControl
         if (ParentForm.Font == null)
             return;
 
+        drawEngine.DrawUnderline(g, ParentForm.DisabledForeColorBrush, X, Y, Width);
+
         var visibleIndex = ViewOffset;
         var y = Y;
-
         var x = X;
         foreach (var c in Columns)
         {
-            // TODO: Render column headers
+            var title = c.GetAlignedTitle();
+
+            for (var i = 0; i < c.Width; i++)
+            {
+                if (title.Length > i)
+                    drawEngine.DrawCharacter(g, title[i], ParentForm.Font, ParentForm.DisabledForeColorBrush, x, y);
+
+                x++;
+            }
+
+            if (x >= Width)
+                break;
         }
 
         if (Height <= 1)

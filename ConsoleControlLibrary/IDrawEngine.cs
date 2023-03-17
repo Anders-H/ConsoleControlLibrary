@@ -17,4 +17,5 @@ public interface IDrawEngine
     Point PhysicalCoordinateToFormCoordinate(int x, int y);
     void OutlineControl(Graphics g, Pen p, Rectangle outline);
     public void FillControl(Graphics g, Brush b, Rectangle outline);
+    public void DrawUnderline(Graphics g, Brush b, int x, int y, int width);
 }

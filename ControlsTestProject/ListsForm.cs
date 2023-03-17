@@ -35,10 +35,10 @@ internal class ListsForm : ConsoleForm
         _simpleList.AddItem(new ListItem(10, "The End"));
         AddControl(_simpleList);
 
-        _listView = new ListView(this, 1, 10, 30, 6);
-        _listView.AddColumn("Left", 10, HorizontalAlign.Left);
-        _listView.AddColumn("Center", 10, HorizontalAlign.Center);
-        _listView.AddColumn("Right", 10, HorizontalAlign.Center);
+        _listView = new ListView(this, 1, 10, 45, 6);
+        _listView.AddColumn("Left", 15, HorizontalAlign.Left);
+        _listView.AddColumn("Center", 15, HorizontalAlign.Center);
+        _listView.AddColumn("Right", 15, HorizontalAlign.Right);
         _listView.AddItem(new ListItem(1, "Hello!"), "Middle column", "Right");
         _listView.AddItem(new ListItem(2, "Item number 2"));
         _listView.AddItem(new ListItem(3, "Hello again!"));

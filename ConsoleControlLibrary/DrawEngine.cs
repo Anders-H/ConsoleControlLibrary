@@ -75,4 +75,14 @@ public class DrawEngine : IDrawEngine
                 (int)(outline.Width * CharacterWidth),
                 (int)(outline.Height * CharacterHeight))
         );
+
+    public void DrawUnderline(Graphics g, Brush b, int x, int y, int width)
+    {
+        var physicalY = (int)(y * CharacterHeight + CharacterHeight - 1);
+        g.FillRectangle(b,
+            new Rectangle((int)(x * CharacterWidth),
+                physicalY,
+                (int)(width * CharacterWidth),
+                1));
+    }
 }
