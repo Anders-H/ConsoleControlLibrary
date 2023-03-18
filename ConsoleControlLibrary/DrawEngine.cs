@@ -45,9 +45,6 @@ public class DrawEngine : IDrawEngine
         }
     }
 
-    public Point PhysicalCoordinateToFormCoordinate(int x, int y) =>
-        new Point((int)(x * CharacterWidth), (int)(y * CharacterHeight));
-
     public void DrawCharacter(Graphics g, char c, Font f, Brush b, int x, int y) =>
         g.DrawString(c.ToString(), f, b, (float)(x * CharacterWidth), (float)(y * CharacterHeight));
         

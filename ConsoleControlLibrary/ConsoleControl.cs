@@ -168,6 +168,8 @@ public partial class ConsoleControl : UserControl
 
     private void DrawTextConsole(Graphics g)
     {
+        g.ScaleTransform(DrawEngine.ScaleX, DrawEngine.ScaleY);
+
         g.Clear(BackColor);
 
         if (_font == null)
@@ -531,8 +533,7 @@ public partial class ConsoleControl : UserControl
         if (CurrentForm == null)
             return;
 
-        var point = DrawEngine
-            .PhysicalCoordinateToFormCoordinate(e.X, e.Y);
+        var point = new Point(_mouseX / 8, _mouseY / 8);
 
         var hit = CurrentForm
             .GetControlAt(point);
@@ -558,8 +559,7 @@ public partial class ConsoleControl : UserControl
         if (CurrentForm == null)
             return;
 
-        var point = DrawEngine
-            .PhysicalCoordinateToFormCoordinate(e.X, e.Y);
+        var point = new Point(_mouseX, _mouseY);
 
         var hit = CurrentForm
             .GetControlAt(point);
@@ -573,9 +573,23 @@ public partial class ConsoleControl : UserControl
 
     private void ConsoleControl_MouseMove(object sender, MouseEventArgs e)
     {
-        _mouseX = e.X;
-        _mouseY = e.Y;
-
+        try
+        {
+            _mouseX = (int)(e.X / DrawEngine.ScaleX);
+        }
+        catch
+        {
+            _mouseX = 0;
+        }
+        try
+        {
+            _mouseY = (int)(e.Y / DrawEngine.ScaleY);
+        }
+        catch
+        {
+            _mouseY = 0;
+        }
+        
         if (_waitMode)
             return;
 
@@ -590,9 +604,10 @@ public partial class ConsoleControl : UserControl
             return;
         }
 
-        var point = DrawEngine.PhysicalCoordinateToFormCoordinate(_mouseX, _mouseY);
+        var point = new Point((int)(_mouseX / DrawEngine.CharacterWidth),(int)(_mouseY / DrawEngine.CharacterHeight));
 
         var hit = CurrentForm.GetControlAt(point);
+
         if (hit == null)
         {
             Cursor = Cursors.Arrow;
@@ -609,7 +624,7 @@ public partial class ConsoleControl : UserControl
 
         if (type == typeof(TextBox) || type == typeof(TextBlock))
         {
-            Cursor = Cursors.IBeam;
+            Cursor = Cursors.Hand;
             return;
         }
 

@@ -122,7 +122,7 @@ public class ListView : ListBase, IMultipleClickZoneControl
     public void MouseClick(Point point)
     {
         var y = point.Y - Y;
-        var clickIndex = y - ViewOffset;
+        var clickIndex = y - ViewOffset - 1;
 
         if (clickIndex >= 0 && clickIndex < Items.Count)
             SelectedIndex = clickIndex;
@@ -136,7 +136,8 @@ public class ListView : ListBase, IMultipleClickZoneControl
         if (ParentForm.Font == null)
             return;
 
-        drawEngine.DrawUnderline(g, ParentForm.DisabledForeColorBrush, X, Y, Width);
+        if (HasFocus)
+            drawEngine.DrawUnderline(g, ParentForm.DisabledForeColorBrush, X, Y, Width);
 
         var visibleIndex = ViewOffset;
         var y = Y;
