@@ -42,7 +42,7 @@
             this.consoleControl1.Location = new System.Drawing.Point(0, 0);
             this.consoleControl1.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.consoleControl1.Name = "consoleControl1";
-            this.consoleControl1.RowCount = 40;
+            this.consoleControl1.RowCount = 30;
             this.consoleControl1.Size = new System.Drawing.Size(1087, 767);
             this.consoleControl1.TabIndex = 0;
             this.consoleControl1.CurrentFormChanged += new System.EventHandler(this.consoleControl1_CurrentFormChanged);

@@ -14,11 +14,11 @@ internal class TextAdventureForm : ConsoleForm
 
     public TextAdventureForm(IntPtr handle, ConsoleControl parentConsole) : base(handle, parentConsole)
     {
-        var picture = new ClientPicture(this, 0, 0, 90, 20);
+        var picture = new ClientPicture(this, 0, 0, 90, 15);
         AddControl(picture);
-        _output = new TextBlock(Handle, this, 0, 20, 90, 20, "", 2, HorizontalTextAlignment.Bottom);
+        _output = new TextBlock(Handle, this, 0, 15, 90, 15, "", 2, HorizontalTextAlignment.Bottom);
         AddControl(_output);
-        _input = new TextBox(this, 0, 39, 90, 90);
+        _input = new TextBox(this, 0, 29, 90, 90);
         AddControl(_input);
         TriggerFormLoadedEvent();
         var _ = new TestImage(parentConsole.DrawEngine, picture, 320, 200);

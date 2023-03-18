@@ -12,7 +12,7 @@ internal class TextBasedVectorImageForm : ConsoleForm
 
     public TextBasedVectorImageForm(IntPtr handle, ConsoleControl parentConsole) : base(handle, parentConsole)
     {
-        _button = new Button(this, 10, 30, 17, "To lists form");
+        _button = new Button(this, 10, 29, 17, "To lists form");
         AddControl(_button);
         var picture = new ClientPicture(this, 0, 0, 90, 20);
         AddControl(picture);

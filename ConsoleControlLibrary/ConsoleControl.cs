@@ -42,6 +42,7 @@ public partial class ConsoleControl : UserControl
         _waitMode = false;
         _mouseX = -1;
         _mouseY = -1;
+        _font = new Font("Courier New", 6.0f);
     }
 
     public void HideCursor() =>
@@ -153,7 +154,7 @@ public partial class ConsoleControl : UserControl
 
         if (_needsRecalcSize)
             CalcSize(e.Graphics);
-
+        
         if (CurrentForm == null)
         {
             e.Graphics.Clear(BackColor);

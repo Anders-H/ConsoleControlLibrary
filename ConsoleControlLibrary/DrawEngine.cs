@@ -5,52 +5,51 @@ namespace ConsoleControlLibrary;
 
 public class DrawEngine : IDrawEngine
 {
+    public float ScaleX { get; private set; }
+    public float ScaleY { get; private set; }
     public int ColumnCount { get; private set; }
     public int RowCount { get; private set; }
-    public double CharacterWidth { get; private set; }
-    public double CharacterHeight { get; private set; }
-    public double CharacterOffsetX { get; private set; }
-    public double CharacterOffsetY { get; private set; }
-        
+    public double CharacterWidth { get; }
+    public double CharacterHeight { get; }
+
+    public DrawEngine()
+    {
+        CharacterWidth = 8;
+        CharacterHeight = 8;
+    }
+
     public void CalculateSizes(Graphics g, ref Font? f, int columnCount, int rowCount, int canvasWidth, int canvasHeight)
     {
-        ColumnCount = columnCount;
-        RowCount = rowCount;
-            
-        var width = Math.Max(canvasWidth, 30.0);
-        var height = Math.Max(canvasHeight, 30.0);
-            
-        CharacterWidth = width / ColumnCount;
-        CharacterHeight = height / RowCount;
-        var fontSize = (float)(Math.Min(CharacterWidth, CharacterHeight) - 1);
+        double pixelsWidth = columnCount * CharacterWidth;
+        double pixelsHeight = rowCount * CharacterHeight;
 
-        for (var i = fontSize + 20; i >= fontSize; i -= 0.5f)
+        if (canvasWidth > pixelsWidth && canvasHeight > pixelsHeight)
         {
-            f?.Dispose();
-            f = new Font("Consolas", fontSize);
-            if (g.MeasureString("WM", f).Width >= fontSize || g.MeasureString("Åj", f).Height >= fontSize)
-                break;
+            ScaleX = (float)(canvasWidth / (double)pixelsWidth);
+            ScaleY = (float)(canvasHeight / (double)pixelsHeight);
         }
-
-        if (f == null)
-            return;
-
-        var csize = g.MeasureString("W", f);
-        CharacterOffsetX = (CharacterWidth / 2.0) - (csize.Width / 2.0);
-        CharacterOffsetY = (CharacterHeight / 2.0) - (csize.Height / 2.0);
+        else if (canvasWidth > pixelsWidth)
+        {
+            ScaleX = (float)(canvasWidth / (double)pixelsWidth);
+            ScaleY = 1f;
+        }
+        else if (canvasHeight > pixelsHeight)
+        {
+            ScaleX = 1f;
+            ScaleY = (float)(canvasHeight / (double)pixelsHeight);
+        }
+        else
+        {
+            ScaleX = 1f;
+            ScaleY = 1f;
+        }
     }
 
-    public Point PhysicalCoordinateToFormCoordinate(int x, int y)
-    {
-        var sourceX = x - CharacterOffsetX;
-        var sourceY = y - CharacterOffsetY;
-        var cx = x > 0 ? (int)(sourceX / CharacterWidth) : 0;
-        var cy = y > 0 ? (int)(sourceY / CharacterHeight) : 0;
-        return new Point(cx, cy);
-    }
+    public Point PhysicalCoordinateToFormCoordinate(int x, int y) =>
+        new Point((int)(x * CharacterWidth), (int)(y * CharacterHeight));
 
     public void DrawCharacter(Graphics g, char c, Font f, Brush b, int x, int y) =>
-        g.DrawString(c.ToString(), f, b, (float)(x*CharacterWidth + CharacterOffsetX), (float)(y*CharacterHeight + CharacterOffsetY));
+        g.DrawString(c.ToString(), f, b, (float)(x * CharacterWidth), (float)(y * CharacterHeight));
         
     public void DrawCursor(Graphics g, Brush b, int x, int y) =>
         g.FillRectangle(b, (float)(x*CharacterWidth), (float)(y*CharacterHeight), (float)CharacterWidth, (float)CharacterHeight);
