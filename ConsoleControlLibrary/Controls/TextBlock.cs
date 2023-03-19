@@ -170,7 +170,7 @@ public class TextBlock : ControlBase, IControl, IControlFormOperations, ITextCon
 
         for(var y = 0; y < Height; y++)
             for(var x = 0; x < Width; x++)
-                drawEngine.DrawCharacter(g, _characterGrid![x, y], ParentForm.Font, ParentForm.ForeColorBrush, x + X, y + Y);
+                drawEngine.DrawCharacter(g, _characterGrid![x, y], ParentForm.Font, ParentForm.CurrentColorScheme!.ForeColor, x + X, y + Y);
     }
 
     private void ScrollUp()

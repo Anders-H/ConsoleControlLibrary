@@ -62,10 +62,10 @@ public class ListView : ListBase, IMultipleClickZoneControl
 
         if (ViewOffset > SelectedIndex)
             ViewOffset = SelectedIndex;
-        else if (SelectedIndex >= ViewOffset + Height)
-            ViewOffset = SelectedIndex - Height + 1;
+        else if (SelectedIndex >= ViewOffset + Height - 1)
+            ViewOffset = SelectedIndex - Height + 2;
 
-        while (ViewOffset + Height > Items.Count)
+        while (ViewOffset + Height > Items.Count + 1)
         {
             ViewOffset--;
         }
@@ -137,7 +137,7 @@ public class ListView : ListBase, IMultipleClickZoneControl
             return;
 
         if (HasFocus)
-            drawEngine.DrawUnderline(g, ParentForm.DisabledForeColorBrush, X, Y, Width);
+            drawEngine.DrawUnderline(g, ParentForm.CurrentColorScheme!.DisabledForeColor, X, Y, Width);
 
         var visibleIndex = ViewOffset;
         var y = Y;
@@ -149,7 +149,7 @@ public class ListView : ListBase, IMultipleClickZoneControl
             for (var i = 0; i < c.Width; i++)
             {
                 if (title.Length > i)
-                    drawEngine.DrawCharacter(g, title[i], ParentForm.Font, ParentForm.DisabledForeColorBrush, x, y);
+                    drawEngine.DrawCharacter(g, title[i], ParentForm.Font, ParentForm.CurrentColorScheme!.DisabledForeColor, x, y);
 
                 x++;
             }
@@ -161,58 +161,66 @@ public class ListView : ListBase, IMultipleClickZoneControl
         if (Height <= 1)
             return;
 
+        using var backColor = new SolidBrush(ParentForm.CurrentColorScheme!.BackColor);
+
         y++;
 
         for (var height = 1; height < Height; height++)
         {
             if (Items.Count > visibleIndex)
             {
-                // TODO: Render columns
+                var columnIndex = 0;
+                x = X - 1;
 
-                var s = Items[visibleIndex].Value.ToString() ?? "";
-
-                if (s.Length > Width)
-                    s = s[..Width];
-
-                x = X;
-
-                if (HasFocus)
+                foreach (var value in Items[visibleIndex].Values)
                 {
-                    var brush = visibleIndex == SelectedIndex ? ParentForm.BackColorBrush : ParentForm.ForeColorBrush;
+                    x++;
 
-                    if (visibleIndex == SelectedIndex)
-                        drawEngine.FillControl(g, ParentForm.ForeColorBrush, new Rectangle(x, y, Width, 1));
+                    if (columnIndex >= Columns.Count)
+                        break;
 
-                    foreach (var t in s)
+                    var col = Columns[columnIndex];
+
+                    var s = value.Length > col.Width ? value[..Width] : value;
+
+                    if (HasFocus)
                     {
-                        drawEngine.DrawCharacter(g, t, ParentForm.Font, brush, x, y);
-                        x++;
+                        var brush = visibleIndex == SelectedIndex ? backColor : ParentForm.CurrentColorScheme!.ForeColor;
+
+                        if (visibleIndex == SelectedIndex)
+                            drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.ForeColor, new Rectangle(x, y, Width, 1));
+
+                        foreach (var t in s)
+                        {
+                            drawEngine.DrawCharacter(g, t, ParentForm.Font, brush, x, y);
+                            x++;
+                        }
                     }
-                }
-                else if (Enabled)
-                {
-                    var brush = visibleIndex == SelectedIndex ? ParentForm.ForeColorBrush : ParentForm.DisabledForeColorBrush;
-
-                    if (visibleIndex == SelectedIndex)
-                        drawEngine.FillControl(g, ParentForm.DisabledForeColorBrush, new Rectangle(x, y, Width, 1));
-
-                    foreach (var t in s)
+                    else if (Enabled)
                     {
-                        drawEngine.DrawCharacter(g, t, ParentForm.Font, brush, x, y);
-                        x++;
+                        var brush = visibleIndex == SelectedIndex ? ParentForm.CurrentColorScheme!.ForeColor : ParentForm.CurrentColorScheme!.DisabledForeColor;
+
+                        if (visibleIndex == SelectedIndex)
+                            drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.DisabledForeColor, new Rectangle(x, y, Width, 1));
+
+                        foreach (var t in s)
+                        {
+                            drawEngine.DrawCharacter(g, t, ParentForm.Font, brush, x, y);
+                            x++;
+                        }
                     }
-                }
-                else
-                {
-                    var brush = visibleIndex == SelectedIndex ? ParentForm.BackColorBrush : ParentForm.DisabledForeColorBrush;
-
-                    if (visibleIndex == SelectedIndex)
-                        drawEngine.FillControl(g, ParentForm.DisabledForeColorBrush, new Rectangle(x, y, Width, 1));
-
-                    foreach (var t in s)
+                    else
                     {
-                        drawEngine.DrawCharacter(g, t, ParentForm.Font, brush, x, y);
-                        x++;
+                        var brush = visibleIndex == SelectedIndex ? backColor : ParentForm.CurrentColorScheme!.DisabledForeColor;
+
+                        if (visibleIndex == SelectedIndex)
+                            drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.DisabledForeColor, new Rectangle(x, y, Width, 1));
+
+                        foreach (var t in s)
+                        {
+                            drawEngine.DrawCharacter(g, t, ParentForm.Font, brush, x, y);
+                            x++;
+                        }
                     }
                 }
             }

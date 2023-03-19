@@ -94,12 +94,10 @@ public abstract class CheckboxBase : ControlBase
             var activeNow = ConsiderAsActiveNow();
 
             var foreColor = activeNow
-                ? ParentForm.ActiveControlForeColor
-                : ParentForm.ForeColorBrush;
+                ? ParentForm.CurrentColorScheme!.ActiveControlForeColor
+                : ParentForm.CurrentColorScheme!.ForeColor;
 
-            var backColor = activeNow
-                ? ParentForm.ActiveControlBackColor
-                : ParentForm.BackColorBrush;
+            using var backColor = new SolidBrush(ParentForm.CurrentColorScheme!.BackColor);
 
             drawEngine.FillControl(g, backColor, new Rectangle(X, Y, Width, Height));
 
@@ -120,7 +118,7 @@ public abstract class CheckboxBase : ControlBase
 
         for (var i = 0; i < VisibleText.Length; i++)
         {
-            drawEngine.DrawCharacter(g, VisibleText[i], ParentForm.Font, ParentForm.DisabledForeColorBrush, X + i, Y);
+            drawEngine.DrawCharacter(g, VisibleText[i], ParentForm.Font, ParentForm.CurrentColorScheme!.DisabledForeColor, X + i, Y);
         }
     }
 }

@@ -121,6 +121,8 @@ public class SimpleList : ListBase, IMultipleClickZoneControl
         var visibleIndex = ViewOffset;
         var y = Y;
 
+        using var backColor = new SolidBrush(ParentForm.CurrentColorScheme!.BackColor);
+
         for (var height = 0; height < Height; height++)
         {
             if (Items.Count > visibleIndex)
@@ -134,10 +136,10 @@ public class SimpleList : ListBase, IMultipleClickZoneControl
 
                 if (HasFocus)
                 {
-                    var brush = visibleIndex == SelectedIndex ? ParentForm.BackColorBrush : ParentForm.ForeColorBrush;
+                    var brush = visibleIndex == SelectedIndex ? backColor : ParentForm.CurrentColorScheme!.ForeColor;
 
                     if (visibleIndex == SelectedIndex)
-                        drawEngine.FillControl(g, ParentForm.ForeColorBrush, new Rectangle(x, y, Width, 1));
+                        drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.ForeColor, new Rectangle(x, y, Width, 1));
 
                     foreach (var t in s)
                     {
@@ -147,10 +149,10 @@ public class SimpleList : ListBase, IMultipleClickZoneControl
                 }
                 else if (Enabled)
                 {
-                    var brush = visibleIndex == SelectedIndex ? ParentForm.ForeColorBrush : ParentForm.DisabledForeColorBrush;
+                    var brush = visibleIndex == SelectedIndex ? ParentForm.CurrentColorScheme!.ForeColor : ParentForm.CurrentColorScheme!.DisabledForeColor;
 
                     if (visibleIndex == SelectedIndex)
-                        drawEngine.FillControl(g, ParentForm.DisabledForeColorBrush, new Rectangle(x, y, Width, 1));
+                        drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.DisabledForeColor, new Rectangle(x, y, Width, 1));
 
                     foreach (var t in s)
                     {
@@ -160,10 +162,10 @@ public class SimpleList : ListBase, IMultipleClickZoneControl
                 }
                 else
                 {
-                    var brush = visibleIndex == SelectedIndex ? ParentForm.BackColorBrush : ParentForm.DisabledForeColorBrush;
+                    var brush = visibleIndex == SelectedIndex ? backColor : ParentForm.CurrentColorScheme!.DisabledForeColor;
 
                     if (visibleIndex == SelectedIndex)
-                        drawEngine.FillControl(g, ParentForm.DisabledForeColorBrush, new Rectangle(x, y, Width, 1));
+                        drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.DisabledForeColor, new Rectangle(x, y, Width, 1));
 
                     foreach (var t in s)
                     {

@@ -79,17 +79,13 @@ public class Button : ControlBase, IControl, IControlFormOperations, ITextContro
         if (ParentForm.Font == null)
             return;
 
-        if (Enabled)
+        if (Visible)
         {
-            var activeNow = ConsiderAsActiveNow();
+            var foreColor = Enabled
+                ? ParentForm.CurrentColorScheme!.ForeColor
+                : ParentForm.CurrentColorScheme!.DisabledForeColor;
 
-            var foreColor = activeNow
-                ? ParentForm.ActiveControlForeColor
-                : ParentForm.ForeColorBrush;
-
-            var backColor = activeNow
-                ? ParentForm.ActiveControlBackColor
-                : ParentForm.BackColorBrush;
+            using var backColor = new SolidBrush(ParentForm.CurrentColorScheme!.BackColor);
 
             drawEngine.FillControl(g, backColor, new Rectangle(X, Y, Width, Height));
 
@@ -97,7 +93,7 @@ public class Button : ControlBase, IControl, IControlFormOperations, ITextContro
             {
                 if (i == 0 && HasFocus && ConsoleControl.CursorBlink)
                 {
-                    drawEngine.DrawCursor(g, ParentForm.ForeColorBrush, X, Y);
+                    drawEngine.DrawCursor(g, ParentForm.CurrentColorScheme!.ForeColor, X, Y);
                     drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, foreColor, X + i, Y);
                     continue;
                 }
@@ -109,7 +105,7 @@ public class Button : ControlBase, IControl, IControlFormOperations, ITextContro
 
         for (var i = 0; i < _visibleText.Length; i++)
         {
-            drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.ActiveControlForeColor, X + i, Y);
+            drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.CurrentColorScheme!.ActiveControlForeColor, X + i, Y);
         }
     }
 }

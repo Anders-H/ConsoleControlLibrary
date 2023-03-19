@@ -55,6 +55,6 @@ public class Label : ControlBase, IControl, IControlFormOperations, ITextControl
             return;
 
         for (var i = 0; i < _visibleText.Length; i++)
-            drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.DisabledForeColorBrush, X + i, Y);
+            drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, ParentForm.CurrentColorScheme!.DisabledForeColor, X + i, Y);
     }
 }

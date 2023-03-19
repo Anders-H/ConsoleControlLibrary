@@ -15,4 +15,14 @@ public class ListViewItem
 
     public override string ToString() =>
         Value.ToString() ?? "";
+
+    public IEnumerable<string> Values
+    {
+        get
+        {
+            var res = new List<string> { Value.ToString() ?? "" }; // TODO Needs optimization
+            res.AddRange(SubValues);
+            return res;
+        }
+    }
 }

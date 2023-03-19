@@ -145,12 +145,12 @@ public class TextBox : ControlBase, IControl, IControlFormOperations, ITextContr
                 cursorX = cursorX > X + Width - 1 ? X + Width - 1 : cursorX;
                     
                 if (ConsoleControl.CursorBlink)
-                    drawEngine.DrawCursor(g, ParentForm.ForeColorBrush, cursorX, Y);
+                    drawEngine.DrawCursor(g, ParentForm.CurrentColorScheme!.ForeColor, cursorX, Y);
                     
                 for (var i = 0; i < drawCharacters.Length; i++)
                 {
                     var x = X + i;
-                    drawEngine.DrawCharacter(g, drawCharacters[i], ParentForm.Font, ParentForm.ForeColorBrush, x, Y);
+                    drawEngine.DrawCharacter(g, drawCharacters[i], ParentForm.Font, ParentForm.CurrentColorScheme!.ForeColor, x, Y);
                 }
             }
             else
@@ -158,7 +158,7 @@ public class TextBox : ControlBase, IControl, IControlFormOperations, ITextContr
                 for (var i = 0; i < drawCharacters.Length; i++)
                 {
                     var x = X + i;
-                    drawEngine.DrawCharacter(g, drawCharacters[i], ParentForm.Font, ParentForm.ForeColorBrush, x, Y);
+                    drawEngine.DrawCharacter(g, drawCharacters[i], ParentForm.Font, ParentForm.CurrentColorScheme!.ForeColor, x, Y);
                 }
             }
         }
@@ -167,7 +167,7 @@ public class TextBox : ControlBase, IControl, IControlFormOperations, ITextContr
             for (var i = 0; i < drawCharacters.Length; i++)
             {
                 var x = X + i;
-                drawEngine.DrawCharacter(g, drawCharacters[i], ParentForm.Font, ParentForm.DisabledForeColorBrush, x, Y);
+                drawEngine.DrawCharacter(g, drawCharacters[i], ParentForm.Font, ParentForm.CurrentColorScheme!.DisabledForeColor, x, Y);
             }
         }
     }

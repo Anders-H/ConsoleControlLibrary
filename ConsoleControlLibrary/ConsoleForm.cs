@@ -19,32 +19,52 @@ public class ConsoleForm : IDisposable
     protected internal IControl? ActiveControl { get; set; }
     protected int CurrentControlIndex { get; private set; }
     protected ConsoleControl ParentConsole { get; }
-    protected internal Brush BackColorBrush { get; }
-    protected internal Brush ForeColorBrush { get; }
-    protected internal Brush DisabledForeColorBrush { get; }
-    protected internal Brush ActiveControlBackColor { get; }
-    protected internal Brush ActiveControlForeColor { get; }
+    internal CurrentColorScheme? CurrentColorScheme { get; private set; }
     public IntPtr Handle { get; }
 
     public ConsoleForm(IntPtr handle, ConsoleControl parentConsole)
     {
         Handle = handle;
-        BackColorBrush = new SolidBrush(ControlColorScheme.BackColor);
-        ForeColorBrush = new SolidBrush(ControlColorScheme.ForeColor);
-        DisabledForeColorBrush = new SolidBrush(ControlColorScheme.DisabledForeColor);
-        ActiveControlBackColor = new SolidBrush(ControlColorScheme.ActiveControlBackColor);
-        ActiveControlForeColor = new SolidBrush(ControlColorScheme.ActiveControlForeColor);
         ParentConsole = parentConsole;
         Controls = new List<IControl>();
     }
 
     public void Dispose()
     {
-        BackColorBrush.Dispose();
-        ForeColorBrush.Dispose();
-        DisabledForeColorBrush.Dispose();
-        ActiveControlBackColor.Dispose();
-        ActiveControlForeColor.Dispose();
+        if (CurrentColorScheme != null)
+        {
+            try
+            {
+                CurrentColorScheme.Dispose();
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+    }
+
+    public void SetColorScheme(IControlColorScheme colorScheme)
+    {
+        if (CurrentColorScheme != null)
+        {
+            try
+            {
+                CurrentColorScheme.Dispose();
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        CurrentColorScheme = new CurrentColorScheme(
+            colorScheme.BackColor,
+            colorScheme.ForeColor,
+            colorScheme.InputControlBackColor,
+            colorScheme.ActiveControlForeColor,
+            colorScheme.DisabledForeColor
+        );
     }
 
     internal void HideCursor() =>
@@ -101,7 +121,10 @@ public class ConsoleForm : IDisposable
     internal void Draw(Graphics g, IDrawEngine drawEngine)
     {
         g.ScaleTransform(drawEngine.ScaleX, drawEngine.ScaleY);
-        g.Clear(ControlColorScheme.BackColor);
+
+        CurrentColorScheme ??= CurrentColorScheme.GetDefaultColorScheme();
+
+        g.Clear(CurrentColorScheme!.BackColor);
 
         Controls
             .Where(x => x.Visible).Cast<IControlFormOperations>()
