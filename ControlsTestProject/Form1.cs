@@ -17,6 +17,6 @@ public partial class Form1 : Form
     private void Form1_Load(object sender, EventArgs e)
     {
         consoleControl1.CurrentForm = new ListsForm(Handle, consoleControl1);
-        //consoleControl1.CurrentForm.SetColorScheme(new ControlColorScheme());
+        consoleControl1.SetDefaultColorScheme(new ControlColorScheme());
     }
 }

@@ -122,6 +122,15 @@ public class ConsoleForm : IDisposable
     {
         g.ScaleTransform(drawEngine.ScaleX, drawEngine.ScaleY);
 
+        if (CurrentColorScheme == null && ParentConsole.DefaultColorScheme != null)
+            CurrentColorScheme = new CurrentColorScheme(
+                ParentConsole.DefaultColorScheme.BackColor,
+                ParentConsole.DefaultColorScheme.ForeColor,
+                ParentConsole.DefaultColorScheme.InputControlBackColor,
+                ParentConsole.DefaultColorScheme.ActiveControlForeColor,
+                ParentConsole.DefaultColorScheme.DisabledForeColor
+            );
+        
         CurrentColorScheme ??= CurrentColorScheme.GetDefaultColorScheme();
 
         g.Clear(CurrentColorScheme!.BackColor);

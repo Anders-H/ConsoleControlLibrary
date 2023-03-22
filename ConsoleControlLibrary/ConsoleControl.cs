@@ -25,14 +25,15 @@ public partial class ConsoleControl : UserControl
     private bool RowChanged { get; set; }
     private ConsoleForm? _currentForm;
     private bool ShiftKey { get; set; }
+    private bool _waitMode;
+    private int _mouseX;
+    private int _mouseY;
+    internal IControlColorScheme? DefaultColorScheme { get; set; }
     internal static bool CursorBlink { get; set; }
     public event EventHandler? CurrentFormChanged;
     public event UserInputHandler? UserInput;
     public event ConsoleControlEventHandler? ControlEvent;
     public IDrawEngine DrawEngine { get; set; } = new DrawEngine();
-    private bool _waitMode;
-    private int _mouseX;
-    private int _mouseY;
 
     public ConsoleControl()
     {
@@ -44,6 +45,9 @@ public partial class ConsoleControl : UserControl
         _mouseY = -1;
         _font = new Font("Courier New", 6.0f);
     }
+
+    public void SetDefaultColorScheme(IControlColorScheme colorScheme) =>
+        DefaultColorScheme = colorScheme;
 
     public void HideCursor() =>
         CursorBlink = false;

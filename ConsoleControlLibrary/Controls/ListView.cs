@@ -136,6 +136,9 @@ public class ListView : ListBase, IMultipleClickZoneControl
         if (ParentForm.Font == null)
             return;
 
+        if (Columns.Count <= 0)
+            return;
+
         if (HasFocus)
             drawEngine.DrawUnderline(g, ParentForm.CurrentColorScheme!.DisabledForeColor, X, Y, Width);
 
@@ -169,26 +172,28 @@ public class ListView : ListBase, IMultipleClickZoneControl
         {
             if (Items.Count > visibleIndex)
             {
-                var columnIndex = 0;
+                if (visibleIndex == SelectedIndex)
+                    drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.ForeColor, new Rectangle(X, y, Width, 1));
+
+                var columnIndex = -1;
                 x = X - 1;
 
-                foreach (var value in Items[visibleIndex].Values)
+                foreach (var col in Columns)
                 {
+                    columnIndex++;
                     x++;
 
-                    if (columnIndex >= Columns.Count)
-                        break;
-
-                    var col = Columns[columnIndex];
+                    var value = "";
+                    if (columnIndex == 0)
+                        value = Items[visibleIndex].Value.ToString() ?? "";
+                    else if (Items.Count < columnIndex - 1)
+                        value = Items[visibleIndex].SubValues[columnIndex - 1] ?? "";
 
                     var s = value.Length > col.Width ? value[..Width] : value;
 
                     if (HasFocus)
                     {
                         var brush = visibleIndex == SelectedIndex ? backColor : ParentForm.CurrentColorScheme!.ForeColor;
-
-                        if (visibleIndex == SelectedIndex)
-                            drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.ForeColor, new Rectangle(x, y, Width, 1));
 
                         foreach (var t in s)
                         {
@@ -200,9 +205,6 @@ public class ListView : ListBase, IMultipleClickZoneControl
                     {
                         var brush = visibleIndex == SelectedIndex ? ParentForm.CurrentColorScheme!.ForeColor : ParentForm.CurrentColorScheme!.DisabledForeColor;
 
-                        if (visibleIndex == SelectedIndex)
-                            drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.DisabledForeColor, new Rectangle(x, y, Width, 1));
-
                         foreach (var t in s)
                         {
                             drawEngine.DrawCharacter(g, t, ParentForm.Font, brush, x, y);
@@ -212,9 +214,6 @@ public class ListView : ListBase, IMultipleClickZoneControl
                     else
                     {
                         var brush = visibleIndex == SelectedIndex ? backColor : ParentForm.CurrentColorScheme!.DisabledForeColor;
-
-                        if (visibleIndex == SelectedIndex)
-                            drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.DisabledForeColor, new Rectangle(x, y, Width, 1));
 
                         foreach (var t in s)
                         {
