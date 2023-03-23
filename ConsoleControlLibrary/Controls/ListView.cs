@@ -172,24 +172,18 @@ public class ListView : ListBase, IMultipleClickZoneControl
         {
             if (Items.Count > visibleIndex)
             {
+                var itm = Items[visibleIndex];
+
                 if (visibleIndex == SelectedIndex)
-                    drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.ForeColor, new Rectangle(X, y, Width, 1));
+                    drawEngine.FillControl(g, HasFocus ? ParentForm.CurrentColorScheme!.ForeColor : ParentForm.CurrentColorScheme.DisabledForeColor, new Rectangle(X, y, Width, 1));
 
                 var columnIndex = -1;
-                x = X - 1;
-
+                
                 foreach (var col in Columns)
                 {
                     columnIndex++;
-                    x++;
-
-                    var value = "";
-                    if (columnIndex == 0)
-                        value = Items[visibleIndex].Value.ToString() ?? "";
-                    else if (Items.Count < columnIndex - 1)
-                        value = Items[visibleIndex].SubValues[columnIndex - 1] ?? "";
-
-                    var s = value.Length > col.Width ? value[..Width] : value;
+                    x = columnIndex == 0 ? X : X + GetOffset(Columns, col);
+                    var s = itm.GetAlignedValue(columnIndex, col.Width, col.Align);
 
                     if (HasFocus)
                     {
@@ -227,5 +221,26 @@ public class ListView : ListBase, IMultipleClickZoneControl
             y++;
             visibleIndex++;
         }
+    }
+
+    private int GetOffset(IEnumerable<ListViewColumn> columns, ListViewColumn column)
+    {
+        if (column.Offset != null)
+            return column.Offset.Value;
+
+        var result = 0;
+
+        foreach (var listViewColumn in columns)
+        {
+            if (listViewColumn == column)
+            {
+                column.Offset = result;
+                return result;
+            }
+
+            result += listViewColumn.Width;
+        }
+
+        return 0;
     }
 }

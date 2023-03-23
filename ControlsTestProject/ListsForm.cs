@@ -47,7 +47,7 @@ internal class ListsForm : ConsoleForm
         _listView.AddItem(new ListItem(6, "Hello! 6"));
         _listView.AddItem(new ListItem(7, "Hello! 7"), "Midl", "Rgt");
         _listView.AddItem(new ListItem(8, "Hello! 8"));
-        _listView.AddItem(new ListItem(9, "Hello! 9"));
+        _listView.AddItem(new ListItem(9, "Hello! 9 Values does not fit"), "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
         _listView.AddItem(new ListItem(10, "The End"), "", "Fine!");
         AddControl(_listView);
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms.VisualStyles;
 
 namespace ConsoleControlLibrary.Controls.ListViewParts;
@@ -7,6 +6,7 @@ namespace ConsoleControlLibrary.Controls.ListViewParts;
 public class ListViewColumn
 {
     private string? _alignedTitle;
+    internal int? Offset { get; set; }
     public string Title { get; }
     public int Width { get; set; }
     public HorizontalAlign Align { get;}
@@ -14,6 +14,7 @@ public class ListViewColumn
     public ListViewColumn(string title, int width, HorizontalAlign align)
     {
         _alignedTitle = null;
+        Offset = null;
         Title = title;
         Width = width;
         Align = align;
@@ -34,18 +35,20 @@ public class ListViewColumn
                 switch (Align)
                 {
                     case HorizontalAlign.Left:
-                        while (_alignedTitle.Length < Width)
-                            _alignedTitle = $"{_alignedTitle} ";
+                        _alignedTitle = Title;
                         break;
                     case HorizontalAlign.Center:
                         while (_alignedTitle.Length < Width)
                             _alignedTitle = $" {_alignedTitle} ";
+
                         if (_alignedTitle.Length > Width)
                             _alignedTitle = _alignedTitle.Substring(0, Width);
+
                         break;
                     case HorizontalAlign.Right:
                         while (_alignedTitle.Length < Width)
                             _alignedTitle = $" {_alignedTitle}";
+                        
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -56,7 +59,6 @@ public class ListViewColumn
                 _alignedTitle = Title;
             }
         }
-
 
         return _alignedTitle;
     }
