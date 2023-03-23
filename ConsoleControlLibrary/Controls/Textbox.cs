@@ -9,11 +9,13 @@ public class TextBox : ControlBase, IControl, IControlFormOperations, ITextContr
 {
     private int _displayOffset;
     private int _cursorX;
+    private readonly bool _transparent;
     private readonly char[] _characters;
     public int MaxLength { get; }
 
-    public TextBox(ConsoleForm parentForm, int x, int y, int width, int maxLength) : base(parentForm, x, y, width, 1)
+    public TextBox(ConsoleForm parentForm, bool transparent, int x, int y, int width, int maxLength) : base(parentForm, x, y, width, 1)
     {
+        _transparent = transparent;
         MaxLength = maxLength;
         _characters = new char[maxLength];
         Enabled = true;
@@ -128,6 +130,9 @@ public class TextBox : ControlBase, IControl, IControlFormOperations, ITextContr
 
         if (ParentForm.Font == null)
             return;
+
+        if (!_transparent)
+            drawEngine.FillControl(g, ParentForm.CurrentColorScheme!.InputControlBackColor, ControlOutline);
 
         var drawCharacters = new char[Width];
             

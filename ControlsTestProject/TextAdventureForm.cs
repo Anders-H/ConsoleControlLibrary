@@ -18,7 +18,7 @@ internal class TextAdventureForm : ConsoleForm
         AddControl(picture);
         _output = new TextBlock(Handle, this, 0, 15, 90, 15, "", 2, HorizontalTextAlignment.Bottom);
         AddControl(_output);
-        _input = new TextBox(this, 0, 29, 90, 90);
+        _input = new TextBox(this, true, 0, 29, 90, 90);
         AddControl(_input);
         TriggerFormLoadedEvent();
         var _ = new TestImage(parentConsole.DrawEngine, picture, 320, 200);
