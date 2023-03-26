@@ -24,12 +24,13 @@ public partial class ConsoleControl : UserControl
     private History History { get; }
     private bool RowChanged { get; set; }
     private ConsoleForm? _currentForm;
+    private PromptForm? _currentPrompt;
     private bool ShiftKey { get; set; }
     private bool _waitMode;
-    private int _mouseX;
-    private int _mouseY;
+    private readonly Mouse _mouse;
     internal IControlColorScheme? DefaultColorScheme { get; set; }
     internal static bool CursorBlink { get; set; }
+    public ConsoleState ConsoleState { get; private set; }
     public event EventHandler? CurrentFormChanged;
     public event UserInputHandler? UserInput;
     public event ConsoleControlEventHandler? ControlEvent;
@@ -41,9 +42,9 @@ public partial class ConsoleControl : UserControl
         InitializeComponent();
         InitializeConsole();
         _waitMode = false;
-        _mouseX = -1;
-        _mouseY = -1;
+        _mouse = new Mouse();
         _font = new Font("Courier New", 6.0f);
+        ConsoleState = ConsoleState.RunningWithoutForm;
     }
 
     public void SetDefaultColorScheme(IControlColorScheme colorScheme) =>
@@ -261,28 +262,8 @@ public partial class ConsoleControl : UserControl
         _characterArray![RowCount - 1, col] = (char)0;
     }
 
-    protected override bool IsInputKey(Keys keyData)
-    {
-        switch (keyData)
-        {
-            case Keys.Shift:
-                return true;
-            case Keys.Right:
-            case Keys.Left:
-            case Keys.Up:
-            case Keys.Down:
-                return true;
-            case Keys.Shift | Keys.Right:
-            case Keys.Shift | Keys.Left:
-            case Keys.Shift | Keys.Up:
-            case Keys.Shift | Keys.Down:
-                return true;
-            case Keys.Tab:
-            case Keys.Shift | Keys.Tab:
-                return true;
-        }
-        return base.IsInputKey(keyData);
-    }
+    protected override bool IsInputKey(Keys keyData) =>
+        Keyboard.IsInputKey(keyData) || base.IsInputKey(keyData);
 
     private int LastCharacterIndex
     {
@@ -390,27 +371,8 @@ public partial class ConsoleControl : UserControl
         Invalidate();
     }
 
-    private bool IsControlKey(Keys key)
-    {
-        switch (key)
-        {
-            case Keys.Up:
-            case Keys.Down:
-            case Keys.Left:
-            case Keys.Right:
-            case Keys.Home:
-            case Keys.End:
-            case Keys.Tab:
-            case Keys.Enter:
-            case Keys.Back:
-            case Keys.Delete:
-            case Keys.PageUp:
-            case Keys.PageDown:
-                return true;
-            default:
-                return false;
-        }
-    }
+    private bool IsControlKey(Keys key) =>
+        Keyboard.IsControlKey(key);
 
     private void GoToEnd()
     {
@@ -517,7 +479,17 @@ public partial class ConsoleControl : UserControl
                 return;
 
             _currentForm = value;
-            _currentForm?.Run();
+
+            if (_currentForm == null)
+            {
+                ConsoleState = ConsoleState.RunningWithoutForm;
+            }
+            else
+            {
+                ConsoleState = ConsoleState.RunningWithForm;
+                _currentForm?.Run();
+            }
+
             Invalidate();
             CurrentFormChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -537,10 +509,8 @@ public partial class ConsoleControl : UserControl
         if (CurrentForm == null)
             return;
 
-        var point = new Point(_mouseX / 8, _mouseY / 8);
-
-        var hit = CurrentForm
-            .GetControlAt(point);
+        var point = _mouse.ToCharacterPosition(DrawEngine);
+        var hit = CurrentForm.GetControlAt(point);
 
         if (hit == null)
             return;
@@ -563,10 +533,7 @@ public partial class ConsoleControl : UserControl
         if (CurrentForm == null)
             return;
 
-        var point = new Point(_mouseX, _mouseY);
-
-        var hit = CurrentForm
-            .GetControlAt(point);
+        var hit = CurrentForm.GetControlAt(_mouse.AsPoint());
 
         if (hit == null)
             return;
@@ -577,22 +544,7 @@ public partial class ConsoleControl : UserControl
 
     private void ConsoleControl_MouseMove(object sender, MouseEventArgs e)
     {
-        try
-        {
-            _mouseX = (int)(e.X / DrawEngine.ScaleX);
-        }
-        catch
-        {
-            _mouseX = 0;
-        }
-        try
-        {
-            _mouseY = (int)(e.Y / DrawEngine.ScaleY);
-        }
-        catch
-        {
-            _mouseY = 0;
-        }
+        _mouse.UpdateMousePosition(e, DrawEngine);
         
         if (_waitMode)
             return;
@@ -608,9 +560,7 @@ public partial class ConsoleControl : UserControl
             return;
         }
 
-        var point = new Point((int)(_mouseX / DrawEngine.CharacterWidth),(int)(_mouseY / DrawEngine.CharacterHeight));
-
-        var hit = CurrentForm.GetControlAt(point);
+        var hit = CurrentForm.GetControlAt(_mouse.ToCharacterPosition(DrawEngine));
 
         if (hit == null)
         {
@@ -650,5 +600,20 @@ public partial class ConsoleControl : UserControl
         }
         _waitMode = false;
         SetCursor();
+    }
+
+    public bool Ask(string prompt)
+    {
+        _currentPrompt = new PromptForm(Handle, this, _columnCount, true, prompt);
+        ConsoleState = ConsoleState.MessageBox;
+        Invalidate();
+        return true;
+    }
+
+    public void Tell(string prompt)
+    {
+        _currentPrompt = new PromptForm(Handle, this, _columnCount, true, prompt);
+        ConsoleState = ConsoleState.MessageBox;
+        Invalidate();
     }
 }
