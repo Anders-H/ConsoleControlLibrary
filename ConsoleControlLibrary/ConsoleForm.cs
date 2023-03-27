@@ -118,7 +118,7 @@ public class ConsoleForm : IDisposable
         ParentConsole.TriggerEvent(sender, e);
     }
 
-    internal void Draw(Graphics g, IDrawEngine drawEngine)
+    internal virtual void Draw(Graphics g, IDrawEngine drawEngine)
     {
         g.ScaleTransform(drawEngine.ScaleX, drawEngine.ScaleY);
 

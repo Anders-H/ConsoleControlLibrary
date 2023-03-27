@@ -169,6 +169,11 @@ public partial class ConsoleControl : UserControl
         {
             CurrentForm.Draw(e.Graphics, DrawEngine);
         }
+
+        if (ConsoleState == ConsoleState.MessageBox && _currentPrompt != null)
+        {
+            _currentPrompt.Draw(e.Graphics, DrawEngine);
+        }
     }
 
     private void DrawTextConsole(Graphics g)
@@ -604,7 +609,7 @@ public partial class ConsoleControl : UserControl
 
     public bool Ask(string prompt)
     {
-        _currentPrompt = new PromptForm(Handle, this, _columnCount, true, prompt);
+        _currentPrompt = new PromptForm(Handle, this, _columnCount, _rowCount, true, prompt);
         ConsoleState = ConsoleState.MessageBox;
         Invalidate();
         return true;
@@ -612,7 +617,7 @@ public partial class ConsoleControl : UserControl
 
     public void Tell(string prompt)
     {
-        _currentPrompt = new PromptForm(Handle, this, _columnCount, true, prompt);
+        _currentPrompt = new PromptForm(Handle, this, _columnCount, _rowCount, true, prompt);
         ConsoleState = ConsoleState.MessageBox;
         Invalidate();
     }
