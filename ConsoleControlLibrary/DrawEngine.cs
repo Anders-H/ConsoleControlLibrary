@@ -45,10 +45,14 @@ public class DrawEngine : IDrawEngine
         }
     }
 
-    public void DrawCharacter(Graphics g, char c, Font f, Brush b, int x, int y) =>
-        g.DrawString(c.ToString(), f, b, (float)(x * CharacterWidth), (float)(y * CharacterHeight));
+    public void DrawCharacter(Graphics g, char c, Font f, SolidBrush b, int x, int y)
+    {
+        if (c != ' ')
+            g.DrawString(c.ToString(), f, b, (float)(x * CharacterWidth), (float)(y * CharacterHeight));
+    }
+    
         
-    public void DrawCursor(Graphics g, Brush b, int x, int y) =>
+    public void DrawCursor(Graphics g, SolidBrush b, int x, int y) =>
         g.FillRectangle(b, (float)(x*CharacterWidth), (float)(y*CharacterHeight), (float)CharacterWidth, (float)CharacterHeight);
         
     public void DrawCursor(Graphics g, Pen p, int x, int y) =>
@@ -63,7 +67,7 @@ public class DrawEngine : IDrawEngine
                 (int)(outline.Height * CharacterHeight))
         );
 
-    public void FillControl(Graphics g, Brush b, Rectangle outline) =>
+    public void FillControl(Graphics g, SolidBrush b, Rectangle outline) =>
         g.FillRectangle(
             b,
             new Rectangle((int)(outline.X * CharacterWidth),
@@ -72,7 +76,7 @@ public class DrawEngine : IDrawEngine
                 (int)(outline.Height * CharacterHeight))
         );
 
-    public void DrawUnderline(Graphics g, Brush b, int x, int y, int width)
+    public void DrawUnderline(Graphics g, SolidBrush b, int x, int y, int width)
     {
         var physicalY = (int)(y * CharacterHeight + CharacterHeight - 1);
         g.FillRectangle(b,

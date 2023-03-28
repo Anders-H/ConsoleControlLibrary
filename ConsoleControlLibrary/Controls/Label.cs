@@ -11,7 +11,7 @@ public class Label : ControlBase, IControl, IControlFormOperations, ITextControl
         
     public Label(ConsoleForm parentForm, int x, int y, int width, int height, string text) : base(parentForm, x, y, width, height)
     {
-        _text = "";
+        _text = text;
         _visibleText = "";
         Text = text;
         CanGetFocus = false;

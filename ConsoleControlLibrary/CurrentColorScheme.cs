@@ -3,17 +3,17 @@ using System.Drawing;
 
 namespace ConsoleControlLibrary;
 
-internal class CurrentColorScheme : IDisposable
+public class CurrentColorScheme : IDisposable
 {
     public Color BackColor { get; }
 
-    public Brush ForeColor { get; }
+    public SolidBrush ForeColor { get; }
 
-    public Brush InputControlBackColor { get; }
+    public SolidBrush InputControlBackColor { get; }
 
-    public Brush ActiveControlForeColor { get; }
+    public SolidBrush ActiveControlForeColor { get; }
 
-    public Brush DisabledForeColor { get; }
+    public SolidBrush DisabledForeColor { get; }
 
     public CurrentColorScheme(Color backColor, Color foreColor, Color inputControlBackColor, Color activeControlForeColor, Color disabledForeColor)
     {
@@ -24,7 +24,7 @@ internal class CurrentColorScheme : IDisposable
         DisabledForeColor = new SolidBrush(disabledForeColor);
     }
 
-    public CurrentColorScheme(Color backColor, Brush foreColor, Brush inputControlBackColor, Brush activeControlForeColor, Brush disabledForeColor)
+    public CurrentColorScheme(Color backColor, SolidBrush foreColor, SolidBrush inputControlBackColor, SolidBrush activeControlForeColor, SolidBrush disabledForeColor)
     {
         BackColor = backColor;
         ForeColor = foreColor;

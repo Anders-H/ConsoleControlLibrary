@@ -12,6 +12,8 @@ namespace ControlsTestProject;
 
 internal class ListsForm : ConsoleForm
 {
+    private readonly Button _buttonTell;
+    private readonly Button _buttonAsk;
     private readonly Button _buttonFirst;
     private readonly Button _buttonLast;
     private readonly Button _button;
@@ -51,9 +53,14 @@ internal class ListsForm : ConsoleForm
         _listView.AddItem(new ListItem(10, "The End"), "", "Fine!");
         AddControl(_listView);
 
-        _buttonFirst = new Button(this, 3, 27, 24, "Select first");
-        _buttonLast = new Button(this, 3, 28, 24, "Select last");
-        _button = new Button(this, 3, 29, 24, "To text buttons form");
+        _buttonTell = new Button(this, 3, 23, 24, "Tell");
+        _buttonAsk = new Button(this, 3, 24, 24, "Ask");
+        _buttonFirst = new Button(this, 3, 25, 24, "Select first");
+        _buttonFirst = new Button(this, 3, 26, 24, "Select first");
+        _buttonLast = new Button(this, 3, 27, 24, "Select last");
+        _button = new Button(this, 3, 28, 24, "To text buttons form");
+        AddControl(_buttonTell);
+        AddControl(_buttonAsk);
         AddControl(_buttonFirst);
         AddControl(_buttonLast);
         AddControl(_button);
@@ -65,6 +72,10 @@ internal class ListsForm : ConsoleForm
             MessageBox.Show($@"You selected from the simple list: {_simpleList.SelectedItem}");
         else if (sender == _listView)
             MessageBox.Show($@"You selected from the list view: {_listView.SelectedItem}");
+        else if (sender == _buttonTell)
+            ParentConsole.Tell("Hello!");
+        else if (sender == _buttonAsk)
+            MessageBox.Show("Ask...");
         else if (sender == _button)
             ParentConsole.CurrentForm = new ButtonsForm(Handle, ParentConsole);
         else if (sender == _buttonFirst)

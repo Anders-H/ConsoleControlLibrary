@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using ConsoleControlLibrary.Controls;
+using ConsoleControlLibrary.Controls.BaseTypes;
 
 namespace ConsoleControlLibrary;
 
@@ -9,8 +11,7 @@ internal class PromptForm : ConsoleForm
     private readonly Button _btnOk;
     private readonly Button? _btnCancel;
     private readonly int _columnCount;
-    private readonly int _rowCount;
-    private string _prompt;
+    private readonly int _yBase;
 
     public PromptForm(IntPtr handle, ConsoleControl parentConsole, int columnCount, int rowCount, bool hasCancelButton, string prompt) : base(handle, parentConsole)
     {
@@ -20,47 +21,49 @@ internal class PromptForm : ConsoleForm
         if (rowCount < 6)
             throw new SystemException("At least 6 rows required.");
 
+        _columnCount = columnCount;
+        _yBase = rowCount / 2 - 1;
+
         if (prompt.Length > _columnCount)
         {
-            _prompt = prompt.Substring(0, _columnCount);
+            prompt = prompt.Substring(0, _columnCount);
         }
         else if (prompt.Length < columnCount)
         {
-            _prompt = prompt;
-
-            while (_prompt.Length < columnCount)
-                _prompt = $@" {_prompt} ";
+            while (prompt.Length < columnCount)
+                prompt = $@" {prompt} ";
 
             if (prompt.Length > _columnCount)
-                _prompt = prompt.Substring(0, _columnCount);
+                prompt = prompt.Substring(0, _columnCount);
         }
-        else
-        {
-            _prompt = prompt;
-        }
-
-        _columnCount = columnCount;
-        _rowCount = rowCount;
-
-        var yBase = _rowCount / 2;
 
         if (hasCancelButton)
         {
-            _btnCancel = new Button(this, _columnCount - 8, yBase + 1, 8, "Cancel");
-            _btnOk = new Button(this, _columnCount - 16, yBase + 1, 8, "OK");
+            _btnCancel = new Button(this, _columnCount - 8, _yBase + 1, 8, "Cancel");
+            _btnOk = new Button(this, _columnCount - 16, _yBase + 1, 8, "OK");
             AddControl(_btnCancel);
         }
         else
         {
-            _btnOk = new Button(this, _columnCount - 8, yBase + 1, 8, "OK");
+            _btnOk = new Button(this, _columnCount - 8, _yBase + 1, 8, "OK");
         }
 
         AddControl(_btnOk);
-        AddControl(new Label(this, 0, yBase - 1, _prompt));
+        AddControl(new Label(this, 0, _yBase - 1, prompt));
     }
 
-    internal override void Draw(Graphics g, IDrawEngine drawEngine)
+    internal void DrawPrompt(Graphics g, IDrawEngine drawEngine, Color outlineColor, SolidBrush background, SolidBrush foreground)
     {
+        CurrentColorScheme ??= new CurrentColorScheme(background.Color, foreground, background, foreground, foreground);
 
+        drawEngine.FillControl(g, background, new Rectangle(0, _yBase - 1, _columnCount, 3));
+
+        Controls
+            .Where(x => x.Visible).Cast<IControlFormOperations>()
+            .ToList()
+            .ForEach(x => x.Draw(g, drawEngine));
+
+        using var p = new Pen(outlineColor);
+        drawEngine.OutlineControl(g, p, new Rectangle(-1, _yBase - 1, _columnCount + 1, 3));
     }
 }

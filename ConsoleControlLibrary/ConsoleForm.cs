@@ -19,7 +19,7 @@ public class ConsoleForm : IDisposable
     protected internal IControl? ActiveControl { get; set; }
     protected int CurrentControlIndex { get; private set; }
     protected ConsoleControl ParentConsole { get; }
-    internal CurrentColorScheme? CurrentColorScheme { get; private set; }
+    protected internal CurrentColorScheme? CurrentColorScheme { get; set; }
     public IntPtr Handle { get; }
 
     public ConsoleForm(IntPtr handle, ConsoleControl parentConsole)
@@ -118,7 +118,7 @@ public class ConsoleForm : IDisposable
         ParentConsole.TriggerEvent(sender, e);
     }
 
-    internal virtual void Draw(Graphics g, IDrawEngine drawEngine)
+    internal void Draw(Graphics g, IDrawEngine drawEngine)
     {
         g.ScaleTransform(drawEngine.ScaleX, drawEngine.ScaleY);
 

@@ -163,20 +163,28 @@ public partial class ConsoleControl : UserControl
         if (CurrentForm == null)
         {
             e.Graphics.Clear(BackColor);
-            DrawTextConsole(e.Graphics);
+            using var b = new SolidBrush(BackColor);
+            DrawTextConsole(e.Graphics, b);
+
+            if (ConsoleState == ConsoleState.MessageBox)
+                throw new SystemException("No form is active.");
         }
         else
         {
             CurrentForm.Draw(e.Graphics, DrawEngine);
-        }
 
-        if (ConsoleState == ConsoleState.MessageBox && _currentPrompt != null)
-        {
-            _currentPrompt.Draw(e.Graphics, DrawEngine);
+            if (ConsoleState == ConsoleState.MessageBox && _currentPrompt != null)
+                _currentPrompt.DrawPrompt(
+                    e.Graphics,
+                    DrawEngine,
+                    CurrentForm.CurrentColorScheme!.ForeColor.Color,
+                    CurrentForm.CurrentColorScheme.InputControlBackColor,
+                    CurrentForm.CurrentColorScheme.ForeColor
+                );
         }
     }
 
-    private void DrawTextConsole(Graphics g)
+    private void DrawTextConsole(Graphics g, SolidBrush background)
     {
         g.ScaleTransform(DrawEngine.ScaleX, DrawEngine.ScaleY);
 
@@ -185,22 +193,21 @@ public partial class ConsoleControl : UserControl
         if (_font == null)
             return;
 
+        using var foreground = new SolidBrush(ForeColor);
+
         var cursY = RowCount - 1;
 
-        using var b = new SolidBrush(ForeColor);
-            
         for (var y = 0; y < RowCount; y++)
         {
             for (var x = 0; x < ColumnCount; x++)
             {
                 if (_characterArray![y, x] > 0 && _characterArray[y, x] != ' ')
-                    DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, b, x, y);
+                    DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, foreground, x, y);
                     
                 if (_hasFocus && CursorBlink && x == _cursorPosition && y == cursY)
                 {
-                    DrawEngine.DrawCursor(g, b, x, y);
-                    using var bb = new SolidBrush(BackColor);
-                    DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, bb, x, y);
+                    DrawEngine.DrawCursor(g, foreground, x, y);
+                    DrawEngine.DrawCharacter(g, _characterArray[y, x], _font, background, x, y);
                 }
                 else if (!_hasFocus && x == _cursorPosition && y == cursY)
                 {
@@ -565,7 +572,9 @@ public partial class ConsoleControl : UserControl
             return;
         }
 
-        var hit = CurrentForm.GetControlAt(_mouse.ToCharacterPosition(DrawEngine));
+        var f = _currentPrompt ?? CurrentForm;
+
+        var hit = f.GetControlAt(_mouse.ToCharacterPosition(DrawEngine));
 
         if (hit == null)
         {
@@ -617,7 +626,7 @@ public partial class ConsoleControl : UserControl
 
     public void Tell(string prompt)
     {
-        _currentPrompt = new PromptForm(Handle, this, _columnCount, _rowCount, true, prompt);
+        _currentPrompt = new PromptForm(Handle, this, _columnCount, _rowCount, false, prompt);
         ConsoleState = ConsoleState.MessageBox;
         Invalidate();
     }
