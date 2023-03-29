@@ -25,15 +25,12 @@ public partial class ConsoleControl : UserControl
     private bool _hasFocus;
     private History History { get; }
     private bool RowChanged { get; set; }
-    private ConsoleForm? _currentForm;
-    private PromptForm? _currentPrompt;
-    private bool _promptResult;
     private bool ShiftKey { get; set; }
     private bool _waitMode;
     private readonly Mouse _mouse;
     internal IControlColorScheme? DefaultColorScheme { get; set; }
     internal static bool CursorBlink { get; set; }
-    public ConsoleState ConsoleState { get; private set; }
+    public State State { get; }
     public event EventHandler? CurrentFormChanged;
     public event UserInputHandler? UserInput;
     public event ConsoleControlEventHandler? ControlEvent;
@@ -41,14 +38,13 @@ public partial class ConsoleControl : UserControl
 
     public ConsoleControl()
     {
-        _promptResult = false;
+        State = new State();
         History = new History();
         InitializeComponent();
         InitializeConsole();
         _waitMode = false;
         _mouse = new Mouse();
         _font = new Font("Courier New", 6.0f);
-        ConsoleState = ConsoleState.RunningWithoutForm;
     }
 
     public void SetDefaultColorScheme(IControlColorScheme colorScheme) =>
@@ -92,7 +88,7 @@ public partial class ConsoleControl : UserControl
         get => _columnCount;
         set
         {
-            if (value < 3 || value > 200)
+            if (value is < 3 or > 200)
                 throw new SystemException("Value out of range.");
 
             _columnCount = value;
@@ -164,27 +160,21 @@ public partial class ConsoleControl : UserControl
         if (_needsRecalcSize)
             CalcSize(e.Graphics);
         
-        if (CurrentForm == null)
+        if (State.CurrentForm == null)
         {
             e.Graphics.Clear(BackColor);
             using var b = new SolidBrush(BackColor);
             DrawTextConsole(e.Graphics, b);
 
-            if (ConsoleState == ConsoleState.MessageBox)
+            if (State.HasForm)
                 throw new SystemException("No form is active.");
         }
         else
         {
-            CurrentForm.Draw(e.Graphics, DrawEngine);
+            State.CurrentForm.Draw(e.Graphics, DrawEngine);
 
-            if (ConsoleState == ConsoleState.MessageBox && _currentPrompt != null)
-                _currentPrompt.DrawPrompt(
-                    e.Graphics,
-                    DrawEngine,
-                    CurrentForm.CurrentColorScheme!.ForeColor.Color,
-                    CurrentForm.CurrentColorScheme.InputControlBackColor,
-                    CurrentForm.CurrentColorScheme.ForeColor
-                );
+            if (State is { HasForm: true, CurrentPrompt: { } })
+                State.DrawPrompt(e.Graphics, DrawEngine, State.CurrentForm.CurrentColorScheme!);
         }
     }
 
@@ -224,9 +214,9 @@ public partial class ConsoleControl : UserControl
 
     private void ConsoleControl_KeyPress(object sender, KeyPressEventArgs e)
     {
-        if (CurrentForm != null)
+        if (State.Form != null)
         {
-            CurrentForm.CharacterInput(e.KeyChar);
+            State.Form.CharacterInput(e.KeyChar);
             return;
         }
 
@@ -295,19 +285,17 @@ public partial class ConsoleControl : UserControl
 
     private void ConsoleControl_KeyDown(object sender, KeyEventArgs e)
     {
-        var f = _currentPrompt ?? CurrentForm;
-
         if (e.KeyCode == Keys.ShiftKey)
         {
             ShiftKey = true;
             return;
         }
 
-        if (f != null && IsControlKey(e.KeyCode))
+        if (State.Form != null && IsControlKey(e.KeyCode))
         {
             e.Handled = true;
             e.SuppressKeyPress = true;
-            f.KeyPressed(e.KeyCode, ShiftKey);
+            State.Form.KeyPressed(e.KeyCode, ShiftKey);
             return;
         }
             
@@ -331,7 +319,7 @@ public partial class ConsoleControl : UserControl
                 break;
             case Keys.Insert:
             {
-                if (f?.CurrentControl is TextBox textBox)
+                if (State.Form?.CurrentControl is TextBox textBox)
                 {
                     textBox.KeyPressed(Keys.Insert);
                     return;
@@ -353,7 +341,7 @@ public partial class ConsoleControl : UserControl
                 break;
             case Keys.Delete:
             {
-                if (f?.CurrentControl is TextBox textBox)
+                if (State.Form?.CurrentControl is TextBox textBox)
                 {
                     textBox.KeyPressed(Keys.Delete);
                     return;
@@ -488,31 +476,6 @@ public partial class ConsoleControl : UserControl
         }
     }
 
-    public ConsoleForm? CurrentForm
-    {
-        get => _currentForm;
-        set
-        {
-            if (_currentForm == value)
-                return;
-
-            _currentForm = value;
-
-            if (_currentForm == null)
-            {
-                ConsoleState = ConsoleState.RunningWithoutForm;
-            }
-            else
-            {
-                ConsoleState = ConsoleState.RunningWithForm;
-                _currentForm?.Run();
-            }
-
-            Invalidate();
-            CurrentFormChanged?.Invoke(this, EventArgs.Empty);
-        }
-    }
-
     internal void TriggerEvent(object sender, ConsoleControlEventArgs e) =>
         ControlEvent?.Invoke(sender, e);
 
@@ -524,20 +487,16 @@ public partial class ConsoleControl : UserControl
 
     private void ConsoleControl_MouseClick(object sender, MouseEventArgs e)
     {
-        var f = _currentPrompt ?? CurrentForm;
-
-        if (f == null)
+        if (State.Form == null)
             return;
 
         var point = _mouse.ToCharacterPosition(DrawEngine);
-        var hit = f.GetControlAt(point);
+        var hit = State.Form.GetControlAt(point);
 
         if (hit == null)
             return;
 
-        f.SetFocus(hit);
-        f.ActiveControl = hit;
-        f.ActiveControl.GotActiveAt = DateTime.Now;
+        State.SetActiveControl(hit);
 
         if (hit is IMultipleClickZoneControl c)
         {
@@ -545,23 +504,15 @@ public partial class ConsoleControl : UserControl
             return;
         }
 
-        f.KeyPressed(Keys.Enter, ShiftKey);
+        State.Form.KeyPressed(Keys.Enter, ShiftKey);
     }
 
     private void ConsoleControl_MouseDoubleClick(object sender, MouseEventArgs e)
     {
-        var f = _currentPrompt ?? CurrentForm;
-
-        if (f == null)
-            return;
-
-        var hit = f.GetControlAt(_mouse.AsPoint());
-
-        if (hit == null)
-            return;
+        var hit = State.Form?.GetControlAt(_mouse.AsPoint());
 
         if (hit is IMultipleClickZoneControl)
-            f.KeyPressed(Keys.Enter, ShiftKey);
+            State.Form?.KeyPressed(Keys.Enter, ShiftKey);
     }
 
     private void ConsoleControl_MouseMove(object sender, MouseEventArgs e)
@@ -576,15 +527,13 @@ public partial class ConsoleControl : UserControl
 
     private void SetCursor()
     {
-        var f = _currentPrompt ?? CurrentForm;
-
-        if (f == null)
+        if (State.Form == null)
         {
             Cursor = Cursors.Arrow;
             return;
         }
 
-        var hit = f.GetControlAt(_mouse.ToCharacterPosition(DrawEngine));
+        var hit = State.Form.GetControlAt(_mouse.ToCharacterPosition(DrawEngine));
 
         if (hit == null)
         {
@@ -628,29 +577,19 @@ public partial class ConsoleControl : UserControl
 
     public async Task<bool> Ask(string prompt)
     {
-        _currentPrompt = new PromptForm(Handle, this, _columnCount, _rowCount, true, prompt);
-        ConsoleState = ConsoleState.MessageBox;
-        do
-        {
-            Thread.Yield();
-            await Task.Delay(50);
-
-        } while (ConsoleState == ConsoleState.MessageBox);
+        if (State.CurrentForm != null)
+            State.Ask(Handle, this, _columnCount, _rowCount, prompt);
+        
+        await State.WaitForMessageBoxToClose();
         Invalidate();
-        return _promptResult;
+        return State.PromptResult;
     }
 
     public void Tell(string prompt)
     {
-        _currentPrompt = new PromptForm(Handle, this, _columnCount, _rowCount, false, prompt);
-        ConsoleState = ConsoleState.MessageBox;
-        Invalidate();
-    }
+        if (State.CurrentForm != null)
+            State.Tell(Handle, this, _columnCount, _rowCount, prompt);
 
-    public void EndPrompt(bool ok)
-    {
-        ConsoleState = CurrentForm == null ? ConsoleState.RunningWithoutForm : ConsoleState.RunningWithForm;
-        _currentPrompt = null;
-        _promptResult = ok;
+        Invalidate();
     }
 }

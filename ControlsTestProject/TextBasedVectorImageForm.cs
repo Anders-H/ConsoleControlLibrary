@@ -42,6 +42,6 @@ BOX-FILLED (50,50,20,20);
     protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
     {
         if (sender == _button)
-            ParentConsole.CurrentForm = new ListsForm(Handle, ParentConsole);
+            ParentConsole.State.CurrentForm = new ListsForm(Handle, ParentConsole);
     }
 }

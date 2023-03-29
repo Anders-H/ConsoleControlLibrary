@@ -41,7 +41,7 @@ public class CheckboxesForm : ConsoleForm
         }
         if (sender == _button)
         {
-            ParentConsole.CurrentForm = new TextboxesForm(Handle, ParentConsole);
+            ParentConsole.State.CurrentForm = new TextboxesForm(Handle, ParentConsole);
         }
     }
 }

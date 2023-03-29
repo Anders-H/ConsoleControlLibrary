@@ -75,5 +75,5 @@ internal class PromptForm : ConsoleForm
     }
 
     protected override void EventOccurred(object sender, ConsoleControlEventArgs e) =>
-        ParentConsole.EndPrompt(sender == _btnOk);
+        ParentConsole.State.EndPrompt(sender == _btnOk);
 }

@@ -28,6 +28,6 @@ public class TextboxesForm : ConsoleForm
     protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
     {
         if (sender == _button)
-            ParentConsole.CurrentForm = new TextAdventureForm(Handle, ParentConsole);
+            ParentConsole.State.CurrentForm = new TextAdventureForm(Handle, ParentConsole);
     }
 }

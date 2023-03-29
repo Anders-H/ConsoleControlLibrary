@@ -35,7 +35,6 @@
             // consoleControl1
             // 
             this.consoleControl1.ColumnCount = 90;
-            this.consoleControl1.CurrentForm = null;
             this.consoleControl1.CursorPosition = 0;
             this.consoleControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.consoleControl1.DrawEngine = drawEngine1;

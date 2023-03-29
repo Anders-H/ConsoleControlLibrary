@@ -77,7 +77,7 @@ internal class ListsForm : ConsoleForm
         else if (sender == _buttonAsk)
             ParentConsole.Tell($"Your answer: {await ParentConsole.Ask("What?!?")}");
         else if (sender == _button)
-            ParentConsole.CurrentForm = new ButtonsForm(Handle, ParentConsole);
+            ParentConsole.State.CurrentForm = new ButtonsForm(Handle, ParentConsole);
         else if (sender == _buttonFirst)
             _simpleList.SelectedIndex = 0;
         else if (sender == _buttonLast)

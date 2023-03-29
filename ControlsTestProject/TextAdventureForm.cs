@@ -53,7 +53,7 @@ internal class TextAdventureForm : ConsoleForm
 
                 if (string.Compare(t, "quit", StringComparison.CurrentCultureIgnoreCase) == 0)
                 {
-                    ParentConsole.CurrentForm = new TextBasedVectorImageForm(Handle, ParentConsole);
+                    ParentConsole.State.CurrentForm = new TextBasedVectorImageForm(Handle, ParentConsole);
                     return;
                 }
 

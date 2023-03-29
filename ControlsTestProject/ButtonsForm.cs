@@ -86,7 +86,7 @@ public class ButtonsForm : ConsoleForm
 
         if (sender == _button5)
         {
-            ParentConsole.CurrentForm = new CheckboxesForm(Handle, ParentConsole);
+            ParentConsole.State.CurrentForm = new CheckboxesForm(Handle, ParentConsole);
         }
     }
 }
