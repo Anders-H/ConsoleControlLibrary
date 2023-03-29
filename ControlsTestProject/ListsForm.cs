@@ -66,7 +66,7 @@ internal class ListsForm : ConsoleForm
         AddControl(_button);
     }
 
-    protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
+    protected override async void EventOccurred(object sender, ConsoleControlEventArgs e)
     {
         if (sender == _simpleList)
             MessageBox.Show($@"You selected from the simple list: {_simpleList.SelectedItem}");
@@ -75,7 +75,7 @@ internal class ListsForm : ConsoleForm
         else if (sender == _buttonTell)
             ParentConsole.Tell("Hello!");
         else if (sender == _buttonAsk)
-            MessageBox.Show("Ask...");
+            ParentConsole.Tell($"Your answer: {await ParentConsole.Ask("What?!?")}");
         else if (sender == _button)
             ParentConsole.CurrentForm = new ButtonsForm(Handle, ParentConsole);
         else if (sender == _buttonFirst)

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.BaseTypes;
+using ConsoleControlLibrary.Controls.Events;
 
 namespace ConsoleControlLibrary;
 
@@ -11,6 +12,7 @@ internal class PromptForm : ConsoleForm
     private readonly Button _btnOk;
     private readonly Button? _btnCancel;
     private readonly int _columnCount;
+    private readonly int _rowCount;
     private readonly int _yBase;
 
     public PromptForm(IntPtr handle, ConsoleControl parentConsole, int columnCount, int rowCount, bool hasCancelButton, string prompt) : base(handle, parentConsole)
@@ -22,6 +24,7 @@ internal class PromptForm : ConsoleForm
             throw new SystemException("At least 6 rows required.");
 
         _columnCount = columnCount;
+        _rowCount = rowCount;
         _yBase = rowCount / 2 - 1;
 
         if (prompt.Length > _columnCount)
@@ -50,11 +53,15 @@ internal class PromptForm : ConsoleForm
 
         AddControl(_btnOk);
         AddControl(new Label(this, 0, _yBase - 1, prompt));
+        SetFocus(_btnOk);
     }
 
     internal void DrawPrompt(Graphics g, IDrawEngine drawEngine, Color outlineColor, SolidBrush background, SolidBrush foreground)
     {
         CurrentColorScheme ??= new CurrentColorScheme(background.Color, foreground, background, foreground, foreground);
+
+        using var shade = new SolidBrush(Color.FromArgb(128, 0, 0, 0));
+        drawEngine.FillControl(g, shade, new Rectangle(0, 0, _columnCount, _rowCount));
 
         drawEngine.FillControl(g, background, new Rectangle(0, _yBase - 1, _columnCount, 3));
 
@@ -66,4 +73,7 @@ internal class PromptForm : ConsoleForm
         using var p = new Pen(outlineColor);
         drawEngine.OutlineControl(g, p, new Rectangle(-1, _yBase - 1, _columnCount + 1, 3));
     }
+
+    protected override void EventOccurred(object sender, ConsoleControlEventArgs e) =>
+        ParentConsole.EndPrompt(sender == _btnOk);
 }

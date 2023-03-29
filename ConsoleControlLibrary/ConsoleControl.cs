@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.BaseTypes;
@@ -25,6 +27,7 @@ public partial class ConsoleControl : UserControl
     private bool RowChanged { get; set; }
     private ConsoleForm? _currentForm;
     private PromptForm? _currentPrompt;
+    private bool _promptResult;
     private bool ShiftKey { get; set; }
     private bool _waitMode;
     private readonly Mouse _mouse;
@@ -38,6 +41,7 @@ public partial class ConsoleControl : UserControl
 
     public ConsoleControl()
     {
+        _promptResult = false;
         History = new History();
         InitializeComponent();
         InitializeConsole();
@@ -291,17 +295,19 @@ public partial class ConsoleControl : UserControl
 
     private void ConsoleControl_KeyDown(object sender, KeyEventArgs e)
     {
+        var f = _currentPrompt ?? CurrentForm;
+
         if (e.KeyCode == Keys.ShiftKey)
         {
             ShiftKey = true;
             return;
         }
 
-        if (CurrentForm != null && IsControlKey(e.KeyCode))
+        if (f != null && IsControlKey(e.KeyCode))
         {
             e.Handled = true;
             e.SuppressKeyPress = true;
-            CurrentForm.KeyPressed(e.KeyCode, ShiftKey);
+            f.KeyPressed(e.KeyCode, ShiftKey);
             return;
         }
             
@@ -325,7 +331,7 @@ public partial class ConsoleControl : UserControl
                 break;
             case Keys.Insert:
             {
-                if (_currentForm?.CurrentControl is TextBox textBox)
+                if (f?.CurrentControl is TextBox textBox)
                 {
                     textBox.KeyPressed(Keys.Insert);
                     return;
@@ -347,7 +353,7 @@ public partial class ConsoleControl : UserControl
                 break;
             case Keys.Delete:
             {
-                if (_currentForm?.CurrentControl is TextBox textBox)
+                if (f?.CurrentControl is TextBox textBox)
                 {
                     textBox.KeyPressed(Keys.Delete);
                     return;
@@ -467,7 +473,7 @@ public partial class ConsoleControl : UserControl
                     continue;
                 Refresh();
                 Application.DoEvents();
-                System.Threading.Thread.Sleep(msDelay);
+                Thread.Sleep(msDelay);
             }
 
             ScrollUp();
@@ -518,18 +524,20 @@ public partial class ConsoleControl : UserControl
 
     private void ConsoleControl_MouseClick(object sender, MouseEventArgs e)
     {
-        if (CurrentForm == null)
+        var f = _currentPrompt ?? CurrentForm;
+
+        if (f == null)
             return;
 
         var point = _mouse.ToCharacterPosition(DrawEngine);
-        var hit = CurrentForm.GetControlAt(point);
+        var hit = f.GetControlAt(point);
 
         if (hit == null)
             return;
 
-        CurrentForm.SetFocus(hit);
-        CurrentForm.ActiveControl = hit;
-        CurrentForm.ActiveControl.GotActiveAt = DateTime.Now;
+        f.SetFocus(hit);
+        f.ActiveControl = hit;
+        f.ActiveControl.GotActiveAt = DateTime.Now;
 
         if (hit is IMultipleClickZoneControl c)
         {
@@ -537,21 +545,23 @@ public partial class ConsoleControl : UserControl
             return;
         }
 
-        CurrentForm.KeyPressed(Keys.Enter, ShiftKey);
+        f.KeyPressed(Keys.Enter, ShiftKey);
     }
 
     private void ConsoleControl_MouseDoubleClick(object sender, MouseEventArgs e)
     {
-        if (CurrentForm == null)
+        var f = _currentPrompt ?? CurrentForm;
+
+        if (f == null)
             return;
 
-        var hit = CurrentForm.GetControlAt(_mouse.AsPoint());
+        var hit = f.GetControlAt(_mouse.AsPoint());
 
         if (hit == null)
             return;
 
         if (hit is IMultipleClickZoneControl)
-            CurrentForm.KeyPressed(Keys.Enter, ShiftKey);
+            f.KeyPressed(Keys.Enter, ShiftKey);
     }
 
     private void ConsoleControl_MouseMove(object sender, MouseEventArgs e)
@@ -566,13 +576,13 @@ public partial class ConsoleControl : UserControl
 
     private void SetCursor()
     {
-        if (CurrentForm == null)
+        var f = _currentPrompt ?? CurrentForm;
+
+        if (f == null)
         {
             Cursor = Cursors.Arrow;
             return;
         }
-
-        var f = _currentPrompt ?? CurrentForm;
 
         var hit = f.GetControlAt(_mouse.ToCharacterPosition(DrawEngine));
 
@@ -616,12 +626,18 @@ public partial class ConsoleControl : UserControl
         SetCursor();
     }
 
-    public bool Ask(string prompt)
+    public async Task<bool> Ask(string prompt)
     {
         _currentPrompt = new PromptForm(Handle, this, _columnCount, _rowCount, true, prompt);
         ConsoleState = ConsoleState.MessageBox;
+        do
+        {
+            Thread.Yield();
+            await Task.Delay(50);
+
+        } while (ConsoleState == ConsoleState.MessageBox);
         Invalidate();
-        return true;
+        return _promptResult;
     }
 
     public void Tell(string prompt)
@@ -629,5 +645,12 @@ public partial class ConsoleControl : UserControl
         _currentPrompt = new PromptForm(Handle, this, _columnCount, _rowCount, false, prompt);
         ConsoleState = ConsoleState.MessageBox;
         Invalidate();
+    }
+
+    public void EndPrompt(bool ok)
+    {
+        ConsoleState = CurrentForm == null ? ConsoleState.RunningWithoutForm : ConsoleState.RunningWithForm;
+        _currentPrompt = null;
+        _promptResult = ok;
     }
 }
