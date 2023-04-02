@@ -171,10 +171,15 @@ public partial class ConsoleControl : UserControl
         }
         else
         {
-            State.CurrentForm.Draw(e.Graphics, DrawEngine);
-
             if (State is { HasForm: true, CurrentPrompt: { } })
+            {
+                State.CurrentForm.Draw(e.Graphics, DrawEngine, true);
                 State.DrawPrompt(e.Graphics, DrawEngine, State.CurrentForm.CurrentColorScheme!);
+            }
+            else
+            {
+                State.CurrentForm.Draw(e.Graphics, DrawEngine, false);
+            }
         }
     }
 

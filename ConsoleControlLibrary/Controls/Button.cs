@@ -68,7 +68,7 @@ public class Button : ControlBase, IControl, IControlFormOperations, ITextContro
     {
     }
 
-    public override void Draw(Graphics g, IDrawEngine drawEngine)
+    public override void Draw(Graphics g, IDrawEngine drawEngine, bool blockedByModalDialog)
     {
         if (Width <= 0)
             return;
@@ -91,7 +91,7 @@ public class Button : ControlBase, IControl, IControlFormOperations, ITextContro
 
             for (var i = 0; i < _visibleText.Length; i++)
             {
-                if (i == 0 && HasFocus && ConsoleControl.CursorBlink)
+                if (i == 0 && HasFocus && ConsoleControl.CursorBlink && !blockedByModalDialog)
                 {
                     drawEngine.DrawCursor(g, ParentForm.CurrentColorScheme!.ForeColor, X, Y);
                     drawEngine.DrawCharacter(g, _visibleText[i], ParentForm.Font, foreColor, X + i, Y);

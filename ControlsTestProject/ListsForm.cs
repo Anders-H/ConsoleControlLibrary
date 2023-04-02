@@ -19,6 +19,7 @@ internal class ListsForm : ConsoleForm
     private readonly Button _button;
     private readonly SimpleList _simpleList;
     private readonly ListView _listView;
+    private readonly FreeInput _freeInput;
 
     public ListsForm(IntPtr handle, ConsoleControl parentConsole) : base(handle, parentConsole)
     {
@@ -64,6 +65,9 @@ internal class ListsForm : ConsoleForm
         AddControl(_buttonFirst);
         AddControl(_buttonLast);
         AddControl(_button);
+
+        _freeInput = new FreeInput(this, 28, 24, 10, 6);
+        AddControl(_freeInput);
     }
 
     protected override async void EventOccurred(object sender, ConsoleControlEventArgs e)

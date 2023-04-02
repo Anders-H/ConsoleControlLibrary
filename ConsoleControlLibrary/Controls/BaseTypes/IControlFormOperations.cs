@@ -8,5 +8,5 @@ public interface IControlFormOperations
     bool HasFocus { get; set; }
     void KeyPressed(Keys key);
     void CharacterInput(char c);
-    void Draw(Graphics g, IDrawEngine drawEngine);
+    void Draw(Graphics g, IDrawEngine drawEngine, bool blockedByModalDialog);
 }

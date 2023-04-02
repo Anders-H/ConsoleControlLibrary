@@ -163,7 +163,7 @@ public class TextBlock : ControlBase, IControl, IControlFormOperations, ITextCon
     {
     }
         
-    public override void Draw(Graphics g, IDrawEngine drawEngine)
+    public override void Draw(Graphics g, IDrawEngine drawEngine, bool blockedByModalDialog)
     {
         if (ParentForm.Font == null)
             return;

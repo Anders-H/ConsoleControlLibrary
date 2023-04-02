@@ -46,7 +46,7 @@ public class Label : ControlBase, IControl, IControlFormOperations, ITextControl
     {
     }
 
-    public override void Draw(Graphics g, IDrawEngine drawEngine)
+    public override void Draw(Graphics g, IDrawEngine drawEngine, bool blockedByModalDialog)
     {
         if (Width <= 0 || _visibleText.Length <= 0)
             return;

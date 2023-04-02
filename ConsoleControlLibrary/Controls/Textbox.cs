@@ -123,7 +123,7 @@ public class TextBox : ControlBase, IControl, IControlFormOperations, ITextContr
         _characters[col] = (char)0;
     }
 
-    public override void Draw(Graphics g, IDrawEngine drawEngine)
+    public override void Draw(Graphics g, IDrawEngine drawEngine, bool blockedByModalDialog)
     {
         if (Width <= 0)
             return;
@@ -149,7 +149,7 @@ public class TextBox : ControlBase, IControl, IControlFormOperations, ITextContr
                 var cursorX = _cursorX + X - _displayOffset;
                 cursorX = cursorX > X + Width - 1 ? X + Width - 1 : cursorX;
                     
-                if (ConsoleControl.CursorBlink)
+                if (ConsoleControl.CursorBlink && !blockedByModalDialog)
                     drawEngine.DrawCursor(g, ParentForm.CurrentColorScheme!.ForeColor, cursorX, Y);
                     
                 for (var i = 0; i < drawCharacters.Length; i++)

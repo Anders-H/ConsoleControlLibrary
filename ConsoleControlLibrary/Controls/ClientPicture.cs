@@ -30,7 +30,7 @@ public class ClientPicture : ControlBase, IControl, IControlFormOperations
     {
     }
 
-    public override void Draw(Graphics g, IDrawEngine drawEngine) =>
+    public override void Draw(Graphics g, IDrawEngine drawEngine, bool blockedByModalDialog) =>
         _drawPictureDelegate?.Invoke(this, g);
 
     public override void KeyPressed(Keys key)

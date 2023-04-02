@@ -118,7 +118,7 @@ public class ConsoleForm : IDisposable
         ParentConsole.TriggerEvent(sender, e);
     }
 
-    internal void Draw(Graphics g, IDrawEngine drawEngine)
+    internal void Draw(Graphics g, IDrawEngine drawEngine, bool blockedByModalDialog)
     {
         g.ScaleTransform(drawEngine.ScaleX, drawEngine.ScaleY);
 
@@ -138,7 +138,7 @@ public class ConsoleForm : IDisposable
         Controls
             .Where(x => x.Visible).Cast<IControlFormOperations>()
             .ToList()
-            .ForEach(x => x.Draw(g, drawEngine));
+            .ForEach(x => x.Draw(g, drawEngine, blockedByModalDialog));
     }
 
     internal void KeyPressed(Keys key, bool shift)

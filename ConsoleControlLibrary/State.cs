@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using ConsoleControlLibrary.Controls.BaseTypes;
@@ -23,7 +22,7 @@ public class State
     }
 
     internal bool HasForm =>
-        ConsoleState == ConsoleState.RunningWithoutForm;
+        ConsoleState == ConsoleState.RunningWithoutForm || CurrentForm != null;
 
     internal async Task WaitForMessageBoxToClose()
     {

@@ -68,7 +68,7 @@ internal class PromptForm : ConsoleForm
         Controls
             .Where(x => x.Visible).Cast<IControlFormOperations>()
             .ToList()
-            .ForEach(x => x.Draw(g, drawEngine));
+            .ForEach(x => x.Draw(g, drawEngine, false));
 
         using var p = new Pen(outlineColor);
         drawEngine.OutlineControl(g, p, new Rectangle(-1, _yBase - 1, _columnCount + 1, 3));

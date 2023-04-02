@@ -81,7 +81,7 @@ public abstract class CheckboxBase : ControlBase
     private string VisibleText =>
         _visibleText ??= $"{LeftBracket}{(Checked ? "X" : " ")}{RightBracket}" + (_text.Length <= Width - 3 ? _text : _text.Substring(0, Width - 3));
 
-    public override void Draw(Graphics g, IDrawEngine drawEngine)
+    public override void Draw(Graphics g, IDrawEngine drawEngine, bool blockedByModalDialog)
     {
         if (Width <= 0)
             return;
@@ -103,7 +103,7 @@ public abstract class CheckboxBase : ControlBase
 
             for (var i = 0; i < VisibleText.Length; i++)
             {
-                if (i == 1 && HasFocus && ConsoleControl.CursorBlink)
+                if (i == 1 && HasFocus && ConsoleControl.CursorBlink && !blockedByModalDialog)
                 {
                     drawEngine.DrawCursor(g, foreColor, X + 1, Y);
                     drawEngine.DrawCharacter(g, VisibleText[i], ParentForm.Font, backColor, X + i, Y);
