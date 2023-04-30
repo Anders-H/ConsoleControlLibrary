@@ -19,7 +19,9 @@ internal class ListsForm : ConsoleForm
     private readonly Button _button;
     private readonly SimpleList _simpleList;
     private readonly ListView _listView;
-    private readonly FreeInput _freeInput;
+    private readonly Button _writeLots;
+    private readonly Button _input;
+
 
     public ListsForm(IntPtr handle, ConsoleControl parentConsole) : base(handle, parentConsole)
     {
@@ -29,13 +31,6 @@ internal class ListsForm : ConsoleForm
         _simpleList.AddItem(new ListItem(1, "Hello!"));
         _simpleList.AddItem(new ListItem(2, "Item number 2"));
         _simpleList.AddItem(new ListItem(3, "Hello again!"));
-        _simpleList.AddItem(new ListItem(4, "The fourth!"));
-        _simpleList.AddItem(new ListItem(5, "Hello! 5"));
-        _simpleList.AddItem(new ListItem(6, "Hello! 6"));
-        _simpleList.AddItem(new ListItem(7, "Hello! 7"));
-        _simpleList.AddItem(new ListItem(8, "Hello! 8"));
-        _simpleList.AddItem(new ListItem(9, "Hello! 9"));
-        _simpleList.AddItem(new ListItem(10, "The End"));
         AddControl(_simpleList);
 
         _listView = new ListView(this, 1, 10, 45, 6);
@@ -48,7 +43,7 @@ internal class ListsForm : ConsoleForm
         _listView.AddItem(new ListItem(4, "The fourth!"));
         _listView.AddItem(new ListItem(5, "Hello! 5"));
         _listView.AddItem(new ListItem(6, "Hello! 6"));
-        _listView.AddItem(new ListItem(7, "Hello! 7"), "Midl", "Rgt");
+        _listView.AddItem(new ListItem(7, "Hello! 7"), "Middle", "Rgt");
         _listView.AddItem(new ListItem(8, "Hello! 8"));
         _listView.AddItem(new ListItem(9, "Hello! 9 Values does not fit"), "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq", "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
         _listView.AddItem(new ListItem(10, "The End"), "", "Fine!");
@@ -66,8 +61,8 @@ internal class ListsForm : ConsoleForm
         AddControl(_buttonLast);
         AddControl(_button);
 
-        _freeInput = new FreeInput(this, 28, 24, 10, 6);
-        AddControl(_freeInput);
+        _writeLots = new Button(this, 28, 18, 24, "Write lots");
+        _input = new Button(this, 28, 19, 24, "Do input");
     }
 
     protected override async void EventOccurred(object sender, ConsoleControlEventArgs e)
@@ -85,7 +80,7 @@ internal class ListsForm : ConsoleForm
         else if (sender == _buttonFirst)
             _simpleList.SelectedIndex = 0;
         else if (sender == _buttonLast)
-            _simpleList.SelectedIndex = 9;
+            _simpleList.SelectedIndex = 2;
     }
 }
 

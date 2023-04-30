@@ -119,6 +119,10 @@ public class SimpleList : ListBase, IMultipleClickZoneControl
             return;
 
         var visibleIndex = ViewOffset;
+        
+        if (visibleIndex < 0)
+            visibleIndex = 0;
+
         var y = Y;
 
         using var backColor = new SolidBrush(ParentForm.CurrentColorScheme!.BackColor);

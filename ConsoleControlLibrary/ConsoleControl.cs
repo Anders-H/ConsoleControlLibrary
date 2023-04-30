@@ -560,7 +560,7 @@ public partial class ConsoleControl : UserControl
             return;
         }
 
-        Cursor = Cursors.Hand;
+        Cursor = Cursors.Arrow;
     }
 
     public void BeginWait()

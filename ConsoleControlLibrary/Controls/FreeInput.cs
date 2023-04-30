@@ -35,6 +35,10 @@ public class FreeInput : ControlBase, IControl, IControlFormOperations
         if (ParentForm.Font == null)
             return;
 
+#if DEBUG
+        drawEngine.OutlineControl(g, Pens.White, new Rectangle(X, Y, Width, Height));
+#endif
+
         using var b = new SolidBrush(ParentForm.CurrentColorScheme!.BackColor);
 
         for (var y = 0; y < Height; y++)
