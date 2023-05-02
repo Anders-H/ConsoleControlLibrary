@@ -104,7 +104,7 @@ public class SimpleList : ListBase, IMultipleClickZoneControl
     public void MouseClick(Point point)
     {
         var y = point.Y - Y;
-        var clickIndex = y - ViewOffset;
+        var clickIndex = y + ViewOffset;
 
         if (clickIndex >= 0 && clickIndex < Items.Count)
             SelectedIndex = clickIndex;

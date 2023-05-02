@@ -122,7 +122,7 @@ public class ListView : ListBase, IMultipleClickZoneControl
     public void MouseClick(Point point)
     {
         var y = point.Y - Y;
-        var clickIndex = y - ViewOffset - 1;
+        var clickIndex = y + ViewOffset - 1;
 
         if (clickIndex >= 0 && clickIndex < Items.Count)
             SelectedIndex = clickIndex;

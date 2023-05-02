@@ -18,6 +18,7 @@ internal class ListsForm : ConsoleForm
     private readonly Button _buttonLast;
     private readonly Button _button;
     private readonly SimpleList _simpleList;
+    private readonly SimpleList _longList;
     private readonly ListView _listView;
     private readonly Button _writeLots;
     private readonly Button _input;
@@ -25,13 +26,27 @@ internal class ListsForm : ConsoleForm
 
     public ListsForm(IntPtr handle, ConsoleControl parentConsole) : base(handle, parentConsole)
     {
-        AddControl(new Label(this, 1, 1, "Select something:"));
+        AddControl(new Label(this, 1, 1, "Short list:"));
         
         _simpleList = new SimpleList(this, 1, 2, 20, 5);
         _simpleList.AddItem(new ListItem(1, "Hello!"));
         _simpleList.AddItem(new ListItem(2, "Item number 2"));
         _simpleList.AddItem(new ListItem(3, "Hello again!"));
         AddControl(_simpleList);
+
+        AddControl(new Label(this, 22, 1, "Long list:"));
+
+        _longList = new SimpleList(this, 22, 2, 20, 5);
+        _longList.AddItem(new ListItem(1, "Hello!"));
+        _longList.AddItem(new ListItem(2, "Item number 2"));
+        _longList.AddItem(new ListItem(3, "Hello again!"));
+        _longList.AddItem(new ListItem(4, "Hello again!"));
+        _longList.AddItem(new ListItem(5, "Hello again!"));
+        _longList.AddItem(new ListItem(6, "Hello again!"));
+        _longList.AddItem(new ListItem(7, "Hello again 7"));
+        _longList.AddItem(new ListItem(8, "Hello again 8"));
+        AddControl(_longList);
+
 
         _listView = new ListView(this, 1, 10, 45, 6);
         _listView.AddColumn("Left", 15, HorizontalAlign.Left);

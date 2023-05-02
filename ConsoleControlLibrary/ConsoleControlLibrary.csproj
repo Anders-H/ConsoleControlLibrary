@@ -9,6 +9,8 @@
 		<Description>A grid based GUI designed for terminal emulation.</Description>
 		<PackageProjectUrl>https://github.com/Anders-H/ConsoleControlLibrary</PackageProjectUrl>
 		<PackageLicenseExpression> GPL-3.0-only</PackageLicenseExpression>
+		<Version>1.0.1</Version>
+		<PackageReleaseNotes>Bug fix in list controls.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
