@@ -5,16 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using ConsoleControlLibrary.Controls;
 using ConsoleControlLibrary.Controls.BaseTypes;
 using ConsoleControlLibrary.Controls.Events;
-using Button = System.Windows.Forms.Button;
-using TextBox = ConsoleControlLibrary.Controls.TextBox;
+using WinForms = System.Windows.Forms;
 
 namespace ConsoleControlLibrary;
 
-public partial class ConsoleControl : UserControl
+public partial class ConsoleControl : WinForms.UserControl
 {
     private char[,]? _characterArray;
     private int _columnCount = 40;
@@ -152,7 +150,7 @@ public partial class ConsoleControl : UserControl
         Invalidate();
     }
 
-    private void ConsoleControl_Paint(object sender, PaintEventArgs e)
+    private void ConsoleControl_Paint(object sender, WinForms.PaintEventArgs e)
     {
         if (DesignMode)
             return;
@@ -217,7 +215,7 @@ public partial class ConsoleControl : UserControl
         }
     }
 
-    private void ConsoleControl_KeyPress(object sender, KeyPressEventArgs e)
+    private void ConsoleControl_KeyPress(object sender, WinForms.KeyPressEventArgs e)
     {
         if (State.Form != null)
         {
@@ -273,7 +271,7 @@ public partial class ConsoleControl : UserControl
         _characterArray![RowCount - 1, col] = (char)0;
     }
 
-    protected override bool IsInputKey(Keys keyData) =>
+    protected override bool IsInputKey(WinForms.Keys keyData) =>
         Keyboard.IsInputKey(keyData) || base.IsInputKey(keyData);
 
     private int LastCharacterIndex
@@ -288,9 +286,9 @@ public partial class ConsoleControl : UserControl
         }
     }
 
-    private void ConsoleControl_KeyDown(object sender, KeyEventArgs e)
+    private void ConsoleControl_KeyDown(object sender, WinForms.KeyEventArgs e)
     {
-        if (e.KeyCode == Keys.ShiftKey)
+        if (e.KeyCode == WinForms.Keys.ShiftKey)
         {
             ShiftKey = true;
             return;
@@ -308,7 +306,7 @@ public partial class ConsoleControl : UserControl
             
         switch (e.KeyCode)
         {
-            case Keys.Up:
+            case WinForms.Keys.Up:
                 if (!History.HasData())
                     return;
                 text = GetText(RowCount - 1, 0);
@@ -316,17 +314,17 @@ public partial class ConsoleControl : UserControl
                     History.RememberTemporary(text.Trim());
                 RestoreInput(History.Previous());
                 break;
-            case Keys.Down:
+            case WinForms.Keys.Down:
                 text = GetText(RowCount - 1, 0);
                 if (RowChanged && !string.IsNullOrWhiteSpace(text))
                     History.RememberTemporary(text.Trim());
                 RestoreInput(History.Next());
                 break;
-            case Keys.Insert:
+            case WinForms.Keys.Insert:
             {
                 if (State.Form?.CurrentControl is TextBox textBox)
                 {
-                    textBox.KeyPressed(Keys.Insert);
+                    textBox.KeyPressed(WinForms.Keys.Insert);
                     return;
                 }
 
@@ -335,7 +333,7 @@ public partial class ConsoleControl : UserControl
                 Invalidate();
                 break;
             }
-            case Keys.Back:
+            case WinForms.Keys.Back:
                 e.SuppressKeyPress = true;
                 BackspaceAt(CursorPosition);
 
@@ -344,11 +342,11 @@ public partial class ConsoleControl : UserControl
 
                 Invalidate();
                 break;
-            case Keys.Delete:
+            case WinForms.Keys.Delete:
             {
                 if (State.Form?.CurrentControl is TextBox textBox)
                 {
-                    textBox.KeyPressed(Keys.Delete);
+                    textBox.KeyPressed(WinForms.Keys.Delete);
                     return;
                 }
 
@@ -357,32 +355,32 @@ public partial class ConsoleControl : UserControl
                 Invalidate();
                 break;
             }
-            case Keys.Right:
+            case WinForms.Keys.Right:
                 if (CursorPosition < ColumnCount - 1 && CursorPosition < LastCharacterIndex + 1)
                 {
                     RestoreBlink();
                     CursorPosition++;
                 }
                 break;
-            case Keys.Left:
+            case WinForms.Keys.Left:
                 if (CursorPosition > 0)
                 {
                     RestoreBlink();
                     CursorPosition--;
                 }
                 break;
-            case Keys.Home:
+            case WinForms.Keys.Home:
                 RestoreBlink();
                 CursorPosition = 0;
                 break;
-            case Keys.End:
+            case WinForms.Keys.End:
                 GoToEnd();
                 break;
         }
         Invalidate();
     }
 
-    private bool IsControlKey(Keys key) =>
+    private bool IsControlKey(WinForms.Keys key) =>
         Keyboard.IsControlKey(key);
 
     private void GoToEnd()
@@ -465,7 +463,7 @@ public partial class ConsoleControl : UserControl
                 if (msDelay <= 0)
                     continue;
                 Refresh();
-                Application.DoEvents();
+                WinForms.Application.DoEvents();
                 Thread.Sleep(msDelay);
             }
 
@@ -484,13 +482,13 @@ public partial class ConsoleControl : UserControl
     internal void TriggerEvent(object sender, ConsoleControlEventArgs e) =>
         ControlEvent?.Invoke(sender, e);
 
-    private void ConsoleControl_KeyUp(object sender, KeyEventArgs e)
+    private void ConsoleControl_KeyUp(object sender, WinForms.KeyEventArgs e)
     {
-        if (e.KeyCode == Keys.ShiftKey)
+        if (e.KeyCode == WinForms.Keys.ShiftKey)
             ShiftKey = false;
     }
 
-    private void ConsoleControl_MouseClick(object sender, MouseEventArgs e)
+    private void ConsoleControl_MouseClick(object sender, WinForms.MouseEventArgs e)
     {
         if (State.Form == null)
             return;
@@ -509,18 +507,18 @@ public partial class ConsoleControl : UserControl
             return;
         }
 
-        State.Form.KeyPressed(Keys.Enter, ShiftKey);
+        State.Form.KeyPressed(WinForms.Keys.Enter, ShiftKey);
     }
 
-    private void ConsoleControl_MouseDoubleClick(object sender, MouseEventArgs e)
+    private void ConsoleControl_MouseDoubleClick(object sender, WinForms.MouseEventArgs e)
     {
         var hit = State.Form?.GetControlAt(_mouse.AsPoint());
 
         if (hit is IMultipleClickZoneControl)
-            State.Form?.KeyPressed(Keys.Enter, ShiftKey);
+            State.Form?.KeyPressed(WinForms.Keys.Enter, ShiftKey);
     }
 
-    private void ConsoleControl_MouseMove(object sender, MouseEventArgs e)
+    private void ConsoleControl_MouseMove(object sender, WinForms.MouseEventArgs e)
     {
         _mouse.UpdateMousePosition(e, DrawEngine);
         
@@ -534,7 +532,7 @@ public partial class ConsoleControl : UserControl
     {
         if (State.Form == null)
         {
-            Cursor = Cursors.Arrow;
+            Cursor = WinForms.Cursors.Arrow;
             return;
         }
 
@@ -542,31 +540,25 @@ public partial class ConsoleControl : UserControl
 
         if (hit == null)
         {
-            Cursor = Cursors.Arrow;
+            Cursor = WinForms.Cursors.Arrow;
             return;
         }
 
         var type = hit.GetType();
 
-        if (type == typeof(Button) || type == typeof(CheckBox) || type == typeof(RadioButton))
+        if (type == typeof(Button) || type == typeof(Checkbox) || type == typeof(Radiobutton))
         {
-            Cursor = Cursors.Hand;
+            Cursor = WinForms.Cursors.Hand;
             return;
         }
 
-        if (type == typeof(TextBox) || type == typeof(TextBlock))
-        {
-            Cursor = Cursors.Hand;
-            return;
-        }
-
-        Cursor = Cursors.Arrow;
+        Cursor = WinForms.Cursors.Arrow;
     }
 
     public void BeginWait()
     {
         _waitMode = true;
-        Cursor = Cursors.WaitCursor;
+        Cursor = WinForms.Cursors.WaitCursor;
     }
 
     public void EndWait()
