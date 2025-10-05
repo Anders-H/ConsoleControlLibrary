@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0-windows</TargetFramework>
+		<TargetFramework>net10.0-windows</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
 		<Nullable>enable</Nullable>
 		<Title>Console Control Library</Title>
@@ -9,8 +9,8 @@
 		<Description>A grid based GUI designed for terminal emulation.</Description>
 		<PackageProjectUrl>https://github.com/Anders-H/ConsoleControlLibrary</PackageProjectUrl>
 		<PackageLicenseExpression> GPL-3.0-only</PackageLicenseExpression>
-		<Version>1.0.1</Version>
-		<PackageReleaseNotes>Bug fix in list controls.</PackageReleaseNotes>
+		<Version>1.0.2</Version>
+		<PackageReleaseNotes>Moved to .NET 10.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -26,12 +26,14 @@ public partial class ConsoleControl : WinForms.UserControl
     private bool ShiftKey { get; set; }
     private bool _waitMode;
     private readonly Mouse _mouse;
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     internal IControlColorScheme? DefaultColorScheme { get; set; }
     internal static bool CursorBlink { get; set; }
     public State State { get; }
     public event EventHandler? CurrentFormChanged;
     public event UserInputHandler? UserInput;
     public event ConsoleControlEventHandler? ControlEvent;
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IDrawEngine DrawEngine { get; set; } = new DrawEngine();
 
     public ConsoleControl()
@@ -67,7 +69,8 @@ public partial class ConsoleControl : WinForms.UserControl
             _characterArray![row, x] = text[i];
         }
     }
-        
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public int CursorPosition
     {
         get => _cursorPosition;

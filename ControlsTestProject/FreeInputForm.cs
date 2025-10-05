@@ -21,7 +21,7 @@ public class FreeInputForm : ConsoleForm
         SetFocus(_freeInput);
     }
 
-    protected override async void EventOccurred(object sender, ConsoleControlEventArgs e)
+    protected override void EventOccurred(object sender, ConsoleControlEventArgs e)
     {
         if (sender == _button)
             ParentConsole.State.CurrentForm = new ListsForm(Handle, ParentConsole);
